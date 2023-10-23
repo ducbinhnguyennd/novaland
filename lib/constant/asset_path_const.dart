@@ -1,0 +1,62 @@
+class AssetsPathConst {
+  static const String splashBackgroundNgonTinh = 'assets/images/icons.png';
+  static const String splashBackgroundNgonTinh1 = 'assets/images/splash1.jpg';
+  static const String backgroundStoryDetail = 'assets/images/ico_free.png';
+
+  static const String icoFile = 'assets/images/ico_file2.png';
+  static const String icoPass = 'assets/images/ico_pass2.png';
+  static const String bgGift = 'assets/images/bg_gift.jpeg';
+  static const String gifava = 'assets/images/gif_ava.gif';
+  static const String icoUser = 'assets/images/ico_user.png';
+  static const String icoFree = 'assets/images/ico_free.png';
+  static const String icoVip = 'assets/images/ico_vip.png';
+  static const String icoCoin = 'assets/images/ico_coin.png';
+  static const String icoCoinBox = 'assets/images/ico_coinbox.png';
+  static const String icoCart = 'assets/images/ico_cart';
+  static const String icoMomo = 'assets/images/ico_momo.png';
+
+  static const String someCoins = 'assets/images/some_coins.png';
+  static const String freeUserChapter = 'assets/images/free.png';
+  static const String categoryBell = 'assets/images/bell.png';
+  static const String categoryNew = 'assets/images/new.png';
+  static const String categoryOffice = 'assets/images/office.png';
+ 
+  static const String categoryTop0 = 'assets/images/icontop0.png';
+  static const String categoryTop1 = 'assets/images/icontop1.png';
+  static const String categoryTop2 = 'assets/images/icontop2.png';
+  static const String categoryTop3 = 'assets/images/icontop3.png';
+  static const String categoryTop4 = 'assets/images/icontop4.png';
+  static const String categoryTrend = 'assets/images/xuhuong.png';
+  static const String categoryFullStory = 'assets/images/xemthem.png';
+  static const String xemthem = 'assets/images/xemthem.png';
+  static const String tabUser = 'assets/images/tab_user.png';
+  static const String tabCategory = 'assets/images/tab_category.png';
+  static const String tabHome = 'assets/images/tab_home.png';
+  static const String tabBook = 'assets/images/tab_book.png';
+  static const String tabShop = 'assets/images/tab_shop.png';
+  static const String tabTop = 'assets/images/tab_shop.png';
+  static const String categoryHot = 'assets/images/hot.png';
+  static const String backgroundLogin = 'assets/images/bg_login.gif';
+
+ static const String vuongmien = 'assets/images/vuongmien.png';
+ static const String vip = 'assets/images/vip.png';
+ static const String nen = 'assets/images/nen.png';
+
+
+  static const String ico_view = 'assets/icons/view.png';
+//icons
+  static const String chap = 'assets/icons/chap.png';
+  static const String logo = 'assets/icons/icons.png';
+  static const String phanloai = 'assets/icons/phanloai.png';
+
+
+  static const String ico_hot = 'assets/images/hot.png';
+
+
+  static const String theloai = 'assets/theloai/theloai';
+  static const String bgintro = 'assets/images/bgintro.png';
+
+
+
+
+}
