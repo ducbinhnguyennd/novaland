@@ -2,17 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/strings_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/routes.dart';
+import 'package:loginapp/user_Service.dart';
 
 class DetailChapter extends StatefulWidget {
   final String chapterId;
   final String storyName;
-  const DetailChapter({super.key, required this.chapterId, required this.storyName});
+  final String storyId;
+  const DetailChapter({super.key, required this.chapterId, required this.storyName, required this.storyId});
 
   @override
   State<DetailChapter> createState() => _DetailChapterState();
@@ -20,11 +23,24 @@ class DetailChapter extends StatefulWidget {
 
 class _DetailChapterState extends State<DetailChapter> {
   late Future<List<String>> chapterDetail;
+  bool _isShowBar = true;
+  bool setStatelaidi = true;
+   ScrollController _scrollController = ScrollController();
+
 
   @override
   void initState() {
     super.initState();
+      UserServices us = UserServices();
+us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName , widget.storyId);
+    // _scrollController.addListener(_scrollListener);
     chapterDetail = ChapterDetail.fetchChapterImages(widget.chapterId);
+  }
+    @override
+  void dispose() {
+    
+    super.dispose();
+    _scrollController.dispose();
   }
 _buildNavbar() {
     return AppBar(
@@ -63,7 +79,7 @@ _buildNavbar() {
       leading: IconButton(
         icon: Icon(Platform.isIOS ? Icons.arrow_back_ios : Icons.arrow_back),
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(setStatelaidi);
         },
       ),
       
@@ -94,7 +110,7 @@ _buildNavbar() {
       // ),
       body: Stack(
         children: [
-          _buildNavbar(),
+          
           FutureBuilder<List<String>>(
             future: chapterDetail,
             builder: (context, snapshot) {
@@ -105,13 +121,18 @@ _buildNavbar() {
               } else {
                 if (snapshot.hasData) {
                   List<String> imageUrls = snapshot.data!;
-                  return ListView.builder(
-                    // scrollDirection: Axis.vertical,
-                    itemCount: imageUrls.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Image.memory(base64Decode(imageUrls[index]),fit: BoxFit.cover, );
-                    },
+                  return SingleChildScrollView(
+                    controller: _scrollController,
+                    child: ListView.builder(
+                      // controller: _scrollController,
+                      physics: NeverScrollableScrollPhysics(),
+                      // scrollDirection: Axis.vertical,
+                      itemCount: imageUrls.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Image.memory(base64Decode(imageUrls[index]),fit: BoxFit.cover, );
+                      },
+                    ),
                   );
                 } else {
                   return Center(child: Text('No data available.'));
@@ -119,8 +140,44 @@ _buildNavbar() {
               }
             },
           ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: AnimatedContainer(
+              height: _isShowBar
+                  ? 56.0 + MediaQuery.of(context).viewPadding.top
+                  : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: _buildNavbar(),
+            ),
+          ),
         ],
       ),
     );
+  }
+  ScrollDirection? _previousScrollDirection;
+void clearCacheMemory() {
+    ImageCache _imageCache = PaintingBinding.instance.imageCache;
+    imageCache.clear();
+    _imageCache.clearLiveImages();
+  }
+
+  void _scrollListener() {
+    final currentScrollDirection =
+        _scrollController.position.userScrollDirection;
+
+    if (_previousScrollDirection != currentScrollDirection) {
+      setState(() {
+        _previousScrollDirection = currentScrollDirection;
+        if (currentScrollDirection == ScrollDirection.forward) {
+          _isShowBar = true;
+          print('cuộn lên nè');
+        } else if (currentScrollDirection == ScrollDirection.reverse) {
+          _isShowBar = false;
+          print('cuộn xuống nè');
+        }
+      });
+    }
   }
 }

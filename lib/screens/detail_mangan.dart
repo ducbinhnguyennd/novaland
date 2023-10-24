@@ -2,14 +2,19 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/colors_const.dart';
+import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/double_x.dart';
+import 'package:loginapp/constant/strings_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
+import 'package:loginapp/routes.dart';
 import 'package:loginapp/screens/detai_chapter.dart';
+import 'package:loginapp/user_Service.dart';
 
 class MangaDetailScreen extends StatefulWidget {
   final String mangaId;
   final String storyName;
+  
   const MangaDetailScreen({super.key, required this.mangaId, required this.storyName});
 
   @override
@@ -19,11 +24,15 @@ class MangaDetailScreen extends StatefulWidget {
 class _MangaDetailScreenState extends State<MangaDetailScreen>
     with TickerProviderStateMixin {
   late Future<MangaDetailModel> mangaDetail;
+    String? chapterDocTiepId;
+  String? chapterDocTuDau;
   late TabController _controller;
   int _currentTabIndex = 0;
+    String chapterTitleDocTiep = "Đọc tiếp";
   @override
   void initState() {
     super.initState();
+    _loadData();
     mangaDetail = MangaDetail.fetchMangaDetail(widget.mangaId);
     _controller = TabController(length: 3, vsync: this);
     _controller.addListener(_handleTabSelection);
@@ -62,7 +71,22 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   buildContent(String content) {
     return Text(content);
   }
-
+  buildDocTiep(MangaDetailModel detail){
+    return Container(
+      child: Row(children: [
+         InkWell(onTap: (){
+                 
+                     Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailChapter(chapterId: chapterDocTiepId ?? detail.chapters[0].idchap, storyName: chapterTitleDocTiep,storyId: widget.mangaId,),
+          ),
+        );
+        
+                },child: Text('Đọc tiếp'),)
+      ]),
+    );
+  }
   buildThongSo(String follow, String view, String chap ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -177,13 +201,19 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
               itemBuilder: (context, index) {
                 final chapter = detail.chapters[index];
                 return InkWell(
+
                   onTap: (){
+                  
                       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailChapter(chapterId: detail.chapters[index].idchap, storyName: detail.chapters[index].namechap ),
+            builder: (context) => DetailChapter(chapterId: detail.chapters[index].idchap, storyName: detail.chapters[index].namechap,storyId: widget.mangaId,),
           ),
-        );
+        ).then((value) {
+          setState(() {
+            _loadData();
+          });
+        });
                   },
                   
                   child: ListTile(
@@ -200,7 +230,28 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
       },
     );
   }
-
+_loadData(){
+   UserServices us = UserServices();
+                  us.readChuongVuaDocOfTruyen(widget.mangaId)
+                  .then((data) async {
+                String? sData = await data;
+                if (sData != null && sData!.isNotEmpty) {
+                  dynamic data2 = jsonDecode(sData);
+                  if (mounted) {
+                    setState(() {
+                      chapterDocTiepId = data2['idchap'];
+                      chapterTitleDocTiep = data2['titlechap'] + " \u279C";
+                    });
+                  }
+                } else {
+                  if (mounted) {
+                    // setState(() {
+                    //   chapterDocTiepId = MangaDetailModel.;
+                    // });
+                  }
+                }
+              });
+}
   Widget buildGioiThieu() {
     return FutureBuilder<MangaDetailModel>(
       future: mangaDetail,
@@ -212,9 +263,11 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         } else {
           if (snapshot.hasData) {
             MangaDetailModel detail = snapshot.data!;
+            print( base64Decode(detail.image),);
             // Hiển thị thông tin chi tiết của Manga dựa trên dữ liệu detail.
             return Column(
               children: [
+
                 Image.memory(
                   base64Decode(detail.image),
                 ),
@@ -230,6 +283,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                 ),
                 SizedBox(height: 15),
                 buildContent(detail.content),
+                buildDocTiep(detail)
+              
               ],
             );
           } else {
@@ -280,3 +335,15 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     ];
   }
 }
+  // void _showToast(String ms) {
+  //   if (ms.contains(StringConst.textyeucaudangnhap)) {
+  //     // show snack bar login here,
+  //     CommonService.showSnackBar(StringConst.textyeucaudangnhap, context, () {
+  //       // go to login screen
+  //       RouteUtil.redirectToLoginScreen(context);
+  //     });
+
+  //     return;
+  //   }
+  //   CommonService.showToast(ms, context);
+  // }

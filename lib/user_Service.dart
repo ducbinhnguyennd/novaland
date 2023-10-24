@@ -1,4 +1,4 @@
-
+import 'dart:convert' as convert;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserServices {
@@ -20,6 +20,28 @@ Future<String> getInfoLogin() async {
   Future<void> deleteinfo() async {
     return await _storage.delete(key: 'user');
   }
-  
+   Future<void> addChuongVuaDocCuaTruyen(
+      String chapterid, String chaptertitle, String storyid) async {
+    Map<String, String> content = {
+      'idchap': chapterid,
+      'titlechap': chaptertitle
+    };
+    print('tanvlog');
+    print(storyid);
+    return await _storage.write(
+        key: 'vx_' + storyid, value: convert.jsonEncode(content));
+  }
+
+  Future<Future<String?>> readChuongVuaDocOfTruyen(
+      String storyId) async {
+    return _storage.read(key: 'vx_$storyId');
+  }
+
+  Future<Future<String?>> readTruyenVuaXem(
+      int ipage, int ipagesize) async {
+    int skipelement = (ipage - 1) * ipagesize;
+
+    return _storage.read(key: 'vuaxem1');
+  }
   
   }
