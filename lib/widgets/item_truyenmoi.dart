@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:loginapp/screens/detail_mangan.dart';
 
@@ -36,12 +37,22 @@ class ItemTruyenMoi extends StatelessWidget {
           },
           child: Column(
             children: [
-              ClipRRect(
-                
-                borderRadius:
-                    BorderRadius.circular(20),
-                child: Image.memory(base64Decode(image),height: 155, fit: BoxFit.cover),
-              ),
+             CachedNetworkImage(
+  imageUrl: image,
+  imageBuilder: (context, imageProvider) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      image: DecorationImage(
+        image: imageProvider,
+        fit: BoxFit.cover,
+      ),
+    ),
+    height: 155,
+  ),
+  placeholder: (context, url) => CircularProgressIndicator(), // Hiển thị khi đang tải ảnh
+  errorWidget: (context, url, error) => Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
+),
+
               Column(
                 children: [
                   Text(name,

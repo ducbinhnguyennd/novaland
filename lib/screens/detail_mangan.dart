@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
@@ -14,8 +15,9 @@ import 'package:loginapp/user_Service.dart';
 class MangaDetailScreen extends StatefulWidget {
   final String mangaId;
   final String storyName;
-  
-  const MangaDetailScreen({super.key, required this.mangaId, required this.storyName});
+
+  const MangaDetailScreen(
+      {super.key, required this.mangaId, required this.storyName});
 
   @override
   _MangaDetailScreenState createState() => _MangaDetailScreenState();
@@ -24,11 +26,11 @@ class MangaDetailScreen extends StatefulWidget {
 class _MangaDetailScreenState extends State<MangaDetailScreen>
     with TickerProviderStateMixin {
   late Future<MangaDetailModel> mangaDetail;
-    String? chapterDocTiepId;
+  String? chapterDocTiepId;
   String? chapterDocTuDau;
   late TabController _controller;
   int _currentTabIndex = 0;
-    String chapterTitleDocTiep = "Đọc tiếp";
+  String chapterTitleDocTiep = "Đọc tiếp";
   @override
   void initState() {
     super.initState();
@@ -71,23 +73,30 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   buildContent(String content) {
     return Text(content);
   }
-  buildDocTiep(MangaDetailModel detail){
+
+  buildDocTiep(MangaDetailModel detail) {
     return Container(
       child: Row(children: [
-         InkWell(onTap: (){
-                 
-                     Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailChapter(chapterId: chapterDocTiepId ?? detail.chapters[0].idchap, storyName: chapterTitleDocTiep,storyId: widget.mangaId,),
-          ),
-        );
-        
-                },child: Text('Đọc tiếp'),)
+        InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailChapter(
+                  chapterId: chapterDocTiepId ?? detail.chapters[0].idchap,
+                  storyName: chapterTitleDocTiep,
+                  storyId: widget.mangaId,
+                ),
+              ),
+            );
+          },
+          child: Text('Đọc tiếp'),
+        )
       ]),
     );
   }
-  buildThongSo(String follow, String view, String chap ) {
+
+  buildThongSo(String follow, String view, String chap) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -201,21 +210,22 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
               itemBuilder: (context, index) {
                 final chapter = detail.chapters[index];
                 return InkWell(
-
-                  onTap: (){
-                  
-                      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailChapter(chapterId: detail.chapters[index].idchap, storyName: detail.chapters[index].namechap,storyId: widget.mangaId,),
-          ),
-        ).then((value) {
-          setState(() {
-            _loadData();
-          });
-        });
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailChapter(
+                          chapterId: detail.chapters[index].idchap,
+                          storyName: detail.chapters[index].namechap,
+                          storyId: widget.mangaId,
+                        ),
+                      ),
+                    ).then((value) {
+                      setState(() {
+                        _loadData();
+                      });
+                    });
                   },
-                  
                   child: ListTile(
                     title: Text('Chapter ${chapter.namechap}'),
                     subtitle: Text('Loại: ${chapter.viporfree}'),
@@ -230,28 +240,29 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
       },
     );
   }
-_loadData(){
-   UserServices us = UserServices();
-                  us.readChuongVuaDocOfTruyen(widget.mangaId)
-                  .then((data) async {
-                String? sData = await data;
-                if (sData != null && sData!.isNotEmpty) {
-                  dynamic data2 = jsonDecode(sData);
-                  if (mounted) {
-                    setState(() {
-                      chapterDocTiepId = data2['idchap'];
-                      chapterTitleDocTiep = data2['titlechap'] + " \u279C";
-                    });
-                  }
-                } else {
-                  if (mounted) {
-                    // setState(() {
-                    //   chapterDocTiepId = MangaDetailModel.;
-                    // });
-                  }
-                }
-              });
-}
+
+  _loadData() {
+    UserServices us = UserServices();
+    us.readChuongVuaDocOfTruyen(widget.mangaId).then((data) async {
+      String? sData = await data;
+      if (sData != null && sData!.isNotEmpty) {
+        dynamic data2 = jsonDecode(sData);
+        if (mounted) {
+          setState(() {
+            chapterDocTiepId = data2['idchap'];
+            chapterTitleDocTiep = data2['titlechap'] + " \u279C";
+          });
+        }
+      } else {
+        if (mounted) {
+          // setState(() {
+          //   chapterDocTiepId = MangaDetailModel.;
+          // });
+        }
+      }
+    });
+  }
+
   Widget buildGioiThieu() {
     return FutureBuilder<MangaDetailModel>(
       future: mangaDetail,
@@ -263,19 +274,37 @@ _loadData(){
         } else {
           if (snapshot.hasData) {
             MangaDetailModel detail = snapshot.data!;
-            print( base64Decode(detail.image),);
+            // print(
+            //   base64Decode(detail.image),
+            // );
             // Hiển thị thông tin chi tiết của Manga dựa trên dữ liệu detail.
             return Column(
               children: [
-
-                Image.memory(
-                  base64Decode(detail.image),
+                // Image.memory(
+                //   base64Decode(detail.image),
+                // ),
+                CachedNetworkImage(
+                  imageUrl: detail.image,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    height: 155,
+                  ),
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
+
                 Text('Tác giả: ${detail.author}'),
                 // Text('Tên Manga: ${detail.category}'),
                 Text('Thể loại: ${detail.category}'),
                 // buildGenresChips(),
-                buildThongSo(detail.like.toString(),detail.view.toString(),  detail.totalChapters.toString()),
+                buildThongSo(detail.like.toString(), detail.view.toString(),
+                    detail.totalChapters.toString()),
                 SizedBox(height: 15),
                 Divider(
                   color: Colors.grey,
@@ -284,7 +313,6 @@ _loadData(){
                 SizedBox(height: 15),
                 buildContent(detail.content),
                 buildDocTiep(detail)
-              
               ],
             );
           } else {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:loginapp/constant/colors_const.dart';
@@ -130,7 +131,22 @@ _buildNavbar() {
                       itemCount: imageUrls.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        return Image.memory(base64Decode(imageUrls[index]),fit: BoxFit.cover, );
+                       return CachedNetworkImage(
+  imageUrl: imageUrls[index],
+  imageBuilder: (context, imageProvider) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      image: DecorationImage(
+        image: imageProvider,
+        fit: BoxFit.cover,
+      ),
+    ),
+    height: 155,
+  ),
+  placeholder: (context, url) => CircularProgressIndicator(), // Hiển thị khi đang tải ảnh
+  errorWidget: (context, url, error) => Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
+);
+                       
                       },
                     ),
                   );
