@@ -51,16 +51,15 @@ class ItemSearch extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Image.memory( base64Decode(imagePath))
-          //         child: CachedNetworkImage(
-          //   //          imageUrl: '${Image.memory( base64Decode(imagePath))}',
-          //   // 
-          //  imageUrl:'data:image/png;base64, ' + imagePath,
-          //           fit: BoxFit.cover,
-          //           placeholder: (context, url) =>
-          //               Center(child: CircularProgressIndicator()),
-          //           errorWidget: (context, url, error) => Icon(Icons.error),
-          //         ),
+                  
+                  child: CachedNetworkImage(
+           
+           imageUrl: imagePath,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
                 ),
               ),
               Expanded(
