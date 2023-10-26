@@ -100,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         if (response?.data['success'] == true) {
                           UserServices us = UserServices();
-                          await us.saveinfologin(_username);
+                          await us.saveinfologin(jsonEncode(response?.data['data']));
                           // final storage = new FlutterSecureStorage();
                          
                           print('${response?.data['data']}');

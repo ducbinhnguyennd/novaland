@@ -26,12 +26,9 @@ class TaikhoanScreen extends StatefulWidget {
 }
 
 class _TaikhoanScreenState extends State<TaikhoanScreen> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin{
-  final _storage = const FlutterSecureStorage();
-  String _email = '';
-  String _avatar = '';
-  String? _username;
+
   int _backButtonCount = 0;
-  UserTSH? currentUser;
+  Data? currentUser;
 
 _loadUser() {
     UserServices us = UserServices();
@@ -40,12 +37,13 @@ _loadUser() {
       
       if (value != "") {
         setState(() {
-        _username = value;
+          currentUser = Data.fromJson(jsonDecode(value));
+       
         });
         
       } else {
         setState(() {
-          _username = null;
+          currentUser = null;
         });
       }
     }, onError: (error) {
@@ -64,7 +62,7 @@ _loadUser() {
 
   @override
   Widget build(BuildContext context) {
-    if (_username == null){
+    if (currentUser == null){
       return LoginScreen();
     }
     else{
@@ -118,7 +116,7 @@ _loadUser() {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                             _username ?? 'Binhchos',
+                             currentUser?.user[0].username ?? 'Binhchos',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
@@ -171,7 +169,7 @@ _loadUser() {
                                   height: 10,
                                 ),
                                 Text(
-                                  'Ngọc Phiếu: ${_email}',
+                                  'Ngọc Phiếu: ${currentUser?.user[0].role}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -272,7 +270,7 @@ _loadUser() {
                             UserServices us = UserServices();
                             await us.deleteinfo();
                             setState(() {
-                              _username = null;
+                              currentUser = null;
                             });
                             print('Deleted user data.');
                           } catch (err) {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/model/trangchu_model.dart';
 
@@ -41,7 +42,7 @@ class MangaDetail {
 }  
 class ChapterDetail{
 
-static Future<List<String>> fetchChapterImages(String chapterId) async {
+static Future<ComicChapter> fetchChapterImages(String chapterId) async {
   final dio = Dio();
   final apiUrl = 'https://du-an-2023.vercel.app/chapter/$chapterId/images';
 
@@ -49,13 +50,16 @@ static Future<List<String>> fetchChapterImages(String chapterId) async {
     final response = await dio.get(apiUrl);
 
     if (response.statusCode == 200) {
-      final List<String> imageUrls = List<String>.from(response.data);
-      return imageUrls;
+      
+  ComicChapter myModel = ComicChapter.fromJson(response.data);
+      return myModel;
     } else {
       throw Exception('Failed to load chapter images');
     }
   } catch (e) {
+    print('loi o day nay :$e');
     throw Exception('Error: $e');
+
   }
 }
 }

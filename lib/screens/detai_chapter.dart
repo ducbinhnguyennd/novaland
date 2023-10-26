@@ -8,22 +8,23 @@ import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/strings_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
+import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/routes.dart';
 import 'package:loginapp/user_Service.dart';
 
 class DetailChapter extends StatefulWidget {
   final String chapterId;
-  final String storyName;
+   String? storyName;
   final String storyId;
-  const DetailChapter({super.key, required this.chapterId, required this.storyName, required this.storyId});
+   DetailChapter({super.key, required this.chapterId,  this.storyName, required this.storyId});
 
   @override
   State<DetailChapter> createState() => _DetailChapterState();
 }
 
 class _DetailChapterState extends State<DetailChapter> {
-  late Future<List<String>> chapterDetail;
+  ComicChapter? chapterDetail;
   bool _isShowBar = true;
   bool setStatelaidi = true;
    ScrollController _scrollController = ScrollController();
@@ -33,9 +34,13 @@ class _DetailChapterState extends State<DetailChapter> {
   void initState() {
     super.initState();
       UserServices us = UserServices();
-us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName , widget.storyId);
+us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName ?? 'loi' , widget.storyId);
     // _scrollController.addListener(_scrollListener);
-    chapterDetail = ChapterDetail.fetchChapterImages(widget.chapterId);
+    ChapterDetail.fetchChapterImages(widget.chapterId).then((value) {
+      setState(() {
+        chapterDetail = value;
+      });
+    });
   }
     @override
   void dispose() {
@@ -43,6 +48,95 @@ us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName , widget.storyId)
     super.dispose();
     _scrollController.dispose();
   }
+
+  Future<void> _goToNewChap(String chapId) async {
+    
+     await ChapterDetail.fetchChapterImages(
+          chapId
+        
+      ).then((value) {
+       
+        setState(() {
+          widget.storyName = 'doi duoc doi';
+          chapterDetail = value;
+        });
+        
+        
+        
+      });
+  }
+
+  Widget _buildBottomBar(ComicChapter? chap) {
+    final bool isFirstChapter =
+        chap?.prevChap == null;
+    final bool isNextChapter = chap?.nextChap == null;
+
+    return Stack(
+      children: [
+        Container(
+          color: ColorConst.colorBgNovelBlack.withOpacity(0.7),
+          // height: 56,
+        ),
+        SizedBox(
+          height: 56,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                child: Container(
+                  height: double.infinity,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      child: Icon(
+                        Icons.arrow_left,
+                        color: isFirstChapter
+                            ? ColorConst.colorWhite.withOpacity(0.5)
+                            : Colors.black,
+                        size: 20,
+                      ),
+                      onTap: () {
+                        isFirstChapter ?_showToast('banj dang doc chap dau thien'):
+                        _goToNewChap(chapterDetail?.prevChap?.id ?? '-1');
+                        ;
+                        // go to the previous chapter,
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              
+              Expanded(
+                child: Container(
+                  // width: 60,
+                  height: double.infinity,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      child: Icon(
+                        Icons.arrow_right,
+                        color: isNextChapter
+                            ? Colors.white.withOpacity(0.2)
+                            : Colors.black87,
+                        size: 20,
+                      ),
+                      onTap: () {
+                        isNextChapter?
+                        _showToast('ban dang doc chap moi nhat'):
+                       _goToNewChap(chapterDetail?.nextChap?.id ?? '-1');
+                       
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
 _buildNavbar() {
     return AppBar(
       // toolbarHeight: _isShowBar ? 100 : 0.0,
@@ -112,27 +206,11 @@ _buildNavbar() {
       body: Stack(
         children: [
           
-          FutureBuilder<List<String>>(
-            future: chapterDetail,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                if (snapshot.hasData) {
-                  List<String> imageUrls = snapshot.data!;
-                  return SingleChildScrollView(
-                    controller: _scrollController,
-                    child: ListView.builder(
-                      // controller: _scrollController,
-                      physics: NeverScrollableScrollPhysics(),
-                      // scrollDirection: Axis.vertical,
-                      itemCount: imageUrls.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                       return CachedNetworkImage(
-  imageUrl: imageUrls[index],
+          ListView.builder(
+            itemCount: chapterDetail?.images.length,
+            itemBuilder:(context, index) {
+            return CachedNetworkImage(
+  imageUrl: chapterDetail?.images[index] ?? '',
   imageBuilder: (context, imageProvider) => Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
@@ -146,16 +224,7 @@ _buildNavbar() {
   placeholder: (context, url) => CircularProgressIndicator(), // Hiển thị khi đang tải ảnh
   errorWidget: (context, url, error) => Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
 );
-                       
-                      },
-                    ),
-                  );
-                } else {
-                  return Center(child: Text('No data available.'));
-                }
-              }
-            },
-          ),
+          },),
           Positioned(
             top: 0,
             left: 0,
@@ -166,6 +235,16 @@ _buildNavbar() {
                   : 0.0,
               duration: const Duration(milliseconds: 200),
               child: _buildNavbar(),
+            ),
+          ),
+           Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AnimatedContainer(
+              height: _isShowBar ? 56.0 : 56,
+              duration: const Duration(milliseconds: 200),
+              child: _buildBottomBar(chapterDetail!),
             ),
           ),
         ],
