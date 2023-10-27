@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:html/dom.dart' as dom;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:html/parser.dart';
+import 'package:loginapp/Globals.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/strings_const.dart';
@@ -196,6 +198,96 @@ _buildNavbar() {
     if (!mounted) return;
     CommonService.showToast(ms, context);
   }
+
+  List<String> _extractImageUrlsFromHtml(String htmlString) {
+    List<String> imageUrls = [];
+    dom.DocumentFragment document = parseFragment(htmlString);
+    List<dom.Element> imgElements = document.querySelectorAll('img');
+    for (dom.Element imgElement in imgElements) {
+      String imageUrl = imgElement.attributes['src'] ?? '...';
+      if (imageUrl != null) {
+        if (imageUrl.startsWith('http')) imageUrls.add(imageUrl);
+        print(imageUrls);
+      }
+    }
+    return imageUrls;
+  }
+
+  List<String> extractImageUrlsFromHtml(String htmlString) {
+  List<String> imageUrls = [];
+  dom.DocumentFragment document = parseFragment(htmlString);
+  List<dom.Element> imgElements = document.querySelectorAll('img');
+  for (dom.Element imgElement in imgElements) {
+    String imageUrl = imgElement.attributes['src'] ?? '...';
+    if (imageUrl != null) {
+      imageUrls.add('https:$imageUrl');
+      print(imageUrls);
+    }
+  }
+  return imageUrls;
+}
+Widget _buildChapterBodyPartNormal(String sChapContent) {
+    List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
+    // List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
+
+    return Container(
+      child: imageUrls.isNotEmpty
+          ? InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              onTap: () {
+                setState(() {
+                  
+                });
+              },
+              child: SingleChildScrollView(
+                        controller: _scrollController,
+                        // physics: const CustomScrollPhysics(),
+                        padding: const EdgeInsets.only(bottom: 0, top: 0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: List.generate(
+                                imageUrls.length,
+                                (index) => CachedNetworkImage(
+                                  // filterQuality: FilterQuality.low,
+                                  fit: BoxFit.fitWidth,
+                                  width: MediaQuery.of(context).size.width,
+                                  imageUrl: imageUrls[index],
+                                  placeholder: (context, url) {
+                                    return Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: index < 5
+                                                ? 120
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    4),
+                                        child: CircularProgressIndicator
+                                            .adaptive(),
+                                      ),
+                                    );
+                                  },
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                              ),
+                            ),
+                            
+                          ],
+                        ),
+                      ),
+            )
+          : Container(
+              color: Colors.red,
+              height: 20,
+            ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,25 +298,58 @@ _buildNavbar() {
       body: Stack(
         children: [
           
-          ListView.builder(
-            itemCount: chapterDetail?.images.length,
-            itemBuilder:(context, index) {
-            return CachedNetworkImage(
-  imageUrl: chapterDetail?.images[index] ?? '',
-  imageBuilder: (context, imageProvider) => Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20),
-      image: DecorationImage(
-        image: imageProvider,
-        fit: BoxFit.cover,
-      ),
-    ),
-    height: 155,
-  ),
-  placeholder: (context, url) => CircularProgressIndicator(), // Hiển thị khi đang tải ảnh
-  errorWidget: (context, url, error) => Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
-);
-          },),
+           ListView.builder(
+             // controller: _scrollController,
+             physics: AlwaysScrollableScrollPhysics(),
+             // scrollDirection: Axis.vertical,
+             itemCount: chapterDetail?.images.length,
+             shrinkWrap: true,
+             itemBuilder: (context, index) {
+               print('thien de tien: ${chapterDetail?.images[index]}');
+                return _buildChapterBodyPartNormal(chapterDetail?.images[index] ?? '');
+             return SingleChildScrollView(
+                        controller: _scrollController,
+                        // physics: const CustomScrollPhysics(),
+                        padding: const EdgeInsets.only(bottom: 0, top: 0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: List.generate(
+                                chapterDetail?.images.length ?? 0,
+                                (index) => CachedNetworkImage(
+                                  // filterQuality: FilterQuality.low,
+                                  fit: BoxFit.fitWidth,
+                                  width: MediaQuery.of(context).size.width,
+                                  imageUrl: (chapterDetail?.images[index] ?? '').replaceAll('\r', ''),
+                                  placeholder: (context, url) {
+                                    return Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: index < 5
+                                                ? 120
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    4),
+                                        child: CircularProgressIndicator
+                                            .adaptive(),
+                                      ),
+                                    );
+                                  },
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                              ),
+                            ),
+                            
+                          ],
+                        ),
+                      );
+              
+             },
+           ),
           Positioned(
             top: 0,
             left: 0,
