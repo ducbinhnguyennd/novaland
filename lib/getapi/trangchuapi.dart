@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/model/trangchu_model.dart';
-
+   Dio dio = Dio();
 class MangaService {
-  static Dio dio = Dio();
+
   static String apiUrl = "https://du-an-2023.vercel.app/mangas";
 
   static Future<List<Manga>> fetchMangaList() async {
@@ -25,7 +25,7 @@ class MangaService {
   }
 }
 class MangaDetail {
-   static Dio dio = Dio();
+
   static String apiUrl = "https://du-an-2023.vercel.app/mangachitiet/";
 
   static Future<MangaDetailModel> fetchMangaDetail(String mangaId) async {
@@ -43,7 +43,7 @@ class MangaDetail {
 class ChapterDetail{
 
 static Future<ComicChapter> fetchChapterImages(String chapterId) async {
-  final dio = Dio();
+
   final apiUrl = 'https://du-an-2023.vercel.app/chapter/$chapterId/images';
 
   try {
@@ -62,5 +62,18 @@ static Future<ComicChapter> fetchChapterImages(String chapterId) async {
 
   }
 }
+}
+
+class ApiListYeuThich {
+  static Future<List<Manga>> fetchFavoriteManga(String userId) async {
+    final response = await dio
+        .get('https://du-an-2023.vercel.app/user/favoriteManga/$userId');
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = response.data;
+      return jsonData.map((mangaData) => Manga.fromJson(mangaData)).toList();
+    } else {
+      throw Exception('Failed to load favorite manga');
+    }
+  }
 }
   // static Future<MangaDetail> fromJson(json) {}}

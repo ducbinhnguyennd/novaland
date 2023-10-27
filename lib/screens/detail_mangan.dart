@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
@@ -11,6 +13,8 @@ import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/routes.dart';
 import 'package:loginapp/screens/detai_chapter.dart';
 import 'package:loginapp/user_Service.dart';
+
+import '../model/user_model.dart';
 
 class MangaDetailScreen extends StatefulWidget {
   final String mangaId;
@@ -29,12 +33,39 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   String? chapterDocTiepId;
   String? chapterDocTuDau;
   late TabController _controller;
+  
   int _currentTabIndex = 0;
   String chapterTitleDocTiep = "Đọc tiếp";
+  Data? currentUser;
+  _loadUser() {
+    UserServices us = UserServices();
+    us.getInfoLogin().then((value) {
+       print('binh bug 123:$value');
+      
+      if (value != "") {
+        setState(() {
+          currentUser = Data.fromJson(jsonDecode(value));
+       
+        });
+        
+      } else {
+        setState(() {
+          currentUser = null;
+        });
+      }
+    }, onError: (error) {
+      if (kDebugMode) {
+        print(
+            '_alexTR_logging_ : SettingPage: _loadUser: error: ${error.toString()}');
+      }
+    });
+  }
+  
   @override
   void initState() {
     super.initState();
     _loadData();
+    _loadUser();
     mangaDetail = MangaDetail.fetchMangaDetail(widget.mangaId);
     _controller = TabController(length: 3, vsync: this);
     _controller.addListener(_handleTabSelection);
@@ -45,30 +76,6 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
       _currentTabIndex = _controller.index;
     });
   }
-
-  // Widget buildGenresChips() {
-  //   if (_bookDetail!.genres != null && _bookDetail!.genres.isNotEmpty) {
-  //     List<String> genresList = _bookDetail!.genres.split(', ');
-
-  //     List<Widget> chips = genresList.map((genre) {
-  //       return Padding(
-  //         padding: const EdgeInsets.all(2.0),
-  //         child: Chip(
-  //           backgroundColor: ColorConst.colorWarning,
-  //           label: Text(
-  //             genre,
-  //             style: TextStyle(color: Colors.grey),
-  //           ),
-  //         ),
-  //       );
-  //     }).toList();
-  //     return Wrap(
-  //       children: chips,
-  //     );
-  //   } else {
-  //     return Text("Không có thể loại");
-  //   }
-  // }
 
   buildContent(String content) {
     return Text(content);
@@ -312,6 +319,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                 ),
                 SizedBox(height: 15),
                 buildContent(detail.content),
+                buildFavorite(),
                 buildDocTiep(detail)
               ],
             );
@@ -320,6 +328,51 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
           }
         }
       },
+    );
+  }
+
+  bool isLiked = false;
+  final dio = Dio();
+//  String userId = currentUser.user[0].id;
+
+  void toggleLike() async {
+    final apiUrl = isLiked
+        ? 'https://du-an-2023.vercel.app/user/removeFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}'
+        : 'https://du-an-2023.vercel.app/user/addFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}';
+
+    try {
+      final response =
+          isLiked ? await dio.post(apiUrl) : await dio.post(apiUrl);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          isLiked = !isLiked;
+        });
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Thành công'),
+              content: Text(
+                  'Truyện đã được ${isLiked ? 'Thêm yêu thích' : 'Bỏ yêu thích'}.'),
+            );
+          },
+        );
+      }
+    } catch (e) {
+      // Xử lý lỗi nếu có
+    }
+  }
+
+  buildFavorite() {
+    return InkWell(
+      onTap: toggleLike,
+      child: Icon(
+        isLiked ? Icons.favorite : Icons.favorite_border,
+        size: 100,
+        color: isLiked ? Colors.red : Colors.blue,
+      ),
     );
   }
 
@@ -363,15 +416,3 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     ];
   }
 }
-  // void _showToast(String ms) {
-  //   if (ms.contains(StringConst.textyeucaudangnhap)) {
-  //     // show snack bar login here,
-  //     CommonService.showSnackBar(StringConst.textyeucaudangnhap, context, () {
-  //       // go to login screen
-  //       RouteUtil.redirectToLoginScreen(context);
-  //     });
-
-  //     return;
-  //   }
-  //   CommonService.showToast(ms, context);
-  // }

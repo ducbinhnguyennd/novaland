@@ -7,6 +7,7 @@ import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/screen_tk/taikhoan.dart';
 import 'package:loginapp/screens/trangchupage.dart';
+import 'package:loginapp/screens/tutruyen_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -65,9 +66,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           controller: _tabController,
           children: <Widget>[
             HomePage(),
-            Center(
-              child: Text('Content for Tab 2'),
-            ),
+            FavoriteMangaScreen(),
            
              Center(
               child: Text('Content for Tab 2'),
