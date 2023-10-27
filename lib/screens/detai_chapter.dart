@@ -228,7 +228,9 @@ _buildNavbar() {
 }
 Widget _buildChapterBodyPartNormal(String sChapContent) {
     // List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
-    List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
+    // List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
+    List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
+    // List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
 
     return Container(
       child: imageUrls.isNotEmpty
@@ -307,8 +309,48 @@ Widget _buildChapterBodyPartNormal(String sChapContent) {
              itemBuilder: (context, index) {
                print('thien de tien: ${chapterDetail?.images[index]}');
                 return _buildChapterBodyPartNormal(chapterDetail?.images[index] ?? '');
-             
-              
+
+            //  return SingleChildScrollView(
+            //             controller: _scrollController,
+            //             // physics: const CustomScrollPhysics(),
+            //             padding: const EdgeInsets.only(bottom: 0, top: 0),
+            //             child: Column(
+            //               mainAxisAlignment: MainAxisAlignment.start,
+            //               crossAxisAlignment: CrossAxisAlignment.center,
+            //               children: [
+            //                 Column(
+            //                   children: List.generate(
+            //                     chapterDetail?.images.length ?? 0,
+            //                     (index) => CachedNetworkImage(
+            //                       // filterQuality: FilterQuality.low,
+            //                       fit: BoxFit.fitWidth,
+            //                       width: MediaQuery.of(context).size.width,
+            //                       imageUrl: (chapterDetail?.images[index] ?? '').replaceAll('\r', ''),
+            //                       placeholder: (context, url) {
+            //                         return Center(
+            //                           child: Padding(
+            //                             padding: EdgeInsets.symmetric(
+            //                                 vertical: index < 5
+            //                                     ? 120
+            //                                     : MediaQuery.of(context)
+            //                                             .size
+            //                                             .height /
+            //                                         4),
+            //                             child: CircularProgressIndicator
+            //                                 .adaptive(),
+            //                           ),
+            //                         );
+            //                       },
+            //                       errorWidget: (context, url, error) =>
+            //                           Icon(Icons.error),
+            //                     ),
+            //                   ),
+            //                 ),
+                            
+            //               ],
+            //             ),
+            //           );
+
              },
            ),
           Positioned(

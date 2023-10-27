@@ -25,8 +25,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     startSplashTimer();
-    checkFirstRead();
-    checkLoginStatus();
+    // checkFirstRead();
+    // checkLoginStatus();
   }
 
   @override
