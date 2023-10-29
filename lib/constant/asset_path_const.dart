@@ -20,7 +20,7 @@ class AssetsPathConst {
   static const String categoryBell = 'assets/images/bell.png';
   static const String categoryNew = 'assets/images/new.png';
   static const String categoryOffice = 'assets/images/office.png';
- 
+
   static const String categoryTop0 = 'assets/images/icontop0.png';
   static const String categoryTop1 = 'assets/images/icontop1.png';
   static const String categoryTop2 = 'assets/images/icontop2.png';
@@ -38,25 +38,20 @@ class AssetsPathConst {
   static const String categoryHot = 'assets/images/hot.png';
   static const String backgroundLogin = 'assets/images/bg_login.gif';
 
- static const String vuongmien = 'assets/images/vuongmien.png';
- static const String vip = 'assets/images/vip.png';
- static const String nen = 'assets/images/nen.png';
-
+  static const String vuongmien = 'assets/images/vuongmien.png';
+  static const String vip = 'assets/images/vip.png';
+  static const String nen = 'assets/images/nen.png';
 
   static const String ico_view = 'assets/icons/view.png';
 //icons
   static const String chap = 'assets/icons/chap.png';
   static const String logo = 'assets/icons/icons.png';
   static const String phanloai = 'assets/icons/phanloai.png';
-
-
+//follow
+  static const String icofollow = 'assets/images/icofollow.png';
+  static const String icodafollow = 'assets/images/icodafollow.png';
   static const String ico_hot = 'assets/images/hot.png';
-
 
   static const String theloai = 'assets/theloai/theloai';
   static const String bgintro = 'assets/images/bgintro.png';
-
-
-
-
 }

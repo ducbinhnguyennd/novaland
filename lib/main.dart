@@ -3,18 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:loginapp/login_screen.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/routes.dart';
+import 'package:loginapp/screen_tk/taikhoan.dart';
 import 'package:loginapp/screens/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  
-
-   MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -28,7 +26,6 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       routes: routes,
-      
       home: Builder(
         builder: (BuildContext context) => WillPopScope(
           onWillPop: () async {
@@ -48,6 +45,7 @@ class MyApp extends StatelessWidget {
             return false;
           },
           child: SplashScreen(),
+          // child: TaikhoanScreen(),
         ),
       ),
     );
