@@ -12,24 +12,22 @@ class ItemCardTaiKhoanWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  //fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                ),
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                //fontWeight: FontWeight.bold,
+                fontSize: 17,
               ),
-              Icon(Icons.arrow_forward),
-            ],
-          ),
+            ),
+            Icon(Icons.arrow_forward),
+          ],
         ),
       ),
     );

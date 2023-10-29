@@ -54,4 +54,22 @@ class AssetsPathConst {
 
   static const String theloai = 'assets/theloai/theloai';
   static const String bgintro = 'assets/images/bgintro.png';
+  //ico setting
+  static const String ico_1 = 'assets/images/icosetting/ico_1.png';
+  static const String ico_2 = 'assets/images/icosetting/ico_2.png';
+  static const String ico_3 = 'assets/images/icosetting/ico_3.png';
+  static const String ico_4 = 'assets/images/icosetting/ico_4.png';
+  static const String ico_5 = 'assets/images/icosetting/ico_5.png';
+  static const String ico_6 = 'assets/images/icosetting/ico_6.png';
+  static const String ico_7 = 'assets/images/icosetting/ico_7.png';
+  static const String ico_8 = 'assets/images/icosetting/ico_8.png';
+  static const String ico_9 = 'assets/images/icosetting/ico_9.png';
+  static const String ico_10 = 'assets/images/icosetting/ico_10.png';
+  static const String ico_11 = 'assets/images/icosetting/ico_11.png';
+  static const String ico_12 = 'assets/images/icosetting/ico_12.png';
+  static const String ico_13 = 'assets/images/icosetting/ico_13.png';
+  static const String ico_14 = 'assets/images/icosetting/ico_14.png';
+
+  static const String ico_face = 'assets/images/icosetting/ico_face.png';
+  static const String ico_tiktok = 'assets/images/icosetting/ico_tiktok.png';
 }
