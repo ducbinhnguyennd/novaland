@@ -14,7 +14,11 @@ class CategoryDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(categoryName),
       ),
-      body: ListView.builder(
+      body: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3, // Số cột
+          childAspectRatio: 2 / 3, // Tỷ lệ chiều rộng so với chiều cao của mỗi item
+        ),
         itemCount: categoryMangas.length,
         itemBuilder: (context, index) {
           return ItemTruyenMoi(

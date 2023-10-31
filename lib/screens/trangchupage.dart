@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/colors_const.dart';
+import 'package:loginapp/screens/category_screen.dart';
 import 'package:loginapp/screens/search_screen.dart';
 import 'package:loginapp/widgets/item_trangchu.dart';
 
@@ -43,36 +44,57 @@ class _HomePageState extends State<HomePage>
   Widget Search() {
     return Padding(
       padding: const EdgeInsets.all(22.0),
-      child: Container(
-        height: 40,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: ColorConst.colorPrimary),
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SearchScreen()),
-            );
-          },
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Text('Tìm kiếm truyện'),
-                Spacer(),
-                Icon(
-                  Icons.search,
-                  color: ColorConst.colorPrimary50,
-                )
-              ],
+      child: Row(
+        children: [
+          Expanded(
+            flex: 9,
+            child: Container(
+              height: 40,
+              
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: ColorConst.colorPrimary),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SearchScreen()),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Text('Tìm kiếm truyện'),
+                      Spacer(),
+                      Icon(
+                        Icons.search,
+                        color: ColorConst.colorPrimary50,
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
+          Expanded(
+            flex: 1,
+            child: IconButton(onPressed: (){
+             
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => CategoriesScreen(),
+                              ),
+                            );
+                          
+            }, icon: Icon(Icons.category)),
+          )
+        ],
       ),
     );
   }
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -91,56 +113,54 @@ class _HomePageState extends State<HomePage>
           // shrinkWrap: true,
           children: [
             Search(),
-            CarouselSlider(
-              options: CarouselOptions(
-                  height: 200,
-                  autoPlay: true,
-                  enableInfiniteScroll: false,
-                  enlargeCenterPage: true,
-                  aspectRatio: 16 / 9,
-                  viewportFraction: 0.8,
-                  autoPlayInterval: Duration(seconds: 2),
-                  onPageChanged: (index, reason) {
-                    // setState(() {
-                    //   _current = index;
-                    // });
-                  }),
-              items: itemList.map((item) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.blue,
+           SizedBox(
+            height: 200,
+                    child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: itemList.length,
+                        onPageChanged: (int page) {
+                          setState(() {
+                            _currentPage = page;
+                          });
+                        },
+                        itemBuilder: (context, index) {
+                          return Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(25),
+
+                              child: Image.network(
+                                itemList[index].image,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      child: Image.network(
-                        item.image,
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: itemList.map((item) {
-                int index = itemList.indexOf(item);
-                return Container(
-                  width: 8.0,
-                  height: 8.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _current == index
-                        ? ColorConst.colorPrimary30
-                        : Colors.grey,
+                    ),
                   ),
-                );
-              }).toList(),
-            ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(itemList.length, (index) {
+                      return Container(
+                        width: 10,
+                        height: 10,
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: ColorConst.colorPrimary80, width: 0.5),
+                          shape: BoxShape.circle,
+                          color: _currentPage == index
+                              ? ColorConst.colorPrimary30
+                              : Colors.transparent,
+                        ),
+                      );
+                    }),
+                  ),
+          
+          
             ItemTrangChu()
           ],
         ),

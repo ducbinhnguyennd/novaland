@@ -9,6 +9,7 @@ import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/constant/strings_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
+import 'package:loginapp/login_screen.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/routes.dart';
 import 'package:loginapp/screens/detai_chapter.dart';
@@ -66,7 +67,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     super.initState();
     _loadData();
     _loadUser();
-    mangaDetail = MangaDetail.fetchMangaDetail(widget.mangaId);
+    mangaDetail = MangaDetail.fetchMangaDetail(widget.mangaId,currentUser?.user[0].id ?? '');
     _controller = TabController(length: 3, vsync: this);
     _controller.addListener(_handleTabSelection);
   }
@@ -169,7 +170,23 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (mangaDetail == null) {
+  if(currentUser== null){
+      return  Scaffold(
+        body: Center(
+          child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginScreen(),
+                                  ),
+                                );
+              },
+              child: Text('Đăng nhập đi các cu em'),
+            
+          ),
+        ),
+      );
+    }else if (mangaDetail == null) {
       return Scaffold(
         appBar: AppBar(
           title: Text('Đang tải...'),

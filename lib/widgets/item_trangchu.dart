@@ -68,9 +68,16 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(category,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Thể loại ${category}',
+                                  style: TextStyle(
+                                      fontSize: 18, fontWeight: FontWeight.bold)),
+                                      Text('Xem thêm')
+                            
+                            ],
+                          ),
                         )),
                     // GridView(
                     //   // scrollDirection: Axis.horizontal,

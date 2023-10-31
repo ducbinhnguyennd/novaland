@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/screens/detail_mangan.dart';
+import 'package:loginapp/user_Service.dart';
 
 import '../model/trangchu_model.dart';
 
@@ -12,17 +15,36 @@ class FavoriteMangaScreen extends StatefulWidget {
 
 class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> {
   List<Manga> favoriteManga = [];
-  Data? user;
+  Data? currentUser;
   @override
   void initState() {
     super.initState();
+    _loadUser();
     fetchData();
+  }
+ _loadUser() {
+    UserServices us = UserServices();
+    us.getInfoLogin().then((value) {
+      print('binh bug 123:$value');
+
+      if (value != "") {
+        setState(() {
+          currentUser = Data.fromJson(jsonDecode(value));
+        });
+      } else {
+        setState(() {
+          currentUser = null;
+        });
+      }
+    }, onError: (error) {
+     
+    });
   }
 
   Future<void> fetchData() async {
     try {
       List<Manga> mangaList =
-          await ApiListYeuThich.fetchFavoriteManga('653a82bb9993ca568bf78ccf');
+          await ApiListYeuThich.fetchFavoriteManga(currentUser?.user[0].id ?? '');
       setState(() {
         favoriteManga = mangaList;
       });
@@ -33,11 +55,12 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(currentUser!.user[0].id);
     return Scaffold(
       appBar: AppBar(
         title: Text('Danh sách Manga Yêu Thích'),
       ),
-      body: ListView.builder(
+      body: currentUser ==null ? Text('Lỗi') : ListView.builder(
         itemCount: favoriteManga.length,
         itemBuilder: (context, index) {
           return ListTile(

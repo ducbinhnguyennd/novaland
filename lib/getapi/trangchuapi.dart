@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:loginapp/model/category_model.dart';
 import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/model/trangchu_model.dart';
@@ -26,12 +27,13 @@ class MangaService {
 }
 class MangaDetail {
 
-  static String apiUrl = "https://du-an-2023.vercel.app/mangachitiet/";
 
-  static Future<MangaDetailModel> fetchMangaDetail(String mangaId) async {
-    Response response = await dio.get(apiUrl+mangaId);
+  static Future<MangaDetailModel> fetchMangaDetail(String mangaId, String userId) async {
+  final apiUrl = "https://du-an-2023.vercel.app/mangachitiet/$mangaId/$userId";
+
+    Response response = await dio.get(apiUrl);
     if (response.statusCode == 200) {
-     
+      print('binhlogin - ${response.data}');
       final mangaDetail = MangaDetailModel.fromJson(response.data);
       return mangaDetail;
     } else {
@@ -69,11 +71,32 @@ class ApiListYeuThich {
     final response = await dio
         .get('https://du-an-2023.vercel.app/user/favoriteManga/$userId');
     if (response.statusCode == 200) {
+      print(response.data);
       final List<dynamic> jsonData = response.data;
       return jsonData.map((mangaData) => Manga.fromJson(mangaData)).toList();
     } else {
       throw Exception('Failed to load favorite manga');
     }
+  }
+}
+
+// cục thể loại
+class CategoryService {
+  final String apiUrl = 'https://du-an-2023.vercel.app/categorys';
+
+  Future<List<CategoryModel>> getCategories() async {
+    try {
+      final response = await dio.get(apiUrl);
+      if (response.statusCode == 200) {
+        List<CategoryModel> categories = (response.data as List)
+            .map((categoryData) => CategoryModel.fromJson(categoryData))
+            .toList();
+        return categories;
+      }
+    } catch (e) {
+      throw Exception('Failed to load categories');
+    }
+    return [];
   }
 }
   // static Future<MangaDetail> fromJson(json) {}}
