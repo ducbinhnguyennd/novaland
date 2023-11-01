@@ -20,7 +20,7 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> {
   void initState() {
     super.initState();
     _loadUser();
-    fetchData();
+    // fetchData();
   }
  _loadUser() {
     UserServices us = UserServices();
@@ -38,20 +38,28 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> {
       }
     }, onError: (error) {
      
-    });
-  }
-
-  Future<void> fetchData() async {
-    try {
+    }).then((value) async{
+       print('userid: ${currentUser?.user[0].id}');
       List<Manga> mangaList =
           await ApiListYeuThich.fetchFavoriteManga(currentUser?.user[0].id ?? '');
       setState(() {
         favoriteManga = mangaList;
       });
-    } catch (e) {
-      print('Error: $e');
-    }
+    });
   }
+
+  // Future<void> fetchData() async {
+  //   print('userid: ${currentUser?.user[0].id}');
+  //   try {
+  //     List<Manga> mangaList =
+  //         await ApiListYeuThich.fetchFavoriteManga(currentUser?.user[0].id ?? '');
+  //     setState(() {
+  //       favoriteManga = mangaList;
+  //     });
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

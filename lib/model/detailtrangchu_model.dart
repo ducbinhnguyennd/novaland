@@ -9,7 +9,7 @@ class MangaDetailModel {
   final int totalChapters;
   final List<Chapter> chapters;
 
-  final bool isLiked;
+   bool? isLiked;
 
 
   MangaDetailModel({
@@ -22,7 +22,7 @@ class MangaDetailModel {
     required this.like,
     required this.totalChapters,
     required this.chapters,
-    required this.isLiked,
+     this.isLiked,
   });
 
   factory MangaDetailModel.fromJson(Map<String, dynamic> json) {

@@ -14,6 +14,7 @@ import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/routes.dart';
 import 'package:loginapp/screens/detai_chapter.dart';
 import 'package:loginapp/user_Service.dart';
+import 'package:like_button/like_button.dart';
 
 import '../model/user_model.dart';
 
@@ -59,6 +60,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         print(
             '_alexTR_logging_ : SettingPage: _loadUser: error: ${error.toString()}');
       }
+    }).then((value) {
+       mangaDetail = MangaDetail.fetchMangaDetail(widget.mangaId,currentUser?.user[0].id ?? '');
     });
   }
   
@@ -67,7 +70,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     super.initState();
     _loadData();
     _loadUser();
-    mangaDetail = MangaDetail.fetchMangaDetail(widget.mangaId,currentUser?.user[0].id ?? '');
+   
     _controller = TabController(length: 3, vsync: this);
     _controller.addListener(_handleTabSelection);
   }
@@ -298,9 +301,11 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         } else {
           if (snapshot.hasData) {
             MangaDetailModel detail = snapshot.data!;
-            // print(
-            //   base64Decode(detail.image),
-            // );
+
+
+            print(
+             'binh oi cuu cuu ${detail.isLiked}',
+            );
             // Hiển thị thông tin chi tiết của Manga dựa trên dữ liệu detail.
             return Column(
               children: [
@@ -336,7 +341,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                 ),
                 SizedBox(height: 15),
                 buildContent(detail.content),
-                buildFavorite(),
+                buildFavorite(detail.isLiked!),
                 buildDocTiep(detail)
               ],
             );
@@ -348,31 +353,31 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     );
   }
 
-  bool isLiked = false;
+
   final dio = Dio();
 //  String userId = currentUser.user[0].id;
 
-  void toggleLike() async {
-    final apiUrl = isLiked
+  Future<bool> onLikeButtonTapped(bool isLiked) async {
+    print(currentUser!.user[0].id);
+    final apiUrl = isLiked 
         ? 'https://du-an-2023.vercel.app/user/removeFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}'
         : 'https://du-an-2023.vercel.app/user/addFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}';
 
     try {
       final response =
-          isLiked ? await dio.post(apiUrl) : await dio.post(apiUrl);
+          await dio.post(apiUrl);
 
       if (response.statusCode == 200) {
-        setState(() {
-          isLiked = !isLiked;
-        });
-
+      
+        
+        
         showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
               title: Text('Thành công'),
               content: Text(
-                  'Truyện đã được ${isLiked ? 'Thêm yêu thích' : 'Bỏ yêu thích'}.'),
+                  'Truyện đã được ${isLiked ? 'Bỏ yêu thích' : 'Thêm yêu thích'}.'),
             );
           },
         );
@@ -380,17 +385,29 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     } catch (e) {
       // Xử lý lỗi nếu có
     }
+    return !isLiked;
   }
 
-  buildFavorite() {
-    return InkWell(
-      onTap: toggleLike,
-      child: Icon(
-        isLiked ? Icons.favorite : Icons.favorite_border,
-        size: 100,
-        color: isLiked ? Colors.red : Colors.blue,
-      ),
-    );
+ buildFavorite(bool isLiked) {
+    return LikeButton(
+                      padding: EdgeInsets.only(left: 30),
+                      size: 25,
+                      circleColor: const CircleColor(
+                          start: Color(0xff00ddff), end: Color(0xff0099cc)),
+                      bubblesColor: const BubblesColor(
+                        dotPrimaryColor: Color(0xff33b5e5),
+                        dotSecondaryColor: Color(0xff0099cc),
+                      ),
+                      likeBuilder: (bool isLiked) {
+                        return Icon(
+                          isLiked == true ?
+                          Icons.favorite
+                          : Icons.favorite_border
+                          );
+                      },
+                      onTap:  onLikeButtonTapped,
+                    );
+ 
   }
 
   _buildTabBarTitlesList() {

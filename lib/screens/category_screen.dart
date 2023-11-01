@@ -29,9 +29,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               itemCount: categories!.length,
               itemBuilder: (context, index) {
                 final category = categories[index];
-                return ListTile(
-                  title: Text(category.categoryName),
-                  // Add navigation or other actions here
+                return InkWell(
+                  onTap: (() {
+                    
+                  }),
+                  child: ListTile(
+                    title: Text(category.categoryName),
+                    // Add navigation or other actions here
+                  ),
                 );
               },
             );
