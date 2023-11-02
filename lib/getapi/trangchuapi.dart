@@ -33,8 +33,9 @@ class MangaDetail {
 
     Response response = await dio.get(apiUrl);
     if (response.statusCode == 200) {
-      print('binhlogin - ${response.data}');
+      
       final mangaDetail = MangaDetailModel.fromJson(response.data);
+      print('binhlogin - ${mangaDetail}');
       return mangaDetail;
     } else {
       throw Exception('Không thể lấy dữ liệu từ API');

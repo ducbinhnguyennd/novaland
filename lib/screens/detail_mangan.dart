@@ -31,11 +31,11 @@ class MangaDetailScreen extends StatefulWidget {
 
 class _MangaDetailScreenState extends State<MangaDetailScreen>
     with TickerProviderStateMixin {
-  late Future<MangaDetailModel> mangaDetail;
+  MangaDetailModel? mangaDetail;
   String? chapterDocTiepId;
   String? chapterDocTuDau;
   late TabController _controller;
-  
+  bool nutlike = false;
   int _currentTabIndex = 0;
   String chapterTitleDocTiep = "Đọc tiếp";
   Data? currentUser;
@@ -61,7 +61,16 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
             '_alexTR_logging_ : SettingPage: _loadUser: error: ${error.toString()}');
       }
     }).then((value) {
-       mangaDetail = MangaDetail.fetchMangaDetail(widget.mangaId,currentUser?.user[0].id ?? '');
+        MangaDetail.fetchMangaDetail(widget.mangaId,currentUser?.user[0].id ?? '').then((value) {
+          print('value day $value');
+          setState(() {
+            
+            mangaDetail = value;
+            nutlike = mangaDetail?.isLiked ?? false;
+          });
+          
+        });
+       print('in data ra day $mangaDetail');
     });
   }
   
@@ -85,7 +94,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     return Text(content);
   }
 
-  buildDocTiep(MangaDetailModel detail) {
+  buildDocTiep(MangaDetailModel? detail) {
     return Container(
       child: Row(children: [
         InkWell(
@@ -94,7 +103,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
               context,
               MaterialPageRoute(
                 builder: (context) => DetailChapter(
-                  chapterId: chapterDocTiepId ?? detail.chapters[0].idchap,
+                  chapterId: chapterDocTiepId ?? detail?.chapters[0].idchap ?? '',
                   storyName: chapterTitleDocTiep,
                   storyId: widget.mangaId,
                 ),
@@ -221,29 +230,19 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   }
 
   Widget buildChapter() {
-    return FutureBuilder<MangaDetailModel>(
-      future: mangaDetail,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Đã xảy ra lỗi: ${snapshot.error}'));
-        } else {
-          if (snapshot.hasData) {
-            MangaDetailModel detail = snapshot.data!;
-            return ListView.builder(
+    return ListView.builder(
               shrinkWrap: true,
-              itemCount: detail.chapters.length,
+              itemCount: mangaDetail?.chapters.length,
               itemBuilder: (context, index) {
-                final chapter = detail.chapters[index];
+
                 return InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailChapter(
-                          chapterId: detail.chapters[index].idchap,
-                          storyName: detail.chapters[index].namechap,
+                          chapterId: mangaDetail?.chapters[index].idchap ?? '',
+                          storyName: mangaDetail?.chapters[index].namechap,
                           storyId: widget.mangaId,
                         ),
                       ),
@@ -254,18 +253,12 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                     });
                   },
                   child: ListTile(
-                    title: Text('Chapter ${chapter.namechap}'),
-                    subtitle: Text('Loại: ${chapter.viporfree}'),
+                    title: Text('Chapter ${mangaDetail?.chapters[index].namechap}'),
+                    subtitle: Text('Loại: ${mangaDetail?.chapters[index].viporfree}'),
                   ),
                 );
               },
             );
-          } else {
-            return Center(child: Text('Không có dữ liệu.'));
-          }
-        }
-      },
-    );
   }
 
   _loadData() {
@@ -291,29 +284,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   }
 
   Widget buildGioiThieu() {
-    return FutureBuilder<MangaDetailModel>(
-      future: mangaDetail,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Đã xảy ra lỗi: ${snapshot.error}');
-        } else {
-          if (snapshot.hasData) {
-            MangaDetailModel detail = snapshot.data!;
-
-
-            print(
-             'binh oi cuu cuu ${detail.isLiked}',
-            );
-            // Hiển thị thông tin chi tiết của Manga dựa trên dữ liệu detail.
-            return Column(
+    return Column(
               children: [
                 // Image.memory(
                 //   base64Decode(detail.image),
                 // ),
                 CachedNetworkImage(
-                  imageUrl: detail.image,
+                  imageUrl: mangaDetail?.image ?? '',
                   imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -328,38 +305,30 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                   errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
 
-                Text('Tác giả: ${detail.author}'),
+                Text('Tác giả: ${mangaDetail?.author}'),
                 // Text('Tên Manga: ${detail.category}'),
-                Text('Thể loại: ${detail.category}'),
+                Text('Thể loại: ${mangaDetail?..category}'),
                 // buildGenresChips(),
-                buildThongSo(detail.like.toString(), detail.view.toString(),
-                    detail.totalChapters.toString()),
+                buildThongSo(mangaDetail!.like.toString(), mangaDetail!.view.toString(),
+                    mangaDetail!.totalChapters.toString()),
                 SizedBox(height: 15),
                 Divider(
                   color: Colors.grey,
                   height: 0.2,
                 ),
                 SizedBox(height: 15),
-                buildContent(detail.content),
-                buildFavorite(detail.isLiked!),
-                buildDocTiep(detail)
+                buildContent(mangaDetail!.content),
+                buildFavorite(),
+                buildDocTiep(mangaDetail!)
               ],
             );
-          } else {
-            return Text('Không có dữ liệu.');
-          }
-        }
-      },
-    );
   }
-
 
   final dio = Dio();
 //  String userId = currentUser.user[0].id;
 
-  Future<bool> onLikeButtonTapped(bool isLiked) async {
-    print(currentUser!.user[0].id);
-    final apiUrl = isLiked 
+  void toggleLike() async {
+    final apiUrl = nutlike
         ? 'https://du-an-2023.vercel.app/user/removeFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}'
         : 'https://du-an-2023.vercel.app/user/addFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}';
 
@@ -369,7 +338,9 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
 
       if (response.statusCode == 200) {
       
-        
+        setState(() {
+          nutlike = !nutlike;
+        });
         
         showDialog(
           context: context,
@@ -377,7 +348,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
             return AlertDialog(
               title: Text('Thành công'),
               content: Text(
-                  'Truyện đã được ${isLiked ? 'Bỏ yêu thích' : 'Thêm yêu thích'}.'),
+                  'Truyện đã được ${nutlike ? 'Bỏ yêu thích' : 'Thêm yêu thích'}.'),
             );
           },
         );
@@ -385,30 +356,42 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     } catch (e) {
       // Xử lý lỗi nếu có
     }
-    return !isLiked;
+    
   }
-
- buildFavorite(bool isLiked) {
-    return LikeButton(
-                      padding: EdgeInsets.only(left: 30),
-                      size: 25,
-                      circleColor: const CircleColor(
-                          start: Color(0xff00ddff), end: Color(0xff0099cc)),
-                      bubblesColor: const BubblesColor(
-                        dotPrimaryColor: Color(0xff33b5e5),
-                        dotSecondaryColor: Color(0xff0099cc),
-                      ),
-                      likeBuilder: (bool isLiked) {
-                        return Icon(
-                          isLiked == true ?
-                          Icons.favorite
-                          : Icons.favorite_border
-                          );
-                      },
-                      onTap:  onLikeButtonTapped,
-                    );
+buildFavorite() {
+    return InkWell(
+      onTap: toggleLike,
+      child: Icon(
+        nutlike? Icons.favorite : Icons.favorite_border,
+        size: 100,
+        color: nutlike  ? Colors.red : Colors.blue,
+      ),
+    );
+  }
+//  buildFavorite() {
+  
+//   return
+//     return LikeButton(
+//                       padding: EdgeInsets.only(left: 30),
+//                       size: 25,
+//                       circleColor: const CircleColor(
+//                           start: Color(0xff00ddff), end: Color(0xff0099cc)),
+//                       bubblesColor: const BubblesColor(
+//                         dotPrimaryColor: Color(0xff33b5e5),
+//                         dotSecondaryColor: Color(0xff0099cc),
+//                       ),
+//                       likeBuilder: (bool isLiked) {
+//                         print('like trong day $isLiked');
+//                         return Icon(
+//                           test == 1  ?
+//                           Icons.favorite
+//                           : Icons.favorite_border
+//                           );
+//                       },
+//                       onTap:  onLikeButtonTapped,
+//                     );
  
-  }
+//   }
 
   _buildTabBarTitlesList() {
     return [
