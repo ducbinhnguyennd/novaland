@@ -100,4 +100,26 @@ class CategoryService {
     return [];
   }
 }
-  // static Future<MangaDetail> fromJson(json) {}}
+  //thanh toán
+  class ApiThanhToan {
+  static Future<void> sendPaymentData(String userId, double totalAmount, String currency) async {
+    final url = 'https://du-an-2023.vercel.app/pay/$userId';
+    try {
+      final response = await dio.post(
+        url,
+        data: {
+          'totalAmount': totalAmount.toString(),
+          'currency': currency,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('binh thanh toan ${response.data}');
+      } else {
+        print('loi');
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+}

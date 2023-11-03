@@ -25,8 +25,7 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> {
  _loadUser() {
     UserServices us = UserServices();
     us.getInfoLogin().then((value) {
-      print('binh bug 123:$value');
-
+    
       if (value != "") {
         setState(() {
           currentUser = Data.fromJson(jsonDecode(value));
@@ -63,12 +62,17 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(currentUser!.user[0].id);
+    // print(currentUser!.user[0].id);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Danh sách Manga Yêu Thích'),
-      ),
-      body: currentUser ==null ? Text('Lỗi') : ListView.builder(
+      
+      body: currentUser ==null ?Scaffold(
+        appBar: AppBar(
+          title: Text('Man hinh theo doi'),
+        ),
+        body: Text('ddang nhap di')
+              
+            
+      ): ListView.builder(
         itemCount: favoriteManga.length,
         itemBuilder: (context, index) {
           return ListTile(

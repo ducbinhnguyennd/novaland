@@ -42,7 +42,6 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   _loadUser() {
     UserServices us = UserServices();
     us.getInfoLogin().then((value) {
-       print('binh bug 123:$value');
       
       if (value != "") {
         setState(() {

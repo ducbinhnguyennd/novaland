@@ -24,7 +24,7 @@ final Map<String, WidgetBuilder> routes = {
   LichSuGiaoDich.routeName: (context) => const LichSuGiaoDich(),
   LienHe.routeName: (context) => const LienHe(),
   XoaTaiKhoan.routeName: (context) => const XoaTaiKhoan(),
-  ThemTienThach.routeName: (context) => const ThemTienThach(),
+  ThemTienThach.routeName: (context) => ThemTienThach(),
 };
 class CustomPageRouteBuilder<T> extends PageRoute<T> {
   final RoutePageBuilder pageBuilder;

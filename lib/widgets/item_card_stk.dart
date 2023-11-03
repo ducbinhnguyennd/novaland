@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class ItemCardStk extends StatelessWidget {
   const ItemCardStk(
       {super.key,
-      required this.title,
+      required this.tien,
       required this.onTap,
-      required this.imagestk});
-  final String title;
-  final String imagestk;
+      required this.loaitien});
+  final String tien;
+  final String loaitien;
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
@@ -16,20 +16,9 @@ class ItemCardStk extends StatelessWidget {
         onTap: () {},
         child: Column(
           children: [
-            Container(
-              margin: const EdgeInsets.only(left: 10),
-              // width: 100,
-              height: 60,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(imagestk),
-                  fit: BoxFit.contain,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(50)),
-              ),
-            ),
+            Text(tien),
             Text(
-              title,
+              loaitien,
               style: TextStyle(fontSize: 17),
             ),
             SizedBox(

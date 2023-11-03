@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/constant/strings_const.dart';
+import 'package:fluttertoast/fluttertoast.dart' as ftoast;
 
 class CommonService {
   static void showSnackBar(String ms, BuildContext context, Function? callback, {String title = StringConst.login}) {

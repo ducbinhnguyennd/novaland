@@ -1,89 +1,97 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:loginapp/widgets/item_card_stk.dart';
+import 'package:loginapp/getapi/trangchuapi.dart';
+import 'package:loginapp/model/user_model.dart';
+import 'package:loginapp/user_Service.dart';
 
 class ThemTienThach extends StatefulWidget {
-  const ThemTienThach({super.key});
   static const routeName = 'themtienthach';
 
   @override
-  State<ThemTienThach> createState() => _ThemTienThachState();
+  _ThemTienThachState createState() => _ThemTienThachState();
 }
 
 class _ThemTienThachState extends State<ThemTienThach> {
-  List<String> names = [];
-  List<String> imageList = [
-    'assets/images/tcb.jpg',
-    'assets/images/vtb.jpg',
-    'assets/images/bidv.jpg',
-    'assets/images/acb.png',
-    'assets/images/mbb.png',
-    'assets/images/mbb.png',
-  ];
-
-  final _storage = const FlutterSecureStorage();
-
-  Future<void> fetchData() async {
-    var dio = Dio();
-    try {
-      var response = await dio.get(
-        'https://ttg5androidapi.g5manhua.com/api/newstory/getlistnganhang',
-        options: Options(
-          headers: {
-            'content-type': 'application/x-www-form-urlencoded',
-          },
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        var responseData = response.data;
-        if (responseData['success']) {
-          var dataList = responseData['data'];
-          if (dataList is List && dataList.isNotEmpty) {
-            setState(() {
-              names = dataList.map((item) => item['name'] as String).toList();
-            });
-          }
-        } else {
-          print('API request failed');
-        }
+  Data? currentUser;
+   _loadUser() {
+    UserServices us = UserServices();
+    us.getInfoLogin().then((value) {
+    
+      if (value != "") {
+        setState(() {
+          currentUser = Data.fromJson(jsonDecode(value));
+        });
       } else {
-        print('API response status: ${response.statusCode}');
+        setState(() {
+          currentUser = null;
+        });
       }
-    } catch (e) {
-      print('API request error: $e');
+    }, onError: (error) {
+     
+    }).then((value) async{
+       
+          // _sendPaymentData()
+      
+    });
+  }
+ Future<void> _sendPaymentData(String userId, double amount, String currency) async {
+    print('day id khac ${userId}');
+    try {
+      await ApiThanhToan.sendPaymentData(userId, amount, currency);
+    } catch (error) {
+      print('loi cmnr $error');
     }
   }
 
+    
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
+  
+    _loadUser();
 
+  }
+  final List<PaymentItem> paymentItems = [
+    PaymentItem(amount: 10.0, currency: 'USD'),
+    PaymentItem(amount: 20.0, currency: 'USD'),
+    PaymentItem(amount: 30.0, currency: 'USD'),
+  ];
+
+ 
   @override
   Widget build(BuildContext context) {
+    print('day ${currentUser?.user[0].id}');
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text('Thanh toán'),
-        backgroundColor: Colors.purple,
+        title: Text('Nạp tiền'),
       ),
-      body: Container(
-        height: 500,
-        child: ListView.builder(
-          itemCount: names.length,
-          itemBuilder: (context, index) {
-            return ItemCardStk(
-                title: names[index], onTap: () {}, imagestk: imageList[index]);
-          },
-        ),
+      body: ListView.builder(
+        itemCount: paymentItems.length,
+        itemBuilder: (context, index) {
+          final item = paymentItems[index];
+          return ListTile(
+            title: Text(
+              'Số tiền: ${item.amount.toStringAsFixed(2)} ${item.currency}',
+              style: TextStyle(fontSize: 24),
+            ),
+            trailing: ElevatedButton(
+              onPressed: () => _sendPaymentData(currentUser?.user[0].id ?? '' ,item.amount, item.currency),
+              child: Text('Nạp tiền'),
+            ),
+          );
+        },
       ),
     );
   }
+}
+
+class PaymentItem {
+  final double amount;
+  final String currency;
+
+  PaymentItem({
+    required this.amount,
+    required this.currency,
+  });
 }

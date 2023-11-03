@@ -284,10 +284,7 @@ Widget _buildChapterBodyPartNormal(String sChapContent) {
                         ),
                       ),
             )
-          : Container(
-              color: Colors.red,
-              height: 20,
-            ),
+          : Center(child: CircularProgressIndicator(),)
     );
   }
   @override
@@ -307,7 +304,7 @@ Widget _buildChapterBodyPartNormal(String sChapContent) {
              itemCount: chapterDetail?.images.length,
              shrinkWrap: true,
              itemBuilder: (context, index) {
-               print('thien de tien: ${chapterDetail?.images[index]}');
+               print('${chapterDetail?.images[index]}');
                 return _buildChapterBodyPartNormal(chapterDetail?.images[index] ?? '');
 
             //  return SingleChildScrollView(
@@ -372,7 +369,7 @@ Widget _buildChapterBodyPartNormal(String sChapContent) {
             child: AnimatedContainer(
               height: _isShowBar ? 56.0 : 56,
               duration: const Duration(milliseconds: 200),
-              child: _buildBottomBar(chapterDetail!),
+              child: _buildBottomBar(chapterDetail),
             ),
           ),
         ],
