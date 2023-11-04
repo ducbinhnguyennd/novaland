@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:loginapp/model/category_model.dart';
 import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
+import 'package:loginapp/model/lichsuthanhtoan_model.dart';
 import 'package:loginapp/model/trangchu_model.dart';
    Dio dio = Dio();
 class MangaService {
@@ -120,6 +121,40 @@ class CategoryService {
       }
     } catch (error) {
       print(error);
+    }
+  }
+}
+// post comment
+class CommentService {
+  static Future<void> postComment(String userId, String mangaId, String comment) async {
+    final dio = Dio();
+    try {
+      final response = await dio.post(
+          'https://du-an-2023.vercel.app/postcomment/$userId/$mangaId',
+          data: {'comment': comment});
+      if (response.statusCode == 200) {
+         print('binh cmt ${response.data}');
+      } else {
+        print('Loi cmnr');
+      }
+    } catch (e) {
+      // Handle Dio exception
+      print('Error: $e');
+    }
+  }
+}
+// lịch sử thanh toán
+class PaymentApi {
+ 
+  final String baseUrl = 'https://du-an-2023.vercel.app';
+
+  Future<List<PaymentHistory>> getPaymentHistory(String userId) async {
+    final response = await dio.get('$baseUrl/paymentdetail/$userId');
+    if (response.statusCode == 200) {
+      final List<dynamic> data = response.data;
+      return data.map((item) => PaymentHistory.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to fetch payment history');
     }
   }
 }

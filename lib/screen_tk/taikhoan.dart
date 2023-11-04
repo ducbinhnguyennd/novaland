@@ -133,6 +133,13 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                           fontSize: 18,
                           color: Colors.black),
                     ),
+                     Text(
+                      currentUser?.user[0].coin.toString() ?? 'Xu nef',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black),
+                    ),
                   ],
                 ),
               ],
@@ -286,11 +293,13 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
           ),
           InkWell(
             onTap: () {
-              // if (currentUser != null && currentUser?.user != null) {
-              //   Navigator.of(context).pushNamed(LichSuGiaoDich.routeName);
-              // } else {
-              //   // _showToast(StringConst.textyeucaudangnhap);
-              // }
+             
+  
+
+ Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>  LichSuGiaoDich(userId: currentUser?.user[0].id ?? '')),
+  );
             },
             child: ListTile(
                 title: Transform.translate(

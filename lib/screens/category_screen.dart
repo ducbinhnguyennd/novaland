@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/category_model.dart';
+import 'package:loginapp/screens/manhinhdetail_theloai.dart';
 
 class CategoriesScreen extends StatefulWidget {
   @override
@@ -14,7 +16,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Categories'),
+        backgroundColor: ColorConst.colorPrimary50,
+        title: Text('Màn hình thể loại'),
       ),
       body: FutureBuilder<List<CategoryModel>>(
         future: categoryService.getCategories(),
@@ -25,17 +28,27 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             return Text('Error: ${snapshot.error}');
           } else {
             final categories = snapshot.data;
-            return ListView.builder(
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 4/2
+              ),
               itemCount: categories!.length,
               itemBuilder: (context, index) {
                 final category = categories[index];
                 return InkWell(
-                  onTap: (() {
-                    
-                  }),
-                  child: ListTile(
-                    title: Text(category.categoryName),
-                    // Add navigation or other actions here
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => MangaListScreen(category: category),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    color: ColorConst.colorPrimary80,
+                    child: Center(
+                      child: Text(category.categoryName),
+                    ),
                   ),
                 );
               },

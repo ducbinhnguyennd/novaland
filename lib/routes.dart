@@ -21,7 +21,6 @@ final Map<String, WidgetBuilder> routes = {
   HuongDanScreen.routeName: (context) => const HuongDanScreen(),
   SuaThongTin.routeName: (context) => const SuaThongTin(),
   DoiMatKhau.routeName: (context) => const DoiMatKhau(),
-  LichSuGiaoDich.routeName: (context) => const LichSuGiaoDich(),
   LienHe.routeName: (context) => const LienHe(),
   XoaTaiKhoan.routeName: (context) => const XoaTaiKhoan(),
   ThemTienThach.routeName: (context) => ThemTienThach(),

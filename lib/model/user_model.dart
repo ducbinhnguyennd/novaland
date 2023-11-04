@@ -37,6 +37,7 @@ class UserTSH {
   String username;
   String password;
   String role;
+  int coin;
 
 
   UserTSH({
@@ -44,6 +45,7 @@ class UserTSH {
     required this.username,
     required this.password,
     required this.role,
+    required this.coin
   });
 
   factory UserTSH.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class UserTSH {
       username: json['username'],
       password: json['password'],
       role: json['role'],
+      coin: json['coin']
     );
   }
 }

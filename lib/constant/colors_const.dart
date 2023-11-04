@@ -4,7 +4,7 @@ class ColorConst {
   static const Color colorPrimary = Color(0xffFFA1A9);
   static const Color colorPrimary30 = Color(0xffED4264);
   static const Color colorPrimary50 = Color(0xffFF4D6D);
-  static const Color colorPrimary80 = Color(0xffFFA1A9);
+  static const Color colorPrimary80 = Color.fromARGB(255, 244, 217, 219);
   static const Color colorPrimary120 = Color(0xffFFA1A9);
   static const Color colorSecondary = Color(0xffFFA1A9);
   static const Color colorTertiary = Color(0xffFFA1A9);

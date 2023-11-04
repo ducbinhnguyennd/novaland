@@ -8,6 +8,7 @@ class MangaDetailModel {
   final int like;
   final int totalChapters;
   final List<Chapter> chapters;
+  final List<Comments> cmts;
 
    bool? isLiked;
 
@@ -22,6 +23,7 @@ class MangaDetailModel {
     required this.like,
     required this.totalChapters,
     required this.chapters,
+    required this.cmts,
      this.isLiked,
   });
 
@@ -29,7 +31,9 @@ class MangaDetailModel {
     List<Chapter> chapterList = (json['chapters'] as List).map((chapterJson) {
       return Chapter.fromJson(chapterJson);
     }).toList();
-   
+   List<Comments> cmtList = (json['comments'] as List).map((cmtJson) {
+      return Comments.fromJson(cmtJson);
+    }).toList();
     return MangaDetailModel(
       mangaName: json['manganame'],
       author: json['author'],
@@ -40,6 +44,7 @@ class MangaDetailModel {
       like: json['like'],
       totalChapters: json['totalChapters'],
       chapters: chapterList,
+      cmts: cmtList,
       isLiked: json['isLiked']
    
     );
@@ -62,6 +67,25 @@ class Chapter {
       idchap: json['idchap'],
       namechap: json['namechap'],
       viporfree: json['viporfree'],
+    );
+  }
+}
+class Comments {
+  final String idcmt;
+  final String usernamecmt;
+  final String noidung;
+
+  Comments({
+    required this.idcmt,
+    required this.usernamecmt,
+    required this.noidung,
+  });
+
+  factory Comments.fromJson(Map<String, dynamic> json) {
+    return Comments(
+      idcmt: json['userID'],
+      usernamecmt: json['username'],
+      noidung: json['cmt'],
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/double_x.dart';
@@ -42,13 +43,10 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   _loadUser() {
     UserServices us = UserServices();
     us.getInfoLogin().then((value) {
-      
       if (value != "") {
         setState(() {
           currentUser = Data.fromJson(jsonDecode(value));
-       
         });
-        
       } else {
         setState(() {
           currentUser = null;
@@ -60,25 +58,25 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
             '_alexTR_logging_ : SettingPage: _loadUser: error: ${error.toString()}');
       }
     }).then((value) {
-        MangaDetail.fetchMangaDetail(widget.mangaId,currentUser?.user[0].id ?? '').then((value) {
-          print('value day $value');
-          setState(() {
-            
-            mangaDetail = value;
-            nutlike = mangaDetail?.isLiked ?? false;
-          });
-          
+      MangaDetail.fetchMangaDetail(
+              widget.mangaId, currentUser?.user[0].id ?? '')
+          .then((value) {
+        print('value day $value');
+        setState(() {
+          mangaDetail = value;
+          nutlike = mangaDetail?.isLiked ?? false;
         });
-       print('in data ra day $mangaDetail');
+      });
+      print('in data ra day $mangaDetail');
     });
   }
-  
+
   @override
   void initState() {
     super.initState();
     _loadData();
     _loadUser();
-   
+
     _controller = TabController(length: 3, vsync: this);
     _controller.addListener(_handleTabSelection);
   }
@@ -102,7 +100,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
               context,
               MaterialPageRoute(
                 builder: (context) => DetailChapter(
-                  chapterId: chapterDocTiepId ?? detail?.chapters[0].idchap ?? '',
+                  chapterId:
+                      chapterDocTiepId ?? detail?.chapters[0].idchap ?? '',
                   storyName: chapterTitleDocTiep,
                   storyId: widget.mangaId,
                 ),
@@ -181,23 +180,22 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-  if(currentUser== null){
-      return  Scaffold(
+    if (currentUser == null) {
+      return Scaffold(
         body: Center(
           child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginScreen(),
-                                  ),
-                                );
-              },
-              child: Text('Đăng nhập đi các cu em'),
-            
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ),
+              );
+            },
+            child: Text('Đăng nhập đi các cu em'),
           ),
         ),
       );
-    }else if (mangaDetail == null) {
+    } else if (mangaDetail == null) {
       return Scaffold(
         appBar: AppBar(
           title: Text('Đang tải...'),
@@ -216,13 +214,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         ),
         body: TabBarView(
           controller: _controller,
-          children: <Widget>[
-            buildGioiThieu(),
-            buildChapter(),
-            Center(
-              child: Text("It's sunny here"),
-            ),
-          ],
+          children: <Widget>[buildGioiThieu(), buildChapter(), buildComments()],
         ),
       );
     }
@@ -230,34 +222,103 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
 
   Widget buildChapter() {
     return ListView.builder(
-              shrinkWrap: true,
-              itemCount: mangaDetail?.chapters.length,
-              itemBuilder: (context, index) {
+      shrinkWrap: true,
+      itemCount: mangaDetail?.chapters.length,
+      itemBuilder: (context, index) {
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailChapter(
+                  chapterId: mangaDetail?.chapters[index].idchap ?? '',
+                  storyName: mangaDetail?.chapters[index].namechap,
+                  storyId: widget.mangaId,
+                ),
+              ),
+            ).then((value) {
+              setState(() {
+                _loadData();
+              });
+            });
+          },
+          child: ListTile(
+            title: Text('Chapter ${mangaDetail?.chapters[index].namechap}'),
+            subtitle: Text('Loại: ${mangaDetail?.chapters[index].viporfree}'),
+          ),
+        );
+      },
+    );
+  }
 
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailChapter(
-                          chapterId: mangaDetail?.chapters[index].idchap ?? '',
-                          storyName: mangaDetail?.chapters[index].namechap,
-                          storyId: widget.mangaId,
-                        ),
-                      ),
-                    ).then((value) {
-                      setState(() {
-                        _loadData();
-                      });
-                    });
-                  },
-                  child: ListTile(
-                    title: Text('Chapter ${mangaDetail?.chapters[index].namechap}'),
-                    subtitle: Text('Loại: ${mangaDetail?.chapters[index].viporfree}'),
-                  ),
-                );
-              },
+  final TextEditingController commentController = TextEditingController();
+  Widget buildComments() {
+    return Column(
+      children: [
+       Expanded(
+  child: mangaDetail!.cmts.isEmpty
+      ? Center(
+          child: Text('Chưa có bình luận'),
+        )
+      : ListView.builder(
+          shrinkWrap: true,
+          itemCount: mangaDetail?.cmts.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('Username ${mangaDetail?.cmts[index].usernamecmt}'),
+              subtitle: Text('Nội dung: ${mangaDetail?.cmts[index].noidung}'),
             );
+          },
+        ),
+),
+
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),color: ColorConst.colorPrimary120
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: commentController,
+                      decoration: InputDecoration(labelText: 'Nhập bình luận', focusColor: Colors.black,),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      String comment = commentController.text;
+                      if (comment.isNotEmpty && comment.length >= 10) {
+                         Fluttertoast.showToast(
+                          msg: "Đăng bình luận thành công",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                        );
+                        CommentService.postComment(
+                            currentUser?.user[0].id ?? '', widget.mangaId, comment);
+                        commentController.clear();
+    _loadData();
+
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: "Nhập ít nhất 10 kí tự",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                        );
+                      }
+                    },
+                    child: Icon(Icons.send_rounded, color: ColorConst.colorPrimary50,),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   _loadData() {
@@ -284,43 +345,43 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
 
   Widget buildGioiThieu() {
     return Column(
-              children: [
-                // Image.memory(
-                //   base64Decode(detail.image),
-                // ),
-                CachedNetworkImage(
-                  imageUrl: mangaDetail?.image ?? '',
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    height: 155,
-                  ),
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
+      children: [
+        // Image.memory(
+        //   base64Decode(detail.image),
+        // ),
+        CachedNetworkImage(
+          imageUrl: mangaDetail?.image ?? '',
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
+              ),
+            ),
+            height: 155,
+          ),
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+        ),
 
-                Text('Tác giả: ${mangaDetail?.author}'),
-                // Text('Tên Manga: ${detail.category}'),
-                Text('Thể loại: ${mangaDetail?..category}'),
-                // buildGenresChips(),
-                buildThongSo(mangaDetail!.like.toString(), mangaDetail!.view.toString(),
-                    mangaDetail!.totalChapters.toString()),
-                SizedBox(height: 15),
-                Divider(
-                  color: Colors.grey,
-                  height: 0.2,
-                ),
-                SizedBox(height: 15),
-                buildContent(mangaDetail!.content),
-                buildFavorite(),
-                buildDocTiep(mangaDetail!)
-              ],
-            );
+        Text('Tác giả: ${mangaDetail?.author}'),
+        // Text('Tên Manga: ${detail.category}'),
+        Text('Thể loại: ${mangaDetail?..category}'),
+        // buildGenresChips(),
+        buildThongSo(mangaDetail!.like.toString(), mangaDetail!.view.toString(),
+            mangaDetail!.totalChapters.toString()),
+        SizedBox(height: 15),
+        Divider(
+          color: Colors.grey,
+          height: 0.2,
+        ),
+        SizedBox(height: 15),
+        buildContent(mangaDetail!.content),
+        buildFavorite(),
+        buildDocTiep(mangaDetail!)
+      ],
+    );
   }
 
   final dio = Dio();
@@ -332,15 +393,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         : 'https://du-an-2023.vercel.app/user/addFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}';
 
     try {
-      final response =
-          await dio.post(apiUrl);
+      final response = await dio.post(apiUrl);
 
       if (response.statusCode == 200) {
-      
         setState(() {
           nutlike = !nutlike;
         });
-        
+
         showDialog(
           context: context,
           builder: (context) {
@@ -355,42 +414,18 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     } catch (e) {
       // Xử lý lỗi nếu có
     }
-    
   }
-buildFavorite() {
+
+  buildFavorite() {
     return InkWell(
       onTap: toggleLike,
       child: Icon(
-        nutlike? Icons.favorite : Icons.favorite_border,
+        nutlike ? Icons.favorite : Icons.favorite_border,
         size: 100,
-        color: nutlike  ? Colors.red : Colors.blue,
+        color: nutlike ? Colors.red : Colors.blue,
       ),
     );
   }
-//  buildFavorite() {
-  
-//   return
-//     return LikeButton(
-//                       padding: EdgeInsets.only(left: 30),
-//                       size: 25,
-//                       circleColor: const CircleColor(
-//                           start: Color(0xff00ddff), end: Color(0xff0099cc)),
-//                       bubblesColor: const BubblesColor(
-//                         dotPrimaryColor: Color(0xff33b5e5),
-//                         dotSecondaryColor: Color(0xff0099cc),
-//                       ),
-//                       likeBuilder: (bool isLiked) {
-//                         print('like trong day $isLiked');
-//                         return Icon(
-//                           test == 1  ?
-//                           Icons.favorite
-//                           : Icons.favorite_border
-//                           );
-//                       },
-//                       onTap:  onLikeButtonTapped,
-//                     );
- 
-//   }
 
   _buildTabBarTitlesList() {
     return [
