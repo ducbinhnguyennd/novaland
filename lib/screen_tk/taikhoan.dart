@@ -7,6 +7,7 @@ import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/login_screen.dart';
+import 'package:loginapp/main_screen.dart';
 
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/routes.dart';
@@ -26,8 +27,7 @@ class TaikhoanScreen extends StatefulWidget {
 }
 
 class _TaikhoanScreenState extends State<TaikhoanScreen>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  int _backButtonCount = 0;
+{
   Data? currentUser;
   bool isSwitchedModeDarkTheme = Globals.isDarkModeTheme;
   bool isSwitchedModeRight = Globals.isRight;
@@ -599,7 +599,13 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                         ),
                         ElevatedButton(
                           onPressed: () async {
-                            RouteUtil.redirectToLoginScreen(context);
+                            Navigator.pushReplacement<void, void>(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const MainScreen(),
+                                ),
+                              );
                             try {
                               UserServices us = UserServices();
                               await us.deleteinfo();
@@ -668,7 +674,5 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
     }
   }
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+
 }

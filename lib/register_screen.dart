@@ -247,6 +247,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //   Register(_username, _password);
                     // }
                     Register(_username, _password);
+                    //  Navigator.pushReplacement<void, void>(
+                    //             context,
+                    //             MaterialPageRoute<void>(
+                    //               builder: (BuildContext context) =>
+                    //                   const MainScreen(),
+                    //             ),
+                    //           );
                   },
                   style: ButtonStyle(
                       backgroundColor:

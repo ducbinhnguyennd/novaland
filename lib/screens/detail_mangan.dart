@@ -100,10 +100,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
               context,
               MaterialPageRoute(
                 builder: (context) => DetailChapter(
+               
                   chapterId:
                       chapterDocTiepId ?? detail?.chapters[0].idchap ?? '',
                   storyName: chapterTitleDocTiep,
                   storyId: widget.mangaId,
+                  viporfree: detail!.chapters[0].viporfree,
+
                 ),
               ),
             );
@@ -220,6 +223,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     }
   }
 
+  
+
   Widget buildChapter() {
     return ListView.builder(
       shrinkWrap: true,
@@ -234,11 +239,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                   chapterId: mangaDetail?.chapters[index].idchap ?? '',
                   storyName: mangaDetail?.chapters[index].namechap,
                   storyId: widget.mangaId,
+                  viporfree: mangaDetail!.chapters[index].viporfree,
                 ),
               ),
             ).then((value) {
               setState(() {
                 _loadData();
+                _loadUser();
               });
             });
           },
@@ -300,7 +307,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                         CommentService.postComment(
                             currentUser?.user[0].id ?? '', widget.mangaId, comment);
                         commentController.clear();
-    _loadData();
+    _loadUser();
 
                       } else {
                         Fluttertoast.showToast(
@@ -406,7 +413,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
             return AlertDialog(
               title: Text('Thành công'),
               content: Text(
-                  'Truyện đã được ${nutlike ? 'Bỏ yêu thích' : 'Thêm yêu thích'}.'),
+                  'Truyện đã được ${nutlike ? 'Thêm yêu thích' : 'Bỏ yêu thích'}.'),
             );
           },
         );

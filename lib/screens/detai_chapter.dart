@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,12 @@ import 'package:html/parser.dart';
 import 'package:loginapp/Globals.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
+import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/constant/strings_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
+import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/routes.dart';
 import 'package:loginapp/user_Service.dart';
 
@@ -19,7 +22,8 @@ class DetailChapter extends StatefulWidget {
   final String chapterId;
    String? storyName;
   final String storyId;
-   DetailChapter({super.key, required this.chapterId,  this.storyName, required this.storyId});
+   String? viporfree;
+   DetailChapter({super.key, required this.chapterId,  this.storyName, required this.storyId, this.viporfree});
 
   @override
   State<DetailChapter> createState() => _DetailChapterState();
@@ -31,10 +35,30 @@ class _DetailChapterState extends State<DetailChapter> {
   bool setStatelaidi = true;
    ScrollController _scrollController = ScrollController();
 
-
+Data? currentUser;
+  _loadUser() {
+    UserServices us = UserServices();
+    us.getInfoLogin().then((value) {
+      if (value != "") {
+        setState(() {
+          currentUser = Data.fromJson(jsonDecode(value));
+        });
+      } else {
+        setState(() {
+          currentUser = null;
+        });
+      }
+    }, onError: (error) {
+      if (kDebugMode) {
+        print(
+            '_alexTR_logging_ : SettingPage: _loadUser: error: ${error.toString()}');
+      }
+    });
+  }
   @override
   void initState() {
     super.initState();
+    _loadUser();
       UserServices us = UserServices();
 us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName ?? 'loi' , widget.storyId);
     // _scrollController.addListener(_scrollListener);
@@ -61,6 +85,9 @@ us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName ?? 'loi' , widget
         setState(() {
           widget.storyName = 'doi duoc doi';
           chapterDetail = value;
+         if(chapterDetail?.nextChap?.vipOrFree == 'vip'){
+          widget.viporfree = 'vip';
+         }
         });
         
         
@@ -226,6 +253,151 @@ _buildNavbar() {
   }
   return imageUrls;
 }
+void bychapterlock() async {
+  print('ddeen day cuh');
+    final apiUrl = 'https://du-an-2023.vercel.app/purchaseChapter/${currentUser!.user[0].id}/${widget.chapterId}';
+
+    try {
+      final response = await dio.post(apiUrl);
+      if (response.statusCode == 200) {
+       setState(() {
+         widget.viporfree = 'free';
+       });
+
+       
+      }
+    } catch (e) {
+      // Xử lý lỗi nếu có
+    }
+  }
+
+Widget _buildVipChapterBodyPartLock() {
+    double height = AppBar().preferredSize.height;
+    if (height <= 0) {
+      height = DoubleX.kPaddingSizeHuge_1XX;
+    }
+    return Center(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(
+            DoubleX.kPaddingSizeLarge,
+            height + MediaQuery.of(context).padding.top,
+            DoubleX.kPaddingSizeLarge,
+            DoubleX.kPaddingSizeZero),
+        alignment: Alignment.topCenter,
+        child: ListView(
+          cacheExtent: 0,
+          padding: EdgeInsets.only(bottom: 30),
+          shrinkWrap: true,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  StringConst.textThongBao,
+                  style: TextStyle(
+                    fontSize: DoubleX.kFontSizeTiny_1XXX,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(
+                    top: DoubleX.kPaddingSizeMedium_1XXX,
+                  ),
+                ),
+                const Text(
+                  StringConst.textThongBaoChapVip,
+                  style: TextStyle(fontSize: DoubleX.kFontSizeTiny_1X1X),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: DoubleX.kPaddingSizeLarge_1XX),
+                  child: Wrap(
+                    children: [
+                      Text(
+                        StringConst.suggestUsersDoMission,
+                        style: TextStyle(
+                            fontSize: DoubleX.kFontSizeTiny_1X1X,
+                            fontWeight: FontWeight.bold,
+                            color: ColorConst.colorDanger),
+                      )
+                    ],
+                  ),
+                ),
+                const Divider(),
+                const SizedBox(
+                  height: DoubleX.kPaddingSizeLarge,
+                ),
+                GestureDetector(
+                  onTap:  () async {
+                          
+                        bychapterlock();
+                          
+                        },
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9),
+                          
+                          color: 
+                               Colors.grey
+                  ,),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.lock,
+                            color: ColorConst.colorPrimaryText,
+                          ),
+                          const SizedBox(
+                            width: DoubleX.kPaddingSizeTiny,
+                          ),
+                          Text(
+                              "Mở Khóa )",
+                              style: const TextStyle(
+                                color: ColorConst.colorPrimaryText,
+                              )),
+                        
+                              
+                              
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: DoubleX.kPaddingSizeLarge,
+                ),
+                const Divider(
+                  height: 2,
+                  thickness: 2,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBodyChapter(String sChapContent) {
+    print('${widget.viporfree}');
+    
+      // chap is vip
+      if (widget.viporfree == 'vip' ) {
+        
+        _isShowBar = true;
+        return Stack(
+          children: [
+            
+            _buildVipChapterBodyPartLock()
+          ],
+        );
+      } else {
+       
+        return _buildChapterBodyPartNormal(sChapContent);
+      }
+    } 
+  
 Widget _buildChapterBodyPartNormal(String sChapContent) {
     // List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
     // List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
@@ -305,7 +477,7 @@ Widget _buildChapterBodyPartNormal(String sChapContent) {
              shrinkWrap: true,
              itemBuilder: (context, index) {
                print('${chapterDetail?.images[index]}');
-                return _buildChapterBodyPartNormal(chapterDetail?.images[index] ?? '');
+                return _buildBodyChapter(chapterDetail?.images[index] ?? '');
 
             //  return SingleChildScrollView(
             //             controller: _scrollController,

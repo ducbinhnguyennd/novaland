@@ -67,6 +67,8 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> {
       
       body: currentUser ==null ?Scaffold(
         appBar: AppBar(
+            automaticallyImplyLeading :false,
+
           title: Text('Man hinh theo doi'),
         ),
         body: Text('ddang nhap di')

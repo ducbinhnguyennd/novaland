@@ -37,6 +37,8 @@ class _BangTinScreenState extends State<BangTinScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+            automaticallyImplyLeading :false,
+
         toolbarHeight: 30,
         centerTitle: true,
         backgroundColor: ColorConst.colorPrimary50,

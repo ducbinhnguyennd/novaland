@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/register_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -73,83 +74,96 @@ class _LoginScreenState extends State<LoginScreen> {
     return GestureDetector(
       child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading :false,
             centerTitle: true,
             elevation: 2,
             backgroundColor: Colors.purple,
             title: const Text("Màn hình đăng nhập"),
           ),
-          body: Container(
-            margin: const EdgeInsets.all(10),
-            width: size.width,
-            height: size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(tt),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: textField(),
-                ),
-                Row(
+          body: Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(10),
+                width: size.width,
+                height: size.height,
+                child: Image.asset(AssetsPathConst.bgintro,fit: BoxFit.cover,)
+              ),
+               Container(
+                margin: const EdgeInsets.all(10),
+                width: size.width,
+                height: size.height,
+                color: Colors.white.withOpacity(0.7),
+              ),
+              Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        // kiểm tra tính hợp lệ của các trường dữ liệu nhập liệu
-                        var response = await signIn(_username, _password);
-
-                        if (response?.data['success'] == true) {
-                          UserServices us = UserServices();
-                          await us.saveinfologin(jsonEncode(response?.data['data']));
-                          // final storage = new FlutterSecureStorage();
-                         
-                          print('${response?.data['data']}');
-                          Navigator.pushReplacement<void, void>(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) =>
-                                  const MainScreen(),
-                            ),
-                          );
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Sai tài khoản hoặc mật khẩu"),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("OK"),
-                                    ),
-                                  ],
-                                );
-                              });
-                        }
-                      },
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.purple)),
-                      child: Text('Login'),
+                    Text(tt),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: textField(),
                     ),
-                    SizedBox(
-                      width: 40,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, RegisterScreen.routeName);
-                      },
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.purple)),
-                      child: Text('Register'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            // kiểm tra tính hợp lệ của các trường dữ liệu nhập liệu
+                            var response = await signIn(_username, _password);
+          
+                            if (response?.data['success'] == true) {
+                              UserServices us = UserServices();
+                              await us.saveinfologin(jsonEncode(response?.data['data']));
+                              // final storage = new FlutterSecureStorage();
+                             
+                              print('${response?.data['data']}');
+                              Navigator.pushReplacement<void, void>(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const MainScreen(),
+                                ),
+                              );
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Sai tài khoản hoặc mật khẩu"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("OK"),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            }
+                          },
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(Colors.purple)),
+                          child: Text('Login'),
+                        ),
+                        SizedBox(
+                          width: 40,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, RegisterScreen.routeName);
+                          },
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(Colors.purple)),
+                          child: Text('Register'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              
+            ],
           )),
     );
   }
