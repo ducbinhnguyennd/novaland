@@ -14,6 +14,8 @@ class AssetsPathConst {
   static const String icoCoinBox = 'assets/images/ico_coinbox.png';
   static const String icoCart = 'assets/images/ico_cart';
   static const String icoMomo = 'assets/images/ico_momo.png';
+  static const String ico_back = 'assets/images/ico_back.png';
+
 
   static const String someCoins = 'assets/images/some_coins.png';
   static const String freeUserChapter = 'assets/images/free.png';

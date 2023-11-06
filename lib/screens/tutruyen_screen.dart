@@ -72,8 +72,7 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> {
           title: Text('Man hinh theo doi'),
         ),
         body: Text('ddang nhap di')
-              
-            
+
       ): ListView.builder(
         itemCount: favoriteManga.length,
         itemBuilder: (context, index) {

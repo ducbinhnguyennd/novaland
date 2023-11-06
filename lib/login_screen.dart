@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
+import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/register_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -73,40 +74,47 @@ class _LoginScreenState extends State<LoginScreen> {
     var size = MediaQuery.of(context).size;
     return GestureDetector(
       child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading :false,
-            centerTitle: true,
-            elevation: 2,
-            backgroundColor: Colors.purple,
-            title: const Text("Màn hình đăng nhập"),
-          ),
+         
           body: Stack(
             children: [
-              Container(
-                margin: const EdgeInsets.all(10),
-                width: size.width,
-                height: size.height,
-                child: Image.asset(AssetsPathConst.bgintro,fit: BoxFit.cover,)
-              ),
-               Container(
-                margin: const EdgeInsets.all(10),
-                width: size.width,
-                height: size.height,
-                color: Colors.white.withOpacity(0.7),
-              ),
+              Image.asset(AssetsPathConst.bgintro),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height / 1.8,
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [ Colors.white,ColorConst.colorPrimary],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white,
+                      spreadRadius: 30,
+                      blurRadius: 40,
+                      offset: Offset(0, -25),
+                    ),
+                  ]),
+            ),
+          ),
               Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(tt),
+                    Text('Chào mừng bạn đến với',style: TextStyle(fontSize: 26,fontWeight: FontWeight.w500)),
+                    Text('Novaland',style: TextStyle(fontSize: 23,fontWeight: FontWeight.w500)),
+
+                  
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.fromLTRB( 20, 120, 20, 20),
                       child: textField(),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: () async {
+                        InkWell(
+                          onTap: () async {
+                  
                             // kiểm tra tính hợp lệ của các trường dữ liệu nhập liệu
                             var response = await signIn(_username, _password);
           
@@ -140,24 +148,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                     );
                                   });
                             }
+                          
                           },
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all<Color>(Colors.purple)),
-                          child: Text('Login'),
-                        ),
+                          child: Container(width: MediaQuery.of(context).size.width/3,decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),color: ColorConst.colorPrimary50), child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Align(alignment: Alignment.center, child: Text('Đăng nhập',style: TextStyle(color: Colors.white,fontSize: 18),)),
+                          ),)),
                         SizedBox(
                           width: 40,
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, RegisterScreen.routeName);
+                        InkWell(
+                          onTap: () async {
+                  
+                        Navigator.pushNamed(context, RegisterScreen.routeName);
+                           
+                          
                           },
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all<Color>(Colors.purple)),
-                          child: Text('Register'),
-                        ),
+                          child: Container(width: MediaQuery.of(context).size.width/3, decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),color: ColorConst.colorPrimary50), child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Align(alignment: Alignment.center, child: Text('Đăng ký',style: TextStyle(color: Colors.white,fontSize: 18),)),
+                          ),)),
                       ],
                     ),
                   ],
@@ -215,8 +225,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       children: [
         buildTextField(
-          labelText: 'Username',
-          hintText: 'abcxyz',
+          labelText: 'Tên đăng nhập',
+          hintText: 'abc',
           prefixIcon: Icons.people,
           controller: userEditingController,
           onChanged: (val) {
@@ -230,8 +240,8 @@ class _LoginScreenState extends State<LoginScreen> {
           height: 24,
         ),
         buildTextField(
-            labelText: 'Password',
-            hintText: 'alo1',
+            labelText: 'Mật khẩu',
+            hintText: '******',
             prefixIcon: Icons.password_outlined,
             controller: passwEditingController,
             onChanged: (val) {

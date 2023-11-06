@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
+import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:validators/validators.dart';
 
@@ -88,180 +90,209 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.purple,
-        centerTitle: true,
-        title: const Text('Đăng ký tài khoản'),
-      ),
-      body: Container(
-        margin: const EdgeInsets.all(16),
-        child: Form(
-            key: _formKey,
+      
+      body: Stack(
+        children: [
+            Image.asset(AssetsPathConst.bgintro),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height / 1.8,
+              decoration:  BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [ Colors.white,ColorConst.colorPrimary],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white,
+                      spreadRadius: 30,
+                      blurRadius: 40,
+                      offset: Offset(0, -25),
+                    ),
+                  ]),
+            ),
+          ),
+          
+          Positioned(
+            bottom: 200,left: 10,right: 10,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextFormField(
-                  controller: userEditingController,
-                  key: _usernameKey,
-                  onChanged: (val) {
-                    doValidation(_usernameKey, null);
-                    _username = val;
-                  },
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.deepPurple),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      labelText: "Username"),
-                  validator: (val) {
-                    if (val == null || val.isEmpty) {
-                      return 'nhap lai';
-                    }
-                    return null;
-                  },
+                InkWell(
+          onTap: (() {
+            Navigator.of(context).pop();
+          }),
+          child: Container(
+            child: Row(children: [
+              Image.asset(AssetsPathConst.ico_back,height: 22,width: 22,),
+              Text('Màn hình đăng nhập', style: TextStyle(fontSize: 20),)
+            ],),
+          ),
+          ),
+                Container(
+                 
+                  margin: const EdgeInsets.all(16),
+                  child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextFormField(
+                            controller: userEditingController,
+                            key: _usernameKey,
+                            onChanged: (val) {
+                              doValidation(_usernameKey, null);
+                              _username = val;
+                            },
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.deepPurple),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                labelText: "Username"),
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return 'nhap lai';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            key: _passwordKey,
+                            controller: passwEditingController,
+                            onChanged: (val) {
+                              doValidation(_passwordKey, null);
+                              _password = val;
+                            },
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.deepPurple),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                labelText: "Password"),
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return 'nhap lai';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          // TextFormField(
+                          //   key: _emailKey,
+                          //   controller: emailEditingController,
+                          //   onChanged: (val) {
+                          //     doValidation(_emailKey, null);
+                          //     _email = val;
+                          //   },
+                          //   keyboardType: TextInputType.emailAddress,
+                          //   decoration: InputDecoration(
+                          //       enabledBorder: OutlineInputBorder(
+                          //         borderSide: const BorderSide(color: Colors.black),
+                          //         borderRadius: BorderRadius.circular(12),
+                          //       ),
+                          //       focusedBorder: OutlineInputBorder(
+                          //         borderSide: const BorderSide(color: Colors.deepPurple),
+                          //         borderRadius: BorderRadius.circular(12),
+                          //       ),
+                          //       labelText: "Email"),
+                          //   validator: (val) {
+                          //     if (val == null || val.isEmpty) {
+                          //       return 'nhap lai';
+                          //     }
+                          //     if (!RegExp(_emailRegex).hasMatch(val)) {
+                          //       return 'nhap dung dinh dang';
+                          //     }
+                          //     return null;
+                          //   },
+                          // ),
+                          // const SizedBox(
+                          //   height: 10,
+                          // ),
+                          // TextFormField(
+                          //   key: _phoneKey,
+                          //   onChanged: (val) {
+                          //     doValidation(_phoneKey, null);
+                          //     _phone = val;
+                          //   },
+                          //   keyboardType: TextInputType.phone,
+                          //   maxLength: 10,
+                          //   decoration: InputDecoration(
+                          //       enabledBorder: OutlineInputBorder(
+                          //         borderSide: const BorderSide(color: Colors.black),
+                          //         borderRadius: BorderRadius.circular(12),
+                          //       ),
+                          //       focusedBorder: OutlineInputBorder(
+                          //         borderSide: const BorderSide(color: Colors.deepPurple),
+                          //         borderRadius: BorderRadius.circular(12),
+                          //       ),
+                          //       labelText: "So dien thoai"),
+                          //   validator: (val) {
+                          //     if (val == null || val.isEmpty) {
+                          //       return 'nhap lai';
+                          //     }
+                          //     if (val.length != 10) {
+                          //       return 'nhap du';
+                          //     }
+                          //     if (!val.startsWith('0')) {
+                          //       return 'Số điện thoại phải bắt đầu bằng số 0';
+                          //     }
+                          //     return null;
+                          //   },
+                          // ),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.center,
+                          //   children: _gioiTinhList
+                          //       .map(
+                          //         (gender) => RadioListTile(
+                          //           title: Text(gender),
+                          //           groupValue: _gioitinh,
+                          //           value: gender,
+                          //           onChanged: (value) {
+                          //             setState(() {
+                          //               _gioitinh = value.toString();
+                          //             });
+                          //           },
+                          //         ),
+                          //       )
+                          //       .toList(),
+                          // ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                         
+                          InkWell(
+                          onTap: () async {
+                  
+                       Register(_username, _password);
+                           
+                          
+                          },
+                          child: Container(width: MediaQuery.of(context).size.width/3, decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),color: ColorConst.colorPrimary50), child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Align(alignment: Alignment.center, child: Text('Đăng ký',style: TextStyle(color: Colors.white,fontSize: 18),)),
+                          ),)),
+                        ],
+                      )),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                  key: _passwordKey,
-                  controller: passwEditingController,
-                  onChanged: (val) {
-                    doValidation(_passwordKey, null);
-                    _password = val;
-                  },
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.deepPurple),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      labelText: "Password"),
-                  validator: (val) {
-                    if (val == null || val.isEmpty) {
-                      return 'nhap lai';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                // TextFormField(
-                //   key: _emailKey,
-                //   controller: emailEditingController,
-                //   onChanged: (val) {
-                //     doValidation(_emailKey, null);
-                //     _email = val;
-                //   },
-                //   keyboardType: TextInputType.emailAddress,
-                //   decoration: InputDecoration(
-                //       enabledBorder: OutlineInputBorder(
-                //         borderSide: const BorderSide(color: Colors.black),
-                //         borderRadius: BorderRadius.circular(12),
-                //       ),
-                //       focusedBorder: OutlineInputBorder(
-                //         borderSide: const BorderSide(color: Colors.deepPurple),
-                //         borderRadius: BorderRadius.circular(12),
-                //       ),
-                //       labelText: "Email"),
-                //   validator: (val) {
-                //     if (val == null || val.isEmpty) {
-                //       return 'nhap lai';
-                //     }
-                //     if (!RegExp(_emailRegex).hasMatch(val)) {
-                //       return 'nhap dung dinh dang';
-                //     }
-                //     return null;
-                //   },
-                // ),
-                // const SizedBox(
-                //   height: 10,
-                // ),
-                // TextFormField(
-                //   key: _phoneKey,
-                //   onChanged: (val) {
-                //     doValidation(_phoneKey, null);
-                //     _phone = val;
-                //   },
-                //   keyboardType: TextInputType.phone,
-                //   maxLength: 10,
-                //   decoration: InputDecoration(
-                //       enabledBorder: OutlineInputBorder(
-                //         borderSide: const BorderSide(color: Colors.black),
-                //         borderRadius: BorderRadius.circular(12),
-                //       ),
-                //       focusedBorder: OutlineInputBorder(
-                //         borderSide: const BorderSide(color: Colors.deepPurple),
-                //         borderRadius: BorderRadius.circular(12),
-                //       ),
-                //       labelText: "So dien thoai"),
-                //   validator: (val) {
-                //     if (val == null || val.isEmpty) {
-                //       return 'nhap lai';
-                //     }
-                //     if (val.length != 10) {
-                //       return 'nhap du';
-                //     }
-                //     if (!val.startsWith('0')) {
-                //       return 'Số điện thoại phải bắt đầu bằng số 0';
-                //     }
-                //     return null;
-                //   },
-                // ),
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: _gioiTinhList
-                //       .map(
-                //         (gender) => RadioListTile(
-                //           title: Text(gender),
-                //           groupValue: _gioitinh,
-                //           value: gender,
-                //           onChanged: (value) {
-                //             setState(() {
-                //               _gioitinh = value.toString();
-                //             });
-                //           },
-                //         ),
-                //       )
-                //       .toList(),
-                // ),
-                SizedBox(
-                  height: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    var alo = doValidation(null, _formKey);
-                    // if (!RegExp(_emailRegex)
-                    //         .hasMatch(emailEditingController.text) &&
-                    //     phoneEditingController.text.length != 10) {
-                    //   print('errro');
-                    // } else {
-                    //   Register(_username, _password);
-                    // }
-                    Register(_username, _password);
-                    //  Navigator.pushReplacement<void, void>(
-                    //             context,
-                    //             MaterialPageRoute<void>(
-                    //               builder: (BuildContext context) =>
-                    //                   const MainScreen(),
-                    //             ),
-                    //           );
-                  },
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.purple)),
-                  child: Text('Đăng ký'),
-                )
               ],
-            )),
+            ),
+          ),
+        ],
       ),
     );
   }

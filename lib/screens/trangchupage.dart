@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/screens/category_screen.dart';
 import 'package:loginapp/screens/search_screen.dart';
@@ -25,6 +26,7 @@ class ItemCarousel {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   int _current = 0;
+  bool _isLoading = true;
 
   final List<ItemCarousel> itemList = [
     ItemCarousel(
@@ -41,6 +43,121 @@ class _HomePageState extends State<HomePage>
             'https://canhrau.com/wp-content/uploads/2022/01/truyen-tranh-ngon-tinh-thanh-xuan-vuon-truong-trung-quoc-hinh-2.png'),
   ];
 
+  final List<TheloaiItem> theloaiItems = [
+    TheloaiItem(
+      image: '${AssetsPathConst.theloai}1.png',
+      theloaiID: '649d61870631b61a30ca3238',
+      theloaiName: 'Ngôn Tình',
+      initialTabIndex: 0,
+    ),
+    TheloaiItem(
+      image: '${AssetsPathConst.theloai}2.png',
+      theloaiID: '649d61c00631b61a30ca324d',
+      theloaiName: 'Vườn Trường',
+      initialTabIndex: 1,
+    ),
+    TheloaiItem(
+      image: '${AssetsPathConst.theloai}4.png',
+      theloaiID: '649d61ec0631b61a30ca325a',
+      theloaiName: 'Bách Hợp',
+      initialTabIndex: 3,
+    ),
+    TheloaiItem(
+      image: '${AssetsPathConst.theloai}3.png',
+      theloaiID: '649d634e0631b61a30ca33ba',
+      theloaiName: 'Đam Mỹ',
+      initialTabIndex: 2,
+    )
+  ];
+_theloai() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14.0, 14.0, 14.0, 0),
+      child: GridView.builder(
+        padding: const EdgeInsets.all(0),
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // Số cột bạn muốn hiển thị
+          crossAxisSpacing: 10,
+          //  mainAxisSpacing: 10,
+          childAspectRatio: 3,
+        ),
+        itemCount: theloaiItems.length,
+        itemBuilder: (context, index) {
+          return _isLoading
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey[300],
+                    ),
+                    width: 550,
+                  ),
+                )
+              : InkWell(
+                  onTap: () {
+                    
+
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => FourCategory(
+                    //             theloaiID: tlngon,
+                      
+                    //             isShowFilterStories: false,
+                    //             initialTabIndex:
+                    //                 theloaiItems[index].initialTabIndex,
+                    //           )),
+                    // );
+
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => StoryCategoryScreen(
+                    //       theloaiID: tlngon,
+                    //       trangthai: -1,
+                    //       sort: 1,
+                    //       isShowFilterStories: false,
+                    //       initialTabIndex: theloaiItems[index].initialTabIndex,
+                    //     ),
+                    //   ),
+                    // );
+
+                    // Navigator.of(context).pushReplacement(
+                    //   PageRouteBuilder(
+                    //     transitionDuration: Duration(milliseconds: 500),
+                    //     pageBuilder: (context, animation, secondaryAnimation) => MainScreen(
+                    //       initialTabIndex: 3,
+                    //       theloaiID: theloaiItems[index].theloaiID,
+                    //       theloaiName: theloaiItems[index].theloaiName,
+                    //     ),
+                    //     transitionsBuilder:
+                    //         (context, animation, secondaryAnimation, child) {
+                    //       return FadeTransition(
+                    //         opacity: animation,
+                    //         child: child,
+                    //       );
+                    //     },
+                    //   ),
+                    // );
+                  },
+                  child: Container(
+                    // height: 43,
+                    // width:100,
+
+                    child: Image.asset(
+                      theloaiItems[index].image,
+                      // fit: BoxFit.fitHeight,
+                      // cacheHeight: 200,
+                      cacheWidth: 550,
+                    ),
+                  ),
+                );
+        },
+      ),
+    );
+  }
   Widget Search() {
     return Padding(
       padding: const EdgeInsets.all(22.0),
@@ -170,4 +287,17 @@ class _HomePageState extends State<HomePage>
 
   @override
   bool get wantKeepAlive => true;
+}
+class TheloaiItem {
+  final String image;
+  final String theloaiID;
+  final String theloaiName;
+  final int initialTabIndex;
+
+  TheloaiItem({
+    required this.image,
+    required this.theloaiID,
+    required this.theloaiName,
+    required this.initialTabIndex,
+  });
 }
