@@ -79,30 +79,7 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                             ],
                           ),
                         )),
-                    // GridView(
-                    //   // scrollDirection: Axis.horizontal,
-                    //   gridDelegate:
-                    //       const SliverGridDelegateWithFixedCrossAxisCount(
-                    //     crossAxisCount: 1,
-                        
-                    //     // crossAxisSpacing: 10,
-                    //     mainAxisSpacing: 10,
-                    //     childAspectRatio: 2 / 4,
-                    //   ),
-                    //   shrinkWrap: true,
-                    //   physics: const NeverScrollableScrollPhysics(),
-                    //   itemCount:
-                    //       categoryMangas.length > 3 ? 3 : categoryMangas.length,
-                    //   itemBuilder: (context, index) {
-                    //     return ItemTruyenMoi(
-                    //       id: categoryMangas[index].id,
-                    //       name: categoryMangas[index].mangaName,
-                    //       image: categoryMangas[index].image,
-                    //       sochap:
-                    //           categoryMangas[index].totalChapters.toString(),
-                    //     );
-                    //   },
-                    // ),
+                   
                   SizedBox(
             width: double.infinity,
             // height: widthS / (Globals.isTablet ? 3 : 2),
@@ -117,7 +94,8 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                 crossAxisSpacing: 0,
                 mainAxisSpacing: 0,
               ),
-              children: List.generate(categoryMangas?.length ?? 0, (index) {
+              children: List.generate(categoryMangas.length, (index) {
+                
                 return ItemTruyenMoi(
                           id: categoryMangas[index].id,
                           name: categoryMangas[index].mangaName,

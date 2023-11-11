@@ -6,6 +6,7 @@ import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/model/lichsuthanhtoan_model.dart';
 import 'package:loginapp/model/trangchu_model.dart';
+import 'package:url_launcher/url_launcher.dart';
    Dio dio = Dio();
 class MangaService {
 
@@ -115,7 +116,9 @@ class CategoryService {
       );
 
       if (response.statusCode == 200) {
-        print('binh thanh toan ${response.data}');
+        // print('binh thanh toan ${response.data}');
+        final Uri paymentUri = Uri.parse(response.data);
+           launchUrl(paymentUri);
       } else {
         print('loi');
       }
@@ -134,6 +137,25 @@ class CommentService {
           data: {'comment': comment});
       if (response.statusCode == 200) {
          print('binh cmt ${response.data}');
+      } else {
+        print('Loi cmnr');
+      }
+    } catch (e) {
+      // Handle Dio exception
+      print('Error: $e');
+    }
+  }
+}
+// xóa comment
+class XoaComment {
+  static Future<void> xoaComment(  String comment,String mangaId,String userId) async {
+    print('https://du-an-2023.vercel.app/deletecomment/$comment/$mangaId/$userId');
+    try {
+      final response = await dio.post(
+          'https://du-an-2023.vercel.app/deletecomment/$comment/$mangaId/$userId',
+        );
+      if (response.statusCode == 200) {
+         print('binh xoa ${response.data}');
       } else {
         print('Loi cmnr');
       }

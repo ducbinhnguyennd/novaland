@@ -84,7 +84,7 @@ _theloai() {
         ),
         itemCount: theloaiItems.length,
         itemBuilder: (context, index) {
-          return _isLoading
+          return !_isLoading
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Container(
@@ -97,8 +97,6 @@ _theloai() {
                 )
               : InkWell(
                   onTap: () {
-                    
-
                     // Navigator.push(
                     //   context,
                     //   MaterialPageRoute(
@@ -161,7 +159,7 @@ _theloai() {
   Widget Search() {
     return Padding(
       padding: const EdgeInsets.all(22.0),
-      child: Row(
+      child: Row(      
         children: [
           Expanded(
             flex: 9,
@@ -210,6 +208,7 @@ _theloai() {
       ),
     );
   }
+  
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -276,7 +275,7 @@ _theloai() {
                       );
                     }),
                   ),
-          
+          _theloai(),
           
             ItemTrangChu()
           ],

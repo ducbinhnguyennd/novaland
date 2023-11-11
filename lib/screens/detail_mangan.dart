@@ -100,13 +100,11 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
               context,
               MaterialPageRoute(
                 builder: (context) => DetailChapter(
-               
                   chapterId:
                       chapterDocTiepId ?? detail?.chapters[0].idchap ?? '',
                   storyName: chapterTitleDocTiep,
                   storyId: widget.mangaId,
                   viporfree: detail!.chapters[0].viporfree,
-
                 ),
               ),
             );
@@ -117,7 +115,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     );
   }
 
-  buildThongSo(String follow, String view, String chap) {
+  buildThongSo(String follow, String view, String chap, String binhluan) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -166,7 +164,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         Column(
           children: [
             Text(
-              '0',
+              binhluan,
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: DoubleX.kFontSizeTiny_1XXX),
@@ -201,10 +199,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     } else if (mangaDetail == null) {
       return Scaffold(
         appBar: AppBar(
+          backgroundColor: ColorConst.colorPrimary,
           title: Text('Đang tải...'),
         ),
         body: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            color: ColorConst.colorPrimary,
+          ),
         ),
       );
     } else {
@@ -222,8 +223,6 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
       );
     }
   }
-
-  
 
   Widget buildChapter() {
     return ListView.builder(
@@ -260,74 +259,114 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
 
   final TextEditingController commentController = TextEditingController();
   Widget buildComments() {
-    return Column(
-      children: [
-       Expanded(
-  child: mangaDetail!.cmts.isEmpty
-      ? Center(
-          child: Text('Chưa có bình luận'),
-        )
-      : ListView.builder(
-          shrinkWrap: true,
-          itemCount: mangaDetail?.cmts.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text('Username ${mangaDetail?.cmts[index].usernamecmt}'),
-              subtitle: Text('Nội dung: ${mangaDetail?.cmts[index].noidung}'),
-            );
-          },
-        ),
-),
+  return Column(
+    children: [
+      Expanded(
+        child: mangaDetail!.cmts.isEmpty
+            ? Center(
+                child: Text('Chưa có bình luận'),
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                itemCount: mangaDetail?.cmts.length,
+                itemBuilder: (context, index) {
+                  bool isCurrentUserComment =
+                      currentUser?.user[0].id ==
+                          mangaDetail?.cmts[index].userIdcmt;
 
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),color: ColorConst.colorPrimary120
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: commentController,
-                      decoration: InputDecoration(labelText: 'Nhập bình luận', focusColor: Colors.black,),
+                  return ListTile(
+                    title: Text(
+                        'Username ${mangaDetail?.cmts[index].usernamecmt}'),
+                    subtitle: Text(
+                        'Nội dung: ${mangaDetail?.cmts[index].noidung}'),
+                    trailing: isCurrentUserComment
+                        ? IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              deleteComment(
+                                  mangaDetail?.cmts[index].idcmt,
+                                 widget.mangaId,
+                                  mangaDetail?.cmts[index].userIdcmt);
+                                   _loadUser();
+                            },
+                          )
+                        : null, 
+                  );
+                },
+              ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: ColorConst.colorPrimary120),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: commentController,
+                    decoration: InputDecoration(
+                      labelText: 'Nhập bình luận',
+                      focusColor: Colors.black,
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      String comment = commentController.text;
-                      if (comment.isNotEmpty && comment.length >= 10) {
-                         Fluttertoast.showToast(
-                          msg: "Đăng bình luận thành công",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                        );
-                        CommentService.postComment(
-                            currentUser?.user[0].id ?? '', widget.mangaId, comment);
-                        commentController.clear();
-    _loadUser();
-
-                      } else {
-                        Fluttertoast.showToast(
-                          msg: "Nhập ít nhất 10 kí tự",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                        );
-                      }
-                    },
-                    child: Icon(Icons.send_rounded, color: ColorConst.colorPrimary50,),
+                ),
+                InkWell(
+                  onTap: () {
+                    String comment = commentController.text;
+                    if (comment.isNotEmpty && comment.length >= 10) {
+                      Fluttertoast.showToast(
+                        msg: "Đăng bình luận thành công",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                      );
+                      CommentService.postComment(
+                          currentUser?.user[0].id ?? '',
+                          widget.mangaId,
+                          comment);
+                      commentController.clear();
+                      _loadUser();
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: "Nhập ít nhất 10 kí tự",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                      );
+                    }
+                  },
+                  child: Icon(
+                    Icons.send_rounded,
+                    color: ColorConst.colorPrimary50,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 
+void deleteComment(String? commentId, String? mangaId, String? userId) {
+  XoaComment.xoaComment(commentId!, mangaId!, userId!).then((response) {
+   
+    Fluttertoast.showToast(
+      msg: "Xóa bình luận thành công",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+    );
+  }).catchError((error) {
+    Fluttertoast.showToast(
+      msg: "Xóa bình luận thất bại",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+    );
+  });
+}
   _loadData() {
     UserServices us = UserServices();
     us.readChuongVuaDocOfTruyen(widget.mangaId).then((data) async {
@@ -374,10 +413,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
 
         Text('Tác giả: ${mangaDetail?.author}'),
         // Text('Tên Manga: ${detail.category}'),
-        Text('Thể loại: ${mangaDetail?..category}'),
+        Text('Thể loại: ${mangaDetail?.category}'),
         // buildGenresChips(),
-        buildThongSo(mangaDetail!.like.toString(), mangaDetail!.view.toString(),
-            mangaDetail!.totalChapters.toString()),
+        buildThongSo(
+            mangaDetail!.like.toString(),
+            mangaDetail!.view.toString(),
+            mangaDetail!.totalChapters.toString(),
+            mangaDetail!.totalcomment.toString()),
         SizedBox(height: 15),
         Divider(
           color: Colors.grey,

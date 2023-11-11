@@ -54,7 +54,7 @@ class AssetsPathConst {
   static const String icodafollow = 'assets/images/icodafollow.png';
   static const String ico_hot = 'assets/images/hot.png';
 
-  static const String theloai = 'assets/theloai/theloai';
+  static const String theloai = 'assets/images/theloai/theloai';
   static const String bgintro = 'assets/images/bgintro.png';
   //ico setting
   static const String ico_1 = 'assets/images/icosetting/ico_1.png';

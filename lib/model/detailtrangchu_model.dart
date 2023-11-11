@@ -7,6 +7,8 @@ class MangaDetailModel {
   final int view;
   final int like;
   final int totalChapters;
+  final int totalcomment;
+
   final List<Chapter> chapters;
   final List<Comments> cmts;
 
@@ -24,6 +26,7 @@ class MangaDetailModel {
     required this.totalChapters,
     required this.chapters,
     required this.cmts,
+    required this.totalcomment,
      this.isLiked,
   });
 
@@ -45,7 +48,8 @@ class MangaDetailModel {
       totalChapters: json['totalChapters'],
       chapters: chapterList,
       cmts: cmtList,
-      isLiked: json['isLiked']
+      isLiked: json['isLiked'],
+      totalcomment: json['totalcomment']
    
     );
   }
@@ -74,18 +78,22 @@ class Comments {
   final String idcmt;
   final String usernamecmt;
   final String noidung;
+  final String userIdcmt;
 
-  Comments({
+  Comments( {
     required this.idcmt,
     required this.usernamecmt,
     required this.noidung,
+   required this.userIdcmt
+    
   });
 
   factory Comments.fromJson(Map<String, dynamic> json) {
     return Comments(
-      idcmt: json['userID'],
+      idcmt: json['cmt_id'],
       usernamecmt: json['username'],
       noidung: json['cmt'],
+      userIdcmt: json['userID']
     );
   }
 }
