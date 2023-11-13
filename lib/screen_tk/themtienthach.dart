@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/user_Service.dart';
@@ -53,9 +54,9 @@ class _ThemTienThachState extends State<ThemTienThach> {
 
   }
   final List<PaymentItem> paymentItems = [
-    PaymentItem(amount: 10.0, currency: 'USD'),
-    PaymentItem(amount: 20.0, currency: 'USD'),
-    PaymentItem(amount: 30.0, currency: 'USD'),
+    PaymentItem(amount: 10.0, currency: 'USD', quy: '10.00 USD quy đổi ra được 100 xu'),
+    PaymentItem(amount: 20.0, currency: 'USD', quy: '20.00 USD quy đổi ra được 200 xu'),
+    PaymentItem(amount: 30.0, currency: 'USD', quy: '30.00 USD quy đổi ra được 300 xu'),
   ];
 
  
@@ -64,22 +65,63 @@ class _ThemTienThachState extends State<ThemTienThach> {
     print('day ${currentUser?.user[0].id}');
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ColorConst.colorPrimary50,
         title: Text('Nạp tiền'),
       ),
       body: ListView.builder(
         itemCount: paymentItems.length,
         itemBuilder: (context, index) {
           final item = paymentItems[index];
-          return ListTile(
-            title: Text(
-              'Số tiền: ${item.amount.toStringAsFixed(2)} ${item.currency}',
-              style: TextStyle(fontSize: 24),
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: MediaQuery.of(context).size.height/12,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: ColorConst.colorPrimary120
+              ),
+              child: Row(
+                children: [
+          Expanded(
+            flex: 7,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Text(
+                        'Số tiền: ${item.amount.toStringAsFixed(2)} ${item.currency}',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(item.quy.toString())
+                ],
+              ),
             ),
-            trailing: ElevatedButton(
-              onPressed: () => _sendPaymentData(currentUser?.user[0].id ?? '' ,item.amount, item.currency),
-              child: Text('Nạp tiền'),
+          ),
+              Expanded(
+                flex: 3,
+                child: InkWell(
+                  onTap: (() {
+                    _sendPaymentData(currentUser?.user[0].id ?? '' ,item.amount, item.currency);
+                  }),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: ColorConst.colorPrimary50,
+                                  ),
+                      
+                      child: Center(child: Text('Nạp tiền',style: TextStyle(color: Colors.white),)),
+                    ),
+                  ),
+                ),
+              )
+                ],
+              ),
             ),
           );
+          
         },
       ),
     );
@@ -89,9 +131,11 @@ class _ThemTienThachState extends State<ThemTienThach> {
 class PaymentItem {
   final double amount;
   final String currency;
+  final String quy;
 
   PaymentItem({
     required this.amount,
     required this.currency,
+    required this.quy
   });
 }

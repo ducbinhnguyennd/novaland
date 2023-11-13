@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -88,7 +89,17 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   }
 
   buildContent(String content) {
-    return Text(content);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Giới thiệu:'),
+
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(content),
+        ),
+      ],
+    );
   }
 
   buildDocTiep(MangaDetailModel? detail) {
@@ -100,6 +111,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
               context,
               MaterialPageRoute(
                 builder: (context) => DetailChapter(
+                  idUser: currentUser!.user[0].id,
                   chapterId:
                       chapterDocTiepId ?? detail?.chapters[0].idchap ?? '',
                   storyName: chapterTitleDocTiep,
@@ -235,6 +247,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
               context,
               MaterialPageRoute(
                 builder: (context) => DetailChapter(
+                  idUser: currentUser!.user[0].id,
+
                   chapterId: mangaDetail?.chapters[index].idchap ?? '',
                   storyName: mangaDetail?.chapters[index].namechap,
                   storyId: widget.mangaId,
@@ -392,29 +406,78 @@ void deleteComment(String? commentId, String? mangaId, String? userId) {
   Widget buildGioiThieu() {
     return Column(
       children: [
-        // Image.memory(
-        //   base64Decode(detail.image),
-        // ),
-        CachedNetworkImage(
-          imageUrl: mangaDetail?.image ?? '',
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
+   
+        Stack(
+          children: [
+           ImageFiltered(
+  imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+  child: Image.network(
+    mangaDetail?.image ?? '',
+    height: 230,
+    width: MediaQuery.of(context).size.width,
+    fit: BoxFit.cover,
+    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+      if (loadingProgress == null) {
+        return child;
+      } else {
+        return CircularProgressIndicator();
+      }
+    },
+    errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+      return Icon(Icons.error);
+    },
+  ),
+),
+
+            Positioned(
+              left: 20,
+              top: 20,
+              right: 0,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: CachedNetworkImage(
+                      imageUrl: mangaDetail?.image ?? '',
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        height: 180,
+                      ),
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                  ),
+                   Expanded(
+                    flex: 6,
+                     child: Padding(
+                       padding: const EdgeInsets.only(left: 8.0),
+                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                           Text('Truyện: ${mangaDetail?.mangaName}'),
+                          Text('Tác giả: ${mangaDetail?.author}'),
+                             Text('Thể loại: ${mangaDetail?.category}'),
+                        ],
+                       ),
+                     ),
+                   )
+                ],
               ),
             ),
-            height: 155,
-          ),
-          placeholder: (context, url) => CircularProgressIndicator(),
-          errorWidget: (context, url, error) => Icon(Icons.error),
+          ],
         ),
 
-        Text('Tác giả: ${mangaDetail?.author}'),
-        // Text('Tên Manga: ${detail.category}'),
-        Text('Thể loại: ${mangaDetail?.category}'),
+       
         // buildGenresChips(),
+        SizedBox(height: 15),
+
         buildThongSo(
             mangaDetail!.like.toString(),
             mangaDetail!.view.toString(),
@@ -470,8 +533,8 @@ void deleteComment(String? commentId, String? mangaId, String? userId) {
       onTap: toggleLike,
       child: Icon(
         nutlike ? Icons.favorite : Icons.favorite_border,
-        size: 100,
-        color: nutlike ? Colors.red : Colors.blue,
+        size: 50,
+        color: nutlike ? Colors.red : ColorConst.colorPrimary120,
       ),
     );
   }

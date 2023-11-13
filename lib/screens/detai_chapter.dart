@@ -20,10 +20,17 @@ import 'package:loginapp/user_Service.dart';
 
 class DetailChapter extends StatefulWidget {
   final String chapterId;
-   String? storyName;
+  String? storyName;
   final String storyId;
-   String? viporfree;
-   DetailChapter({super.key, required this.chapterId,  this.storyName, required this.storyId, this.viporfree});
+  String? viporfree;
+  String? idUser;
+  DetailChapter(
+      {super.key,
+      required this.idUser,
+      required this.chapterId,
+      this.storyName,
+      required this.storyId,
+      this.viporfree});
 
   @override
   State<DetailChapter> createState() => _DetailChapterState();
@@ -33,15 +40,22 @@ class _DetailChapterState extends State<DetailChapter> {
   ComicChapter? chapterDetail;
   bool _isShowBar = true;
   bool setStatelaidi = true;
-   ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController = ScrollController();
 
-Data? currentUser;
+  Data? currentUser;
   _loadUser() {
     UserServices us = UserServices();
     us.getInfoLogin().then((value) {
       if (value != "") {
         setState(() {
           currentUser = Data.fromJson(jsonDecode(value));
+          ChapterDetail.fetchChapterImages(
+            widget.chapterId, currentUser?.user[0].id ?? '')
+        .then((value) {
+      setState(() {
+        chapterDetail = value;
+      });
+    });
         });
       } else {
         setState(() {
@@ -55,52 +69,43 @@ Data? currentUser;
       }
     });
   }
+
   @override
   void initState() {
     super.initState();
     _loadUser();
-      UserServices us = UserServices();
-us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName ?? 'loi' , widget.storyId);
-    // _scrollController.addListener(_scrollListener);
-    ChapterDetail.fetchChapterImages(widget.chapterId).then((value) {
-      setState(() {
-        chapterDetail = value;
-      });
-    });
-  }
-    @override
-  void dispose() {
     
+    UserServices us = UserServices();
+    us.addChuongVuaDocCuaTruyen(
+        widget.chapterId, widget.storyName ?? 'loi', widget.storyId);
+    // _scrollController.addListener(_scrollListener);
+    
+  }
+
+  @override
+  void dispose() {
     super.dispose();
     _scrollController.dispose();
   }
 
-  Future<void> _goToNewChap(String chapId) async {
-    
-     await ChapterDetail.fetchChapterImages(
-          chapId
-        
-      ).then((value) {
-       
-        setState(() {
-          widget.storyName = 'doi duoc doi';
-          chapterDetail = value;
-         if(chapterDetail?.nextChap?.vipOrFree == 'vip'){
+  Future<void> _goToNewChap(String chapId, String userId) async {
+    await ChapterDetail.fetchChapterImages(chapId, userId).then((value) {
+      setState(() {
+        widget.storyName = chapterDetail!.nextChap!.name;
+        chapterDetail = value;
+        if (chapterDetail?.nextChap?.vipOrFree == 'vip') {
           widget.viporfree = 'vip';
-         }
-        });
-        
-        
-        
+        }
       });
+    });
   }
 
   Widget _buildBottomBar(ComicChapter? chap) {
-    final bool isFirstChapter =
-        chap?.prevChap == null;
+    final bool isFirstChapter = chap?.prevChap == null;
     final bool isNextChapter = chap?.nextChap == null;
 
     return Stack(
+      alignment: Alignment.bottomCenter,
       children: [
         Container(
           color: ColorConst.colorBgNovelBlack.withOpacity(0.7),
@@ -125,8 +130,10 @@ us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName ?? 'loi' , widget
                         size: 20,
                       ),
                       onTap: () {
-                        isFirstChapter ?_showToast('banj dang doc chap dau thien'):
-                        _goToNewChap(chapterDetail?.prevChap?.id ?? '-1');
+                        isFirstChapter
+                            ? _showToast('Bạn đang đọc chap đầu tiên')
+                            : _goToNewChap(chapterDetail?.prevChap?.id ?? '-1',
+                                currentUser?.user[0].id ?? '');
                         ;
                         // go to the previous chapter,
                       },
@@ -134,7 +141,6 @@ us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName ?? 'loi' , widget
                   ),
                 ),
               ),
-              
               Expanded(
                 child: Container(
                   // width: 60,
@@ -150,10 +156,10 @@ us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName ?? 'loi' , widget
                         size: 20,
                       ),
                       onTap: () {
-                        isNextChapter?
-                        _showToast('ban dang doc chap moi nhat'):
-                       _goToNewChap(chapterDetail?.nextChap?.id ?? '-1');
-                       
+                        isNextChapter
+                            ? _showToast('Bạn đang đọc chap mới nhất')
+                            : _goToNewChap(chapterDetail?.nextChap?.id ?? '-1',
+                                currentUser?.user[0].id ?? '');
                       },
                     ),
                   ),
@@ -166,7 +172,7 @@ us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.storyName ?? 'loi' , widget
     );
   }
 
-_buildNavbar() {
+  _buildNavbar() {
     return AppBar(
       // toolbarHeight: _isShowBar ? 100 : 0.0,
       title: Text(
@@ -206,10 +212,9 @@ _buildNavbar() {
           Navigator.of(context).pop(setStatelaidi);
         },
       ),
-      
-      
     );
   }
+
   void _showToast(String ms) {
     if (ms.contains(StringConst.textyeucaudangnhap)) {
       // update count show user need login: only first show toast need login, after will show snack bar to go to login screen,
@@ -234,44 +239,43 @@ _buildNavbar() {
       String imageUrl = imgElement.attributes['src'] ?? '...';
       if (imageUrl != null) {
         if (imageUrl.startsWith('http')) imageUrls.add(imageUrl);
-        print(imageUrls);
+        // print(imageUrls);
       }
     }
     return imageUrls;
   }
 
   List<String> extractImageUrlsFromHtml(String htmlString) {
-  List<String> imageUrls = [];
-  dom.DocumentFragment document = parseFragment(htmlString);
-  List<dom.Element> imgElements = document.querySelectorAll('img');
-  for (dom.Element imgElement in imgElements) {
-    String imageUrl = imgElement.attributes['src'] ?? '...';
-    if (imageUrl != null) {
-      imageUrls.add('https:$imageUrl');
-      print(imageUrls);
+    List<String> imageUrls = [];
+    dom.DocumentFragment document = parseFragment(htmlString);
+    List<dom.Element> imgElements = document.querySelectorAll('img');
+    for (dom.Element imgElement in imgElements) {
+      String imageUrl = imgElement.attributes['src'] ?? '...';
+      if (imageUrl != null) {
+        imageUrls.add('https:$imageUrl');
+        // print(imageUrls);
+      }
     }
+    return imageUrls;
   }
-  return imageUrls;
-}
-void bychapterlock() async {
-  print('ddeen day cuh');
-    final apiUrl = 'https://du-an-2023.vercel.app/purchaseChapter/${currentUser!.user[0].id}/${widget.chapterId}';
+
+  void bychapterlock() async {
+    final apiUrl =
+        'https://du-an-2023.vercel.app/purchaseChapter/${currentUser!.user[0].id}/${widget.chapterId}';
 
     try {
       final response = await dio.post(apiUrl);
       if (response.statusCode == 200) {
-       setState(() {
-         widget.viporfree = 'free';
-       });
-
-       
+        setState(() {
+          widget.viporfree = 'free';
+        });
       }
     } catch (e) {
       // Xử lý lỗi nếu có
     }
   }
 
-Widget _buildVipChapterBodyPartLock() {
+  Widget _buildVipChapterBodyPartLock() {
     double height = AppBar().preferredSize.height;
     if (height <= 0) {
       height = DoubleX.kPaddingSizeHuge_1XX;
@@ -327,21 +331,17 @@ Widget _buildVipChapterBodyPartLock() {
                   height: DoubleX.kPaddingSizeLarge,
                 ),
                 GestureDetector(
-                  onTap:  () async {
-                          
-                        bychapterlock();
-                          
-                        },
+                  onTap: () async {
+                    bychapterlock();
+                  },
                   child: Padding(
                     padding: EdgeInsets.all(8),
                     child: Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(9),
-                          
-                          color: 
-                               Colors.grey
-                  ,),
+                        borderRadius: BorderRadius.circular(9),
+                        color: Colors.grey,
+                      ),
                       child: Row(
                         children: [
                           const Icon(
@@ -351,14 +351,10 @@ Widget _buildVipChapterBodyPartLock() {
                           const SizedBox(
                             width: DoubleX.kPaddingSizeTiny,
                           ),
-                          Text(
-                              "Mở Khóa )",
+                          Text("Mở Khóa )",
                               style: const TextStyle(
                                 color: ColorConst.colorPrimaryText,
                               )),
-                        
-                              
-                              
                         ],
                       ),
                     ),
@@ -381,147 +377,91 @@ Widget _buildVipChapterBodyPartLock() {
 
   Widget _buildBodyChapter(String sChapContent) {
     print('${widget.viporfree}');
-    
-      // chap is vip
-      if (widget.viporfree == 'vip' ) {
-        
-        _isShowBar = true;
-        return Stack(
-          children: [
-            
-            _buildVipChapterBodyPartLock()
-          ],
-        );
-      } else {
-       
-        return _buildChapterBodyPartNormal(sChapContent);
-      }
-    } 
-  
-Widget _buildChapterBodyPartNormal(String sChapContent) {
+
+    // chap is vip
+    if (widget.viporfree == 'vip') {
+      _isShowBar = true;
+      return Stack(
+        children: [_buildVipChapterBodyPartLock()],
+      );
+    } else {
+      return _buildChapterBodyPartNormal(sChapContent);
+    }
+  }
+
+  Widget _buildChapterBodyPartNormal(String sChapContent) {
     // List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
     // List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
     List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
     // List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
 
     return Container(
-      child: imageUrls.isNotEmpty
-          ? InkWell(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              onTap: () {
-                setState(() {
-                  
-                });
-              },
-              child: SingleChildScrollView(
-                        controller: _scrollController,
-                        // physics: const CustomScrollPhysics(),
-                        padding: const EdgeInsets.only(bottom: 0, top: 0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: List.generate(
-                                imageUrls.length,
-                                (index) => CachedNetworkImage(
-                                  // filterQuality: FilterQuality.low,
-                                  fit: BoxFit.fitWidth,
-                                  width: MediaQuery.of(context).size.width,
-                                  imageUrl: imageUrls[index],
-                                  placeholder: (context, url) {
-                                    return Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: index < 5
-                                                ? 120
-                                                : MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    4),
-                                        child: CircularProgressIndicator
-                                            .adaptive(),
-                                      ),
-                                    );
-                                  },
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+        child: imageUrls.isNotEmpty
+            ? InkWell(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                onTap: () {
+                  setState(() {});
+                },
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  // physics: const CustomScrollPhysics(),
+                  padding: const EdgeInsets.only(bottom: 0, top: 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: List.generate(
+                          imageUrls.length,
+                          (index) => CachedNetworkImage(
+                            // filterQuality: FilterQuality.low,
+                            fit: BoxFit.fitWidth,
+                            width: MediaQuery.of(context).size.width,
+                            imageUrl: imageUrls[index],
+                            placeholder: (context, url) {
+                              return Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: index < 5
+                                          ? 120
+                                          : MediaQuery.of(context).size.height /
+                                              4),
+                                  child: CircularProgressIndicator.adaptive(),
                                 ),
-                              ),
-                            ),
-                            
-                          ],
+                              );
+                            },
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          ),
                         ),
                       ),
-            )
-          : Center(child: CircularProgressIndicator(),)
-    );
+                    ],
+                  ),
+                ),
+              )
+            : Center(
+                child: CircularProgressIndicator(),
+              ));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: ColorConst.colorPrimary50,
-      //   title: Text('Chapter ${widget.storyName}'),
-      // ),
       body: Stack(
         children: [
-          
-           ListView.builder(
-             // controller: _scrollController,
-             physics: AlwaysScrollableScrollPhysics(),
-             // scrollDirection: Axis.vertical,
-             itemCount: chapterDetail?.images.length,
-             shrinkWrap: true,
-             itemBuilder: (context, index) {
-               print('${chapterDetail?.images[index]}');
-                return _buildBodyChapter(chapterDetail?.images[index] ?? '');
-
-            //  return SingleChildScrollView(
-            //             controller: _scrollController,
-            //             // physics: const CustomScrollPhysics(),
-            //             padding: const EdgeInsets.only(bottom: 0, top: 0),
-            //             child: Column(
-            //               mainAxisAlignment: MainAxisAlignment.start,
-            //               crossAxisAlignment: CrossAxisAlignment.center,
-            //               children: [
-            //                 Column(
-            //                   children: List.generate(
-            //                     chapterDetail?.images.length ?? 0,
-            //                     (index) => CachedNetworkImage(
-            //                       // filterQuality: FilterQuality.low,
-            //                       fit: BoxFit.fitWidth,
-            //                       width: MediaQuery.of(context).size.width,
-            //                       imageUrl: (chapterDetail?.images[index] ?? '').replaceAll('\r', ''),
-            //                       placeholder: (context, url) {
-            //                         return Center(
-            //                           child: Padding(
-            //                             padding: EdgeInsets.symmetric(
-            //                                 vertical: index < 5
-            //                                     ? 120
-            //                                     : MediaQuery.of(context)
-            //                                             .size
-            //                                             .height /
-            //                                         4),
-            //                             child: CircularProgressIndicator
-            //                                 .adaptive(),
-            //                           ),
-            //                         );
-            //                       },
-            //                       errorWidget: (context, url, error) =>
-            //                           Icon(Icons.error),
-            //                     ),
-            //                   ),
-            //                 ),
-                            
-            //               ],
-            //             ),
-            //           );
-
-             },
-           ),
+          ListView.builder(
+            // controller: _scrollController,
+            physics: AlwaysScrollableScrollPhysics(),
+            // scrollDirection: Axis.vertical,
+            itemCount: chapterDetail?.images.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              // print('${chapterDetail?.images[index]}');
+              return _buildBodyChapter(chapterDetail?.images[index] ?? '');
+            },
+          ),
           Positioned(
             top: 0,
             left: 0,
@@ -534,7 +474,7 @@ Widget _buildChapterBodyPartNormal(String sChapContent) {
               child: _buildNavbar(),
             ),
           ),
-           Positioned(
+          Positioned(
             left: 0,
             right: 0,
             bottom: 0,
@@ -548,8 +488,9 @@ Widget _buildChapterBodyPartNormal(String sChapContent) {
       ),
     );
   }
+
   ScrollDirection? _previousScrollDirection;
-void clearCacheMemory() {
+  void clearCacheMemory() {
     ImageCache _imageCache = PaintingBinding.instance.imageCache;
     imageCache.clear();
     _imageCache.clearLiveImages();

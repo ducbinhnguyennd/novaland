@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/strings_const.dart';
 import 'package:loginapp/model/user_model.dart';
@@ -9,13 +10,13 @@ import 'package:loginapp/routes.dart';
 import 'package:loginapp/screens/detail_mangan.dart';
 import 'package:loginapp/user_Service.dart';
 
-class ItemTruyenMoi extends StatefulWidget {
+class ItemTo extends StatefulWidget {
   final String id;
   final String image;
   final String name;
   final String sochap;
 
-  ItemTruyenMoi(
+  ItemTo(
       {Key? key,
       required this.id,
       required this.image,
@@ -23,10 +24,10 @@ class ItemTruyenMoi extends StatefulWidget {
       required this.sochap});
 
   @override
-  _ItemTruyenMoiState createState() => _ItemTruyenMoiState();
+  _ItemToMoiState createState() => _ItemToMoiState();
 }
 
-class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
+class _ItemToMoiState extends State<ItemTo> {
   Data? currentUser;
   _loadUser() {
     UserServices us = UserServices();
@@ -93,7 +94,7 @@ class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
               _showToast(StringConst.textyeucaudangnhap);
             }
           },
-          child: Column(
+          child: Stack(
             children: [
               CachedNetworkImage(
                 imageUrl: widget.image,
@@ -110,16 +111,33 @@ class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
                 placeholder: (context, url) => CircularProgressIndicator(), // Hiển thị khi đang tải ảnh
                 errorWidget: (context, url, error) => Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.name,
-                      style: TextStyle(fontSize: 15),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
-                  Text('Chapter ${widget.sochap}')
-                ],
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: ColorConst.colorPrimary120,
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Column(
+                  children: [
+                    Text(widget.name,
+                        style: TextStyle(fontSize: 15),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis),
+                    Text('Chapter ${widget.sochap}')
+                  ],
+                ),
               )
+              
             ],
           ),
         ),

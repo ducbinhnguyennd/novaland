@@ -9,6 +9,7 @@ import 'package:loginapp/screen_tk/taikhoan.dart';
 import 'package:loginapp/screens/bangtin.dart';
 import 'package:loginapp/screens/trangchupage.dart';
 import 'package:loginapp/screens/tutruyen_screen.dart';
+import 'package:loginapp/screens/user_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -71,6 +72,7 @@ class _MainScreenState extends State<MainScreen>
 
             BangTinScreen(),
             TaikhoanScreen()
+            // UserScreen()
             // Add more TabBarView children as needed
           ],
         ),

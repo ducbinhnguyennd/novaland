@@ -6,10 +6,12 @@ import 'package:loginapp/Globals.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
+import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/login_screen.dart';
 import 'package:loginapp/main_screen.dart';
 
 import 'package:loginapp/model/user_model.dart';
+import 'package:loginapp/model/user_model2.dart';
 import 'package:loginapp/routes.dart';
 import 'package:loginapp/screen_tk/huongdan_screen.dart';
 import 'package:loginapp/screen_tk/lichsugiaodich.dart';
@@ -26,31 +28,28 @@ class TaikhoanScreen extends StatefulWidget {
   State<TaikhoanScreen> createState() => _TaikhoanScreenState();
 }
 
-class _TaikhoanScreenState extends State<TaikhoanScreen>
-{
+class _TaikhoanScreenState extends State<TaikhoanScreen> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   Data? currentUser;
   bool isSwitchedModeDarkTheme = Globals.isDarkModeTheme;
   bool isSwitchedModeRight = Globals.isRight;
   final GlobalKey _secondUserMissionKey = GlobalKey();
+  late Future<UserModel> futureUserData;
+  final ApiUser apiService = ApiUser();
   _loadUser() {
     UserServices us = UserServices();
     us.getInfoLogin().then((value) {
-    
       if (value != "") {
         setState(() {
           currentUser = Data.fromJson(jsonDecode(value));
+          futureUserData =
+              apiService.fetchUserData(currentUser?.user[0].id ?? '');
         });
       } else {
         setState(() {
           currentUser = null;
         });
       }
-    }, onError: (error) {
-      if (kDebugMode) {
-        print(
-            '_alexTR_logging_ : SettingPage: _loadUser: error: ${error.toString()}');
-      }
-    });
+    }, onError: (error) {});
   }
 
   @override
@@ -58,201 +57,208 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
     super.initState();
     _loadUser();
   }
-
+Future<void> _refresh() async {
+    await _loadUser();
+  }
   @override
   Widget build(BuildContext context) {
     if (currentUser == null) {
       return LoginScreen();
     } else {
-      return Scaffold(
-        // resizeToAvoidBottomInset: false,
-        body: ListView(
-          padding: EdgeInsets.all(0),
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(35),
-                      bottomRight: Radius.circular(35),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                    color: Colors.grey[300],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(35),
-                      bottomRight: Radius.circular(35),
-                    ),
-                    child: Image.asset(
-                      AssetsPathConst.backgroundStoryDetail,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Container(
-                    height: MediaQuery.of(context).size.height / 4,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(35),
-                        bottomRight: Radius.circular(35),
-                      ),
-                      color: Colors.white.withOpacity(0.7),
-                    )),
-                Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                              'https://tiengdong.com/wp-content/uploads/www_tiengdong_com-meme-9-5-diem-huan-hoa-hong.jpg?v=1640272983'),
-                          fit: BoxFit.cover,
+      return RefreshIndicator(
+        color: ColorConst.colorPrimary120,
+        onRefresh: _refresh,
+        child: Scaffold(
+            // resizeToAvoidBottomInset: false,
+            body: FutureBuilder<UserModel>(
+                future: futureUserData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: ColorConst.colorPrimary120,
+                    ));
+                  } else if (snapshot.hasError) {
+                    return Text(
+                      'Error: ${snapshot.error}',
+                      style: TextStyle(fontSize: 30),
+                    );
+                  } else {
+                    final userData = snapshot.data!;
+                    return ListView(
+                      padding: EdgeInsets.all(0),
+                      children: [
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              height: MediaQuery.of(context).size.height / 4,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(35),
+                                  bottomRight: Radius.circular(35),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 3), // changes position of shadow
+                                  ),
+                                ],
+                                color: Colors.grey[300],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(35),
+                                  bottomRight: Radius.circular(35),
+                                ),
+                                child: Image.asset(
+                                  AssetsPathConst.backgroundStoryDetail,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Container(
+                                height: MediaQuery.of(context).size.height / 4,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(35),
+                                    bottomRight: Radius.circular(35),
+                                  ),
+                                  color: Colors.white.withOpacity(0.7),
+                                )),
+                            Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          'https://tiengdong.com/wp-content/uploads/www_tiengdong_com-meme-9-5-diem-huan-hoa-hong.jpg?v=1640272983'),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50)),
+                                  ),
+                                ),
+                                Text(
+                                  userData.username,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  'Xu của bạn: ${userData.coin.toString()}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                      ),
-                    ),
-                    Text(
-                      currentUser?.user[0].username ?? 'Tên đăng nhập',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.black),
-                    ),
-                     Text(
-                      currentUser?.user[0].coin.toString() ?? 'Xu nef',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.black),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            // Text('Chức năng thành viên'),
-            // Container(
-            //   height: 100,
-            //   decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(30),
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: Colors.grey.withOpacity(0.5),
-            //           spreadRadius: 5,
-            //           blurRadius: 7,
-            //           offset: Offset(0, 3), // changes position of shadow
-            //         ),
-            //       ],
-            //       color: ColorConst.colorPrimary80),
-            //       child: Column(children: [
-            //         ItemCardTaiKhoanWidget(title: 'Thay đổi ảnh đại diện', onTap: () {
-            //     Navigator.of(context).pushNamed(SuaThongTin.routeName);
-            //   },)
-            //       ]),
-            // )
-            const Padding(
-              padding: EdgeInsets.only(left: 20.0, top: 40, bottom: 5),
-              child: Text('Chức năng thành viên',
-                  style: TextStyle(
-                    color: Colors.pink,
-                    fontWeight: FontWeight.bold,
-                    // fontSize: 12
-                  )),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    blurRadius: 10,
-                    offset: Offset(0, 0),
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: _buildSetting(),
-            ),
-
-            const Padding(
-              padding: EdgeInsets.only(left: 20.0, top: 40, bottom: 5),
-              child: Text('Cài đặt',
-                  style: TextStyle(
-                    color: Colors.pink,
-                    fontWeight: FontWeight.bold,
-                    // fontSize: 12
-                  )),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    blurRadius: 10,
-                    offset: Offset(0, 0),
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: _buildSetting1(),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 20.0, top: 40, bottom: 5),
-              child: Text('Hỗ trợ người dùng',
-                  style: TextStyle(
-                    color: Colors.pink,
-                    fontWeight: FontWeight.bold,
-                    // fontSize: 12
-                  )),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    blurRadius: 10,
-                    offset: Offset(0, 0),
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: _buildSetting2(),
-            ),
-            SizedBox(height: 50),
-          ],
-        ),
+                        const Padding(
+                          padding:
+                              EdgeInsets.only(left: 20.0, top: 40, bottom: 5),
+                          child: Text('Chức năng thành viên',
+                              style: TextStyle(
+                                color: Colors.pink,
+                                fontWeight: FontWeight.bold,
+                                // fontSize: 12
+                              )),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                blurRadius: 10,
+                                offset: Offset(0, 0),
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: _buildSetting(),
+                        ),
+                        const Padding(
+                          padding:
+                              EdgeInsets.only(left: 20.0, top: 40, bottom: 5),
+                          child: Text('Cài đặt',
+                              style: TextStyle(
+                                color: Colors.pink,
+                                fontWeight: FontWeight.bold,
+                                // fontSize: 12
+                              )),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                blurRadius: 10,
+                                offset: Offset(0, 0),
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: _buildSetting1(),
+                        ),
+                        const Padding(
+                          padding:
+                              EdgeInsets.only(left: 20.0, top: 40, bottom: 5),
+                          child: Text('Hỗ trợ người dùng',
+                              style: TextStyle(
+                                color: Colors.pink,
+                                fontWeight: FontWeight.bold,
+                                // fontSize: 12
+                              )),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                blurRadius: 10,
+                                offset: Offset(0, 0),
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: _buildSetting2(),
+                        ),
+                        SizedBox(height: 50),
+                      ],
+                    );
+                  }
+                })),
       );
     }
   }
-
+@override
+  bool get wantKeepAlive => true;
   bool hot18 = false;
   bool noichap = false;
   _buildSetting() {
@@ -293,13 +299,12 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
           ),
           InkWell(
             onTap: () {
-             
-  
-
- Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) =>  LichSuGiaoDich(userId: currentUser?.user[0].id ?? '')),
-  );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        LichSuGiaoDich(userId: currentUser?.user[0].id ?? '')),
+              );
             },
             child: ListTile(
                 title: Transform.translate(
@@ -308,17 +313,7 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                 ),
                 leading: Image.asset(AssetsPathConst.ico_6, height: 22)),
           ),
-          Visibility(
-            visible: true,
-            child: InkWell(
-              onTap: () {},
-              child: ListTile(
-                title: const Text('Xu Của Bạn'),
-                leading: Image.asset(AssetsPathConst.someCoins,
-                    width: DoubleX.kSizeMedium_1XX),
-              ),
-            ),
-          ),
+          
           Visibility(
             visible: true,
             child: InkWell(
@@ -600,12 +595,12 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                         ElevatedButton(
                           onPressed: () async {
                             Navigator.pushReplacement<void, void>(
-                                context,
-                                MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      const MainScreen(),
-                                ),
-                              );
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    const MainScreen(),
+                              ),
+                            );
                             try {
                               UserServices us = UserServices();
                               await us.deleteinfo();
@@ -673,6 +668,4 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
       });
     }
   }
-
-
 }

@@ -23,11 +23,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         future: categoryService.getCategories(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator(color: ColorConst.colorPrimary120,));
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
             final categories = snapshot.data;
+    // print('object ${categories}');
+
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,

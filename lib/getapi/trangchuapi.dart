@@ -6,10 +6,12 @@ import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/model/lichsuthanhtoan_model.dart';
 import 'package:loginapp/model/trangchu_model.dart';
+import 'package:loginapp/model/user_model2.dart';
 import 'package:url_launcher/url_launcher.dart';
-   Dio dio = Dio();
-class MangaService {
 
+Dio dio = Dio();
+
+class MangaService {
   static String apiUrl = "https://du-an-2023.vercel.app/mangas";
 
   static Future<List<Manga>> fetchMangaList() async {
@@ -27,15 +29,15 @@ class MangaService {
     }
   }
 }
+
 class MangaDetail {
-
-
-  static Future<MangaDetailModel> fetchMangaDetail(String mangaId, String userId) async {
-  final apiUrl = "https://du-an-2023.vercel.app/mangachitiet/$mangaId/$userId";
+  static Future<MangaDetailModel> fetchMangaDetail(
+      String mangaId, String userId) async {
+    final apiUrl =
+        "https://du-an-2023.vercel.app/mangachitiet/$mangaId/$userId";
 
     Response response = await dio.get(apiUrl);
     if (response.statusCode == 200) {
-      
       final mangaDetail = MangaDetailModel.fromJson(response.data);
       print('binhlogin - ${mangaDetail}');
       return mangaDetail;
@@ -43,30 +45,28 @@ class MangaDetail {
       throw Exception('Không thể lấy dữ liệu từ API');
     }
   }
-
-}  
-class ChapterDetail{
-
-static Future<ComicChapter> fetchChapterImages(String chapterId) async {
-
-  final apiUrl = 'https://du-an-2023.vercel.app/chapter/$chapterId/images';
-
-  try {
-    final response = await dio.get(apiUrl);
-
-    if (response.statusCode == 200) {
-      
-  ComicChapter myModel = ComicChapter.fromJson(response.data);
-      return myModel;
-    } else {
-      throw Exception('Failed to load chapter images');
-    }
-  } catch (e) {
-    print('loi o day nay :$e');
-    throw Exception('Error: $e');
-
-  }
 }
+
+class ChapterDetail {
+  static Future<ComicChapter> fetchChapterImages(
+      String chapterId, String userId) async {
+    final apiUrl =
+        'https://du-an-2023.vercel.app/chapter/$chapterId/$userId/images';
+
+    try {
+      final response = await dio.get(apiUrl);
+
+      if (response.statusCode == 200) {
+        ComicChapter myModel = ComicChapter.fromJson(response.data);
+        return myModel;
+      } else {
+        throw Exception('Failed to load chapter images');
+      }
+    } catch (e) {
+      print('loi o day nay :$e');
+      throw Exception('Error: $e');
+    }
+  }
 }
 
 class ApiListYeuThich {
@@ -102,9 +102,11 @@ class CategoryService {
     return [];
   }
 }
-  //thanh toán
-  class ApiThanhToan {
-  static Future<void> sendPaymentData(String userId, double totalAmount, String currency) async {
+
+//thanh toán
+class ApiThanhToan {
+  static Future<void> sendPaymentData(
+      String userId, double totalAmount, String currency) async {
     final url = 'https://du-an-2023.vercel.app/pay/$userId';
     try {
       final response = await dio.post(
@@ -118,7 +120,7 @@ class CategoryService {
       if (response.statusCode == 200) {
         // print('binh thanh toan ${response.data}');
         final Uri paymentUri = Uri.parse(response.data);
-           launchUrl(paymentUri);
+        launchUrl(paymentUri);
       } else {
         print('loi');
       }
@@ -127,16 +129,18 @@ class CategoryService {
     }
   }
 }
+
 // post comment
 class CommentService {
-  static Future<void> postComment(String userId, String mangaId, String comment) async {
+  static Future<void> postComment(
+      String userId, String mangaId, String comment) async {
     final dio = Dio();
     try {
       final response = await dio.post(
           'https://du-an-2023.vercel.app/postcomment/$userId/$mangaId',
           data: {'comment': comment});
       if (response.statusCode == 200) {
-         print('binh cmt ${response.data}');
+        print('binh cmt ${response.data}');
       } else {
         print('Loi cmnr');
       }
@@ -146,16 +150,19 @@ class CommentService {
     }
   }
 }
+
 // xóa comment
 class XoaComment {
-  static Future<void> xoaComment(  String comment,String mangaId,String userId) async {
-    print('https://du-an-2023.vercel.app/deletecomment/$comment/$mangaId/$userId');
+  static Future<void> xoaComment(
+      String comment, String mangaId, String userId) async {
+    print(
+        'https://du-an-2023.vercel.app/deletecomment/$comment/$mangaId/$userId');
     try {
       final response = await dio.post(
-          'https://du-an-2023.vercel.app/deletecomment/$comment/$mangaId/$userId',
-        );
+        'https://du-an-2023.vercel.app/deletecomment/$comment/$mangaId/$userId',
+      );
       if (response.statusCode == 200) {
-         print('binh xoa ${response.data}');
+        print('binh xoa ${response.data}');
       } else {
         print('Loi cmnr');
       }
@@ -165,9 +172,9 @@ class XoaComment {
     }
   }
 }
+
 // lịch sử thanh toán
 class PaymentApi {
- 
   final String baseUrl = 'https://du-an-2023.vercel.app';
 
   Future<List<PaymentHistory>> getPaymentHistory(String userId) async {
@@ -178,5 +185,15 @@ class PaymentApi {
     } else {
       throw Exception('Failed to fetch payment history');
     }
+  }
+}
+
+// lay info user
+class ApiUser {
+  final String baseUrl = 'https://du-an-2023.vercel.app';
+
+  Future<UserModel> fetchUserData(String userId) async {
+    final response = await dio.get('$baseUrl/user/$userId');
+    return UserModel.fromJson(response.data);
   }
 }

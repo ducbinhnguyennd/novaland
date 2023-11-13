@@ -35,6 +35,7 @@ class ComicChapter {
 
 class ChapterDetails {
   final String id;
+  final String name;
   final List<String> images;
   final String vipOrFree;
 
@@ -42,6 +43,7 @@ class ChapterDetails {
     required this.id,
     required this.images,
     required this.vipOrFree,
+    required this.name
   });
 
   factory ChapterDetails.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class ChapterDetails {
 
     return ChapterDetails(
       id: json['_id'],
+      name: json['chapname'],
       images: images,
       vipOrFree: json['viporfree'],
     );

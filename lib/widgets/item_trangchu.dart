@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/trangchu_model.dart';
 import 'package:loginapp/screens/detail_category_screen.dart';
+import 'package:loginapp/widgets/item_to.dart';
 import 'package:loginapp/widgets/item_truyenmoi.dart';
 
 class ItemTrangChu extends StatefulWidget {
@@ -73,40 +74,152 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                             children: [
                               Text('Thể loại ${category}',
                                   style: TextStyle(
-                                      fontSize: 18, fontWeight: FontWeight.bold)),
-                                      Text('Xem thêm')
-                            
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold)),
+                              Text('Xem thêm')
                             ],
                           ),
                         )),
-                   
-                  SizedBox(
-            width: double.infinity,
-            // height: widthS / (Globals.isTablet ? 3 : 2),
-            height: 220,
-            child: GridView(
-              shrinkWrap: true,
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: widthS / 1,
-                childAspectRatio: 2 / 1,
-                crossAxisSpacing: 0,
-                mainAxisSpacing: 0,
-              ),
-              children: List.generate(categoryMangas.length, (index) {
-                
-                return ItemTruyenMoi(
-                          id: categoryMangas[index].id,
-                          name: categoryMangas[index].mangaName,
-                          image: categoryMangas[index].image,
-                          sochap:
-                              categoryMangas[index].totalChapters.toString(),
-                        );
-              }),
-            ),
-          )
-
+                    SizedBox(
+                        child: category == 'Action'
+                            ? SizedBox(
+                                width: double.infinity,
+                                height: 220,
+                                child: GridView(
+                                  shrinkWrap: true,
+                                  physics: const BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  gridDelegate:
+                                      SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: widthS / 1,
+                                    childAspectRatio: 4 / 2.3,
+                                    crossAxisSpacing: 0,
+                                    mainAxisSpacing: 0,
+                                  ),
+                                  children: List.generate(categoryMangas.length,
+                                      (index) {
+                                    return ItemTruyenMoi(
+                                      id: categoryMangas[index].id,
+                                      name: categoryMangas[index].mangaName,
+                                      image: categoryMangas[index].image,
+                                      sochap: categoryMangas[index]
+                                          .totalChapters
+                                          .toString(),
+                                    );
+                                  }),
+                                ),
+                              )
+                            : category == 'Anime'
+                                ? SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height / 2,
+                                    width: widthS,
+                                    child: GridView.builder(
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 0,
+                                        mainAxisSpacing: 0,
+                                        childAspectRatio: 3 / 4.5,
+                                      ),
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: 6,
+                                      itemBuilder: (context, innerIndex) {
+                                        return ItemTruyenMoi(
+                                          id: categoryMangas[innerIndex].id,
+                                          name: categoryMangas[innerIndex]
+                                              .mangaName,
+                                          image:
+                                              categoryMangas[innerIndex].image,
+                                          sochap: categoryMangas[innerIndex]
+                                              .totalChapters
+                                              .toString(),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : category == 'Romance'
+                                    ? Column(
+                                      children: [
+                                         SizedBox(
+                                           width: widthS,
+                                           height: MediaQuery.of(context).size.height/5,
+                                           child: Padding(
+                                             padding: const EdgeInsets.all(8.0),
+                                             child: ItemTo(
+                                                                                   id: categoryMangas[0].id,
+                                                                                   name: categoryMangas[0]
+                                                                                       .mangaName,
+                                                                                   image:
+                                                                                       categoryMangas[0].image,
+                                                                                   sochap: categoryMangas[0]
+                                                                                       .totalChapters
+                                                                                       .toString(),
+                                                                                 ),
+                                           )
+                                         ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: GridView.builder(
+                                            gridDelegate:
+                                                SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              crossAxisSpacing: 0,
+                                              mainAxisSpacing: 0,
+                                              childAspectRatio: 3 / 4.5,
+                                            ),
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount: 3,
+                                            itemBuilder: (context, innerIndex) {
+                                              return ItemTruyenMoi(
+                                                id: categoryMangas[innerIndex + 1].id,
+                                                name: categoryMangas[innerIndex + 1]
+                                                    .mangaName,
+                                                image: categoryMangas[innerIndex + 1]
+                                                    .image,
+                                                sochap: categoryMangas[innerIndex + 1]
+                                                    .totalChapters
+                                                    .toString(),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                    : SizedBox(
+                                        width: double.infinity,
+                                        height: 220,
+                                        child: GridView(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          scrollDirection: Axis.horizontal,
+                                          gridDelegate:
+                                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                            maxCrossAxisExtent: widthS / 1,
+                                            childAspectRatio: 4 / 2.3,
+                                            crossAxisSpacing: 0,
+                                            mainAxisSpacing: 0,
+                                          ),
+                                          children: List.generate(
+                                              categoryMangas.length, (index) {
+                                            return ItemTruyenMoi(
+                                              id: categoryMangas[index].id,
+                                              name: categoryMangas[index]
+                                                  .mangaName,
+                                              image:
+                                                  categoryMangas[index].image,
+                                              sochap: categoryMangas[index]
+                                                  .totalChapters
+                                                  .toString(),
+                                            );
+                                          }),
+                                        ),
+                                      ))
                   ],
                 );
               }).toList(),
