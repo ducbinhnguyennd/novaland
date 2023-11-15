@@ -20,6 +20,7 @@ import 'package:loginapp/screen_tk/suathongtin.dart';
 import 'package:loginapp/screen_tk/themtienthach.dart';
 import 'package:loginapp/screen_tk/xoataikhoan.dart';
 import 'package:loginapp/user_Service.dart';
+import 'package:loginapp/widgets/custom_circle_avatar.dart';
 
 class TaikhoanScreen extends StatefulWidget {
   const TaikhoanScreen({super.key});
@@ -133,20 +134,32 @@ Future<void> _refresh() async {
                                 )),
                             Column(
                               children: [
-                                Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          'https://tiengdong.com/wp-content/uploads/www_tiengdong_com-meme-9-5-diem-huan-hoa-hong.jpg?v=1640272983'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50)),
-                                  ),
-                                ),
+                             
+                       Container(
+                height: 80,
+                width: 80,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  boxShadow: const <BoxShadow>[
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.17),
+                      blurRadius: 10,
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Center(
+                  child: Text(
+                   userData.username.toString().substring(0, 1),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: ColorConst.colorBackgroundStory,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
                                 Text(
                                   userData.username,
                                   style: TextStyle(

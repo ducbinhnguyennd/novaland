@@ -5,6 +5,7 @@ import 'package:loginapp/model/category_model.dart';
 import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/model/lichsuthanhtoan_model.dart';
+import 'package:loginapp/model/topUser_model.dart';
 import 'package:loginapp/model/trangchu_model.dart';
 import 'package:loginapp/model/user_model2.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -195,5 +196,22 @@ class ApiUser {
   Future<UserModel> fetchUserData(String userId) async {
     final response = await dio.get('$baseUrl/user/$userId');
     return UserModel.fromJson(response.data);
+  }
+}
+class ApiTopUser {
+  Future<List<TopUserModel>> getUsers() async {
+    try {
+      Response response = await dio.get('https://du-an-2023.vercel.app/topUsers');
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        List<TopUserModel> users =
+            data.map((json) => TopUserModel.fromJson(json)).toList();
+        return users;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
   }
 }

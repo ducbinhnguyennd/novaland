@@ -2,11 +2,18 @@ class ComicChapter {
   final List<String> images;
   final ChapterDetails? nextChap;
   final ChapterDetails? prevChap;
+  final String name;
+  final String id;
+
+  final String viporfree;
 
   ComicChapter({
     required this.images,
     this.nextChap,
     this.prevChap,
+    required this.id,
+    required this.name,
+    required this.viporfree
   });
 
   factory ComicChapter.fromJson(Map<String, dynamic> json) {
@@ -26,9 +33,12 @@ class ComicChapter {
     }
 
     return ComicChapter(
+      id: json['_id'],
       images: images,
       nextChap: nextChap,
       prevChap: prevChap,
+      name: json['chapname'],
+      viporfree: json['viporfree']
     );
   }
 }

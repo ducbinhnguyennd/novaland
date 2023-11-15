@@ -6,14 +6,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:html/parser.dart';
-import 'package:loginapp/Globals.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/constant/strings_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/detail_chapter.dart';
-import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/routes.dart';
 import 'package:loginapp/user_Service.dart';
@@ -76,8 +74,9 @@ class _DetailChapterState extends State<DetailChapter> {
     _loadUser();
     
     UserServices us = UserServices();
+    print('alo123 ${chapterDetail?.id}');
     us.addChuongVuaDocCuaTruyen(
-        widget.chapterId, widget.storyName ?? 'loi', widget.storyId);
+     widget.chapterId, chapterDetail?.name ?? 'loi', widget.storyId);
     // _scrollController.addListener(_scrollListener);
     
   }
@@ -89,13 +88,21 @@ class _DetailChapterState extends State<DetailChapter> {
   }
 
   Future<void> _goToNewChap(String chapId, String userId) async {
+    print('object $chapId');
     await ChapterDetail.fetchChapterImages(chapId, userId).then((value) {
       setState(() {
-        widget.storyName = chapterDetail!.nextChap!.name;
+        
         chapterDetail = value;
-        if (chapterDetail?.nextChap?.vipOrFree == 'vip') {
-          widget.viporfree = 'vip';
-        }
+        // if (chapterDetail?.nextChap?.vipOrFree == 'vip') {
+        //   widget.viporfree = 'vip';
+        // }
+        widget.viporfree = chapterDetail?.viporfree ?? 'vip';
+        UserServices us = UserServices();
+    print('alo123 ${chapterDetail?.id}');
+    us.addChuongVuaDocCuaTruyen(
+       chapterDetail?.id ?? widget.chapterId, chapterDetail?.name ?? 'loi', widget.storyId);
+    // _scrollController.addListener(_scrollListener);
+    
       });
     });
   }
@@ -176,7 +183,7 @@ class _DetailChapterState extends State<DetailChapter> {
     return AppBar(
       // toolbarHeight: _isShowBar ? 100 : 0.0,
       title: Text(
-        widget.storyName ?? 'Tanvlog',
+         chapterDetail?.name?? 'Tanvlog',
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -261,7 +268,8 @@ class _DetailChapterState extends State<DetailChapter> {
 
   void bychapterlock() async {
     final apiUrl =
-        'https://du-an-2023.vercel.app/purchaseChapter/${currentUser!.user[0].id}/${widget.chapterId}';
+        // 'https://du-an-2023.vercel.app/purchaseChapter/${currentUser!.user[0].id}/${widget.chapterId}';
+        'https://du-an-2023.vercel.app/purchaseChapter/${currentUser!.user[0].id}/${chapterDetail?.id}';
 
     try {
       final response = await dio.post(apiUrl);
@@ -288,7 +296,9 @@ class _DetailChapterState extends State<DetailChapter> {
             DoubleX.kPaddingSizeLarge,
             DoubleX.kPaddingSizeZero),
         alignment: Alignment.topCenter,
+        height: MediaQuery.of(context).size.height,
         child: ListView(
+
           cacheExtent: 0,
           padding: EdgeInsets.only(bottom: 30),
           shrinkWrap: true,
@@ -396,6 +406,7 @@ class _DetailChapterState extends State<DetailChapter> {
     // List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
 
     return Container(
+      height: MediaQuery.of(context).size.height,
         child: imageUrls.isNotEmpty
             ? InkWell(
                 splashColor: Colors.transparent,

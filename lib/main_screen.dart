@@ -31,7 +31,7 @@ class _MainScreenState extends State<MainScreen>
   void initState() {
     super.initState();
     _tabController =
-        TabController(length: 4, vsync: this); // Change the length as needed
+        TabController(length: 5, vsync: this); // Change the length as needed
 
     _storage.read(key: 'user').catchError((value) {
       print("Error Is: $value");
@@ -71,8 +71,9 @@ class _MainScreenState extends State<MainScreen>
             FavoriteMangaScreen(),
 
             BangTinScreen(),
+            BXHScreen(),
             TaikhoanScreen()
-            // UserScreen()
+            
             // Add more TabBarView children as needed
           ],
         ),
@@ -132,6 +133,21 @@ class _MainScreenState extends State<MainScreen>
                         visible: true,
                         child: Text(
                           'Thế giới',
+                          style: TextStyle(fontSize: DoubleX.kFontSizeTiny_1X),
+                        ),
+                      ),
+                    ),
+                      Tab(
+                      icon: ImageIcon(
+                        AssetImage(AssetsPathConst.tabUser),
+                        size: DoubleX.kSizeLarge - 5,
+                      ),
+                      iconMargin:
+                          EdgeInsets.only(bottom: DoubleX.kPaddingSizeZero),
+                      child: Visibility(
+                        visible: true,
+                        child: Text(
+                          'BXH',
                           style: TextStyle(fontSize: DoubleX.kFontSizeTiny_1X),
                         ),
                       ),
