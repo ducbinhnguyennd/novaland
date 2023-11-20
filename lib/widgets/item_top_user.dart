@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/model/topUser_model.dart';
 import 'package:loginapp/widgets/custom_circle_avatar.dart';
@@ -50,13 +51,16 @@ class TopCuongGiaItem extends StatelessWidget {
                       SizedBox(
                         width: DoubleX.kSizeLarge_1X,
                         height: DoubleX.kSizeLarge_1X,
-                        child: Padding(
-                          padding: const EdgeInsets.all(DoubleX.kPaddingSizeTiny_0X0X),
-                          child: CustomCircleAvatar(
-                            myImage: NetworkImage(model.username),
-                            initials: model.username.toString().substring(0, 1),
-                          ),
-                        ),
+                           child: CircleAvatar(
+                    backgroundColor: ColorConst.colorPrimary,
+                    child: Text(
+                     model.username
+                              .toString()
+                              .substring(0, 1) 
+                          ,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
                       ),
                       const SizedBox(
                         width: DoubleX.kPaddingSizeTiny,

@@ -29,10 +29,7 @@ class _HomePageState extends State<HomePage>
   bool _isLoading = true;
 
   final List<ItemCarousel> itemList = [
-    ItemCarousel(
-        id: '',
-        image:
-            'https://toptruyentranh.net/wp-content/uploads/2021/04/top-9-truyen-tranh-ngon-tinh-hay-nhat.png'),
+
     ItemCarousel(
         id: '',
         image:

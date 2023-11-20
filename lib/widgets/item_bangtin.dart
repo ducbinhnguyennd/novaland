@@ -1,9 +1,46 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:like_button/like_button.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
+import 'package:loginapp/constant/common_service.dart';
+import 'package:loginapp/constant/strings_const.dart';
+import 'package:loginapp/getapi/trangchuapi.dart';
+import 'package:loginapp/model/bangtin_model.dart';
+import 'package:loginapp/model/user_model.dart';
+import 'package:loginapp/routes.dart';
+import 'package:loginapp/screens/binhluan_screen.dart';
+import 'package:loginapp/user_Service.dart';
 
 class ItemBangTin extends StatefulWidget {
-  const ItemBangTin({Key? key}) : super(key: key);
+  ItemBangTin(
+      {Key? key,
+      required this.username,
+      this.like,
+      required this.content,
+      required this.date,
+      required this.cmt,
+      this.userid,
+      required this.idbaiviet,
+      required this.isLike,
+      required this.comments,
+      this.widgetDelete,
+      required this.useridbaiviet})
+      : super(key: key);
+
+  final String? username;
+  int? like;
+  final String? content;
+  final String? date;
+  final String? cmt;
+  final String? userid;
+  final String? idbaiviet;
+  final String? useridbaiviet;
+  bool isLike = false;
+  final List<Comment> comments;
+  Widget? widgetDelete;
 
   @override
   _ItemBangTinState createState() => _ItemBangTinState();
@@ -11,18 +48,52 @@ class ItemBangTin extends StatefulWidget {
 
 class _ItemBangTinState extends State<ItemBangTin> {
   bool isFollowing = false;
-  bool isLike = false;
-
+  Data? currentUser;
+  LikeApiService likeApiService = LikeApiService();
   void toggleFollowStatus() {
     setState(() {
       isFollowing = !isFollowing;
     });
   }
 
+
   void toggleLike() {
-    setState(() {
-      isLike = !isLike;
-    });
+    if (widget.userid != null) {
+      if (!widget.isLike) {
+        // If the post is not liked, allow the user to like it
+        setState(() {
+          widget.isLike = true;
+          
+            widget.like = widget.like! + 1;
+          
+        });
+
+        likeApiService.likeBaiViet(widget.userid ?? '', widget.idbaiviet ?? '');
+      } else {
+        // If the post is already liked, show a toast message
+        _showToast("Bạn đã thích bài viết này");
+        // if (kDebugMode) {
+        //   setState(() {
+        //     if (widget.like != null) {
+        //       widget.like = widget.like! + 1;
+        //     }
+        //   });
+        // }
+      }
+    } else {
+      _showToast(StringConst.textyeucaudangnhap);
+    }
+  }
+
+  void _showToast(String msg) {
+    if (msg.contains(StringConst.textyeucaudangnhap)) {
+      CommonService.showSnackBar(StringConst.textyeucaudangnhap, context, () {
+        RouteUtil.redirectToLoginScreen(context);
+      });
+      return;
+    }
+
+    CommonService.showToast(msg, context);
   }
 
   @override
@@ -35,61 +106,44 @@ class _ItemBangTinState extends State<ItemBangTin> {
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(0, 8.0, 8.0, 8.0),
                 child: CircleAvatar(
-                  backgroundColor: Colors.amber,
-                  child: Text('Alo'),
+                  backgroundColor: ColorConst.colorPrimary,
+                  child: Text(
+                    widget.username?.substring(0, 1) ?? '',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Tên nhóm dịch',
+                    widget.username ?? '',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'Ngày đăng',
+                    widget.date ?? '2023-11-18T04:38:10.828Z',
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
               Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: toggleFollowStatus,
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        isFollowing
-                            ? AssetsPathConst.icodafollow
-                            : AssetsPathConst.icofollow,
-                        height: 20,
-                      ),
-                      Text(
-                        isFollowing ? ' Đã theo dõi' : ' Theo dõi',
-                        style: TextStyle(
-                          color: isFollowing ? ColorConst.colorPrimary50 : null,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              widget.widgetDelete ?? Container()
             ],
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 5, 15.0, 15.0),
             child: Text(
-                'Bộ truyện Mao Sơn Tróc Quỷ Sơn chính thức end phần 1, team đã up ngang chap và cùng đợi phần 2 nhé.',
-                style: TextStyle(fontSize: 15)),
+              widget.content ?? '',
+              style: TextStyle(fontSize: 15),
+            ),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.favorite_outlined,
-                  color: ColorConst.colorPrimary50, size: 25),
-              Text(' 126')
+              Text('${widget.like} lượt thích'),
+              Text('${widget.cmt} bình luận')
             ],
           ),
           Divider(
@@ -106,27 +160,34 @@ class _ItemBangTinState extends State<ItemBangTin> {
                     InkWell(
                       onTap: toggleLike,
                       child: Icon(
-                          isLike ? Icons.favorite : Icons.favorite_border,
-                          color: isLike
-                              ? ColorConst.colorPrimary50
-                              : Colors.grey[350],
-                          size: 25),
+                        widget.isLike ? Icons.favorite : Icons.favorite_border,
+                        color: widget.isLike ?? false
+                            ? ColorConst.colorPrimary50
+                            : Colors.grey[350],
+                        size: 25,
+                      ),
                     ),
                     Text(' Tim')
                   ],
                 ),
-                Row(
-                  children: [
-                    Icon(Icons.chat, size: 25, color: Colors.grey[350]),
-                    Text(' Bình luận')
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.chat_bubble_outline,
-                        size: 25, color: Colors.grey[350]),
-                    Text(' Nhắn tin')
-                  ],
+                InkWell(
+                  onTap: (() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentScreen(
+                            comments: widget.comments,
+                            baivietID: widget.idbaiviet ?? '',
+                            userID: widget.userid ?? ''),
+                      ),
+                    );
+                  }),
+                  child: Row(
+                    children: [
+                      Icon(Icons.chat, size: 25, color: Colors.grey[350]),
+                      Text(' Bình luận')
+                    ],
+                  ),
                 ),
                 Row(
                   children: [

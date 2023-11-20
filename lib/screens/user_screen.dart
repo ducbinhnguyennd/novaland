@@ -13,7 +13,7 @@ class BXHScreen extends StatefulWidget {
   _BXHScreenState createState() => _BXHScreenState();
 }
 
-class _BXHScreenState extends State<BXHScreen> {
+class _BXHScreenState extends State<BXHScreen> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin{
   ApiTopUser apiService = ApiTopUser();
   late Future<List<TopUserModel>> futureUsers;
 
@@ -27,6 +27,7 @@ class _BXHScreenState extends State<BXHScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text('Bảng Xếp Hạng'),
         backgroundColor: ColorConst.colorPrimary50,
@@ -46,7 +47,7 @@ class _BXHScreenState extends State<BXHScreen> {
             future: futureUsers,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator(color: ColorConst.colorPrimary120,));
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -243,4 +244,6 @@ class _BXHScreenState extends State<BXHScreen> {
       ],
     );
   }
+  @override
+  bool get wantKeepAlive => true;
 }

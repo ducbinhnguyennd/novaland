@@ -54,7 +54,9 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> with SingleTi
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text('Truyện Yêu Thích'),
         backgroundColor: ColorConst.colorPrimary50,
@@ -63,12 +65,7 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> with SingleTi
         color: ColorConst.colorPrimary120,
         onRefresh: _refresh,
         child: currentUser == null
-            ? Scaffold(
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  title: Text('Man hinh theo doi'),
-                ),
-                body: Text('ddang nhap di'))
+            ? Container()
             : ListView.builder(
                 itemCount: favoriteManga.length,
                 itemBuilder: (context, index) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:loginapp/login_screen.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/routes.dart';
@@ -8,7 +9,9 @@ import 'package:loginapp/screens/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  runApp(MyApp());
+ 
+    runApp(MyApp());
+  
 }
 
 class MyApp extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:loginapp/model/bangtin_model.dart';
 import 'package:loginapp/model/category_model.dart';
 import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
@@ -156,8 +157,7 @@ class CommentService {
 class XoaComment {
   static Future<void> xoaComment(
       String comment, String mangaId, String userId) async {
-    print(
-        'https://du-an-2023.vercel.app/deletecomment/$comment/$mangaId/$userId');
+   
     try {
       final response = await dio.post(
         'https://du-an-2023.vercel.app/deletecomment/$comment/$mangaId/$userId',
@@ -198,6 +198,7 @@ class ApiUser {
     return UserModel.fromJson(response.data);
   }
 }
+// bxh
 class ApiTopUser {
   Future<List<TopUserModel>> getUsers() async {
     try {
@@ -212,6 +213,122 @@ class ApiTopUser {
       }
     } catch (e) {
       throw Exception('Error: $e');
+    }
+  }
+}
+// trang bangtin chưa login
+class ApiBangTin {
+  Future<List<Bangtin>> getPosts() async {
+    try {
+      Response response = await dio.get("https://du-an-2023.vercel.app/getbaiviet");
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        List<Bangtin> posts = data.map((json) => Bangtin.fromJson(json)).toList();
+        return posts;
+      } else {
+        throw Exception("Failed to load posts");
+      }
+    } catch (e) {
+      throw Exception("Error: $e");
+    }
+  }
+}
+// đã log
+class ApiBangTinDaLog {
+  Future<List<Bangtin>> getPosts(String userId) async {
+    try {
+      Response response = await dio.get("https://du-an-2023.vercel.app/getbaiviet/$userId");
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        List<Bangtin> posts = data.map((json) => Bangtin.fromJson(json)).toList();
+        return posts;
+      } else {
+        throw Exception("Failed to load posts");
+      }
+    } catch (e) {
+      throw Exception("Error: $e");
+    }
+  }
+}
+
+//post bài đăng
+class ApiPostBaiDang {
+  Future<Response> postBaiViet(String userId, String content) async {
+    try {
+      return await dio.post(
+        'https://du-an-2023.vercel.app/postbaiviet/$userId',
+        data: {'content': content},
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+}
+// xoa bài viết 
+class XoaBaiDang {
+  static Future<void> xoaBaiDang(
+      String baivietId, String userId) async {
+   
+    try {
+      final response = await dio.post(
+        'https://du-an-2023.vercel.app/deletebaiviet/$baivietId/$userId',
+      );
+      if (response.statusCode == 200) {
+        print('binh xoa ${response.data}');
+      } else {
+        print('Loi cmnr');
+      }
+    } catch (e) {
+      // Handle Dio exception
+      print('Error: $e');
+    }
+  }
+}
+// like bài viết
+class LikeApiService {
+  Future<void> likeBaiViet(String userId, String baiVietId) async {
+    try {
+      await dio.post(
+        'https://du-an-2023.vercel.app/addfavoritebaiviet/$userId/$baiVietId',
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+}
+
+// post cmt bài đăng
+class ApiSCommentBaiDang {
+  Future<void> postComment(String baivietId, String userId, String comment) async {
+    try {
+      final response = await dio.post(
+        'https://du-an-2023.vercel.app/postcmtbaiviet/$baivietId/$userId',
+        data: {'comment': comment},
+      );
+      print('Response from postComment API: $response');
+    } catch (error) {
+      print('Error in postComment API: $error');
+    }
+  }
+}
+// xoa cmt bài viết 
+class XoaCommentBaiDang {
+  static Future<void> xoaComment(
+      String commentId, String baivietId, String userId) async {
+   
+    try {
+      final response = await dio.post(
+        'https://du-an-2023.vercel.app/deletecmtbaiviet/$commentId/$baivietId/$userId',
+      );
+      if (response.statusCode == 200) {
+        print('binh xoa ${response.data}');
+      } else {
+        print('Loi cmnr');
+      }
+    } catch (e) {
+      // Handle Dio exception
+      print('Error: $e');
     }
   }
 }
