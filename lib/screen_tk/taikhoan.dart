@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:loginapp/Globals.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
@@ -9,7 +8,6 @@ import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/login_screen.dart';
 import 'package:loginapp/main_screen.dart';
-
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/model/user_model2.dart';
 import 'package:loginapp/routes.dart';
@@ -21,7 +19,6 @@ import 'package:loginapp/screen_tk/suathongtin.dart';
 import 'package:loginapp/screen_tk/themtienthach.dart';
 import 'package:loginapp/screen_tk/xoataikhoan.dart';
 import 'package:loginapp/user_Service.dart';
-import 'package:loginapp/widgets/custom_circle_avatar.dart';
 
 class TaikhoanScreen extends StatefulWidget {
   const TaikhoanScreen({super.key});
@@ -438,25 +435,7 @@ Future<void> _refresh() async {
                 ),
               ),
             ),
-            // InkWell(
-            //   onTap: () {
-            //     //
-            //   },
-            //   child: ListTile(
-            //     title: Transform.translate(
-            //       offset: Offset(-20, 0),
-            //       child: Text('Tự động bỏ qua quảng cáo'),
-            //     ),
-            //     leading: ImageIcon(AssetImage(AssetsPathConst.ico_10),
-            //         size: 22, color: ColorConst.colorPrimary),
-            //     trailing: Switch.adaptive(
-            //       onChanged: (value) {},
-            //       value: false,
-            //       activeColor: Colors.orange,
-            //       // trackColor: Colors.grey,
-            //     ),
-            //   ),
-            // ),
+        
             InkWell(
               onTap: () {
                 setState(() {
@@ -493,26 +472,7 @@ Future<void> _refresh() async {
                 ),
                 leading: ImageIcon(AssetImage(AssetsPathConst.ico_12),
                     size: 22, color: ColorConst.colorPrimary30),
-                // trailing: Switch.adaptive(
-                //   onChanged: (v) {
-                //   if (v) {
-                //     Globals.isAutoUnlockVipChap == false
-                //         ? _buildDialog()
-                //         : setState(() {
-                //             isSwitchedAutoOpenVipChap = false;
-                //             Globals.isAutoUnlockVipChap = false;
-                //           });
-                //   } else {
-                //     setState(() {
-                //       isSwitchedAutoOpenVipChap = false;
-                //       Globals.isAutoUnlockVipChap = false;
-                //     });
-                //   }
-                // },
-                // dragStartBehavior: DragStartBehavior.start,
-                // value: isSwitchedAutoOpenVipChap,
-                // activeColor: ColorConst.colorPrimary30,
-                // trackColor: Colors.grey,
+        
               ),
             ),
           ]),

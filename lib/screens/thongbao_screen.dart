@@ -3,6 +3,7 @@ import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/thongbao_model.dart';
+import 'package:loginapp/screens/detail_baiviet.dart';
 
 class NotificationScreen extends StatefulWidget {
   final String userID;
@@ -58,69 +59,77 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 
                 return Padding(
                   padding: EdgeInsets.all(5),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Stack(
-                          children: [
-                            SizedBox(
-                              width: DoubleX.kSizeLarge_1XXX,
-                              height: DoubleX.kSizeLarge_1XXX,
-                              child: CircleAvatar(
-                                backgroundColor: ColorConst.colorPrimary,
-                                child: Text(
-                                  beforeDa.substring(0, 1),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                  child: InkWell(
+                    onTap: (){
+                       Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>  DetailBaiViet(baivietID:notifications[index].baivietId ,userID: notifications[index].userId )),
+  );
+                    },
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Stack(
+                            children: [
+                              SizedBox(
+                                width: DoubleX.kSizeLarge_1XXX,
+                                height: DoubleX.kSizeLarge_1XXX,
+                                child: CircleAvatar(
+                                  backgroundColor: ColorConst.colorPrimary,
+                                  child: Text(
+                                    beforeDa.substring(0, 1),
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              if (containsThich)
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Icon(Icons.favorite, color: Colors.red),
+                                ),
+                              if (!containsThich)
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Icon(Icons.comment, color: Colors.blue),
+                                ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width/1.4,
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: ColorConst.colorBackgroundGray,
+                              ),
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: beforeDa,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: afterDa,
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            if (containsThich)
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Icon(Icons.favorite, color: Colors.red),
-                              ),
-                            if (!containsThich)
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Icon(Icons.comment, color: Colors.blue),
-                              ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width/1.4,
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: ColorConst.colorBackgroundGray,
-                            ),
-                            child: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: beforeDa,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: afterDa,
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

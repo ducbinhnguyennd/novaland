@@ -404,23 +404,7 @@ class Login{
     return null;
   }
 }
-// cmt bài viết
-// class ApiCmtBaiViet {
 
-//   Future<List<Comment>> getComments(String baivietId) async {
-//     try {
-//       Response response = await dio.get('https://du-an-2023.vercel.app/getcmtbaiviet/$baivietId');
-//        if (response.statusCode == 200) {
-//       final List<dynamic> data = json.decode(response.data);
-//       return data.map((commentData) => Comment.fromJson(commentData)).toList();
-//     } else {
-//       throw Exception('Failed to load comments');
-//     }
-//     } catch (error) {
-//       throw (error.toString());
-//     }
-//   }
-// }
 class ApiCmtBaiViet {
   Future<List<Comment>> getComments(String baivietId) async {
     try {
@@ -434,6 +418,31 @@ class ApiCmtBaiViet {
       }
     } catch (e) {
       throw Exception("Error: $e");
+    }
+  }
+}
+// detail bai viet
+class ApiDetailBaiViet {
+  Future<Bangtin> fetchDetailBaiviet(String baivietID,String userId) async {
+    final response = await dio.get('https://du-an-2023.vercel.app/detailbaiviet/$baivietID/$userId');
+    return Bangtin.fromJson(response.data);
+  }
+}
+//xóa user
+class XoaUser {
+  static Future<void> xoaUser(
+    String userId) async {
+    try {
+      final response = await dio.post(
+        'https://du-an-2023.vercel.app/userdelete/$userId',
+      );
+      if (response.statusCode == 200) {
+        print('binh xoa ${response.data}');
+      } else {
+        print('Loi cmnr');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 }
