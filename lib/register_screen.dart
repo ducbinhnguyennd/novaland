@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
+import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/main_screen.dart';
+import 'package:loginapp/user_Service.dart';
 import 'package:validators/validators.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -19,10 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameKey = GlobalKey<FormFieldState>();
   final _passwordKey = GlobalKey<FormFieldState>();
-
-  final _emailRegex =
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-  TextEditingController emailEditingController = TextEditingController();
+  final _phoneKey = GlobalKey<FormFieldState>();
   TextEditingController phoneEditingController = TextEditingController();
   TextEditingController userEditingController = TextEditingController();
   TextEditingController passwEditingController = TextEditingController();
@@ -30,10 +32,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool isEmailCorrect = false;
   String _username = '';
   String _password = '';
-  // String _email = '';
-  // String _phone = '';
-  // String _gioitinh = '';
-  // final List<String> _gioiTinhList = ['Nam', 'Nữ'];
+  String _phone = '';
+  bool success = false;
+
   @override
   void dispose() {
     // emailEditingController.dispose();
@@ -48,39 +49,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
       onPressed: () {},
     ),
   );
-  // ignore: non_constant_identifier_names
-  // , String email, String gioitinh, String phone
-  Future<Response?> Register(String username, String password) async {
+
+  Future<Response?> Register(
+      String username, String password, String phone) async {
     var dio = Dio();
-    final bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(emailEditingController.text);
-    if (userEditingController.text == '' && passwEditingController.text == ''
-        // &&
-        // emailEditingController.text == '' &&
-        // RegExp(_emailRegex).hasMatch(emailEditingController.text) == false &&
-        // phoneEditingController.text == ''
-        ) {
-      print('chua co gi ca');
+    if (userEditingController.text.isEmpty) {
+      showSnackBar(context, 'Username đang trống');
+    } else if (passwEditingController.text.isEmpty) {
+      showSnackBar(context, 'Password đang trống');
+    } else if (phone.isEmpty) {
+      showSnackBar(context, 'Số điện thoại đang trống');
+    } else if (phone.length != 10) {
+      showSnackBar(context, 'Số điện thoại phải đủ 10 số');
+    } else if (!phone.startsWith('0')) {
+      showSnackBar(context, 'Số điện thoại đầu 0');
     } else {
       try {
         var response = await dio.post('https://du-an-2023.vercel.app/register',
-            data: {
-              "username": username,
-              "password": password,
-              // "gioitinh": gioitinh,
-              // "email": email,
-              // "phone": phone
-            },
+            data: {"username": username, "password": password, "phone": phone},
             options: Options(
               headers: {
                 'content-type': 'application/x-www-form-urlencoded',
               },
             ));
         print(response.data);
+       setState(() {
+        success =true;
+         showSnackBar(context, 'Đăng ký tài khoản thành công');
+       });
+        
+                    
         return response;
       } catch (e) {
-        print(e);
+       
+        showSnackBar(context, 'Tên tài khoản đã tồn tại');
       }
     }
     return null;
@@ -89,20 +91,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      
+      // resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-            Image.asset(AssetsPathConst.bgintro),
+          Image.asset(AssetsPathConst.bgintro),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: MediaQuery.of(context).size.height / 1.8,
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [ Colors.white,ColorConst.colorPrimary],
+                    colors: [Colors.white, ColorConst.colorPrimary],
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -114,24 +115,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ]),
             ),
           ),
-          
           Positioned(
-            bottom: 200,left: 10,right: 10,
+            bottom: 200,
+            left: 10,
+            right: 10,
             child: Column(
               children: [
                 InkWell(
-          onTap: (() {
-            Navigator.of(context).pop();
-          }),
-          child: Container(
-            child: Row(children: [
-              Image.asset(AssetsPathConst.ico_back,height: 22,width: 22,),
-              Text('Màn hình đăng nhập', style: TextStyle(fontSize: 20),)
-            ],),
-          ),
-          ),
+                  onTap: (() {
+                    Navigator.of(context).pop();
+                  }),
+                  child: Container(
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          AssetsPathConst.ico_back,
+                          height: 22,
+                          width: 22,
+                        ),
+                        Text(
+                          'Màn hình đăng nhập',
+                          style: TextStyle(fontSize: 20),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
                 Container(
-                 
                   margin: const EdgeInsets.all(16),
                   child: Form(
                       key: _formKey,
@@ -142,25 +152,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             controller: userEditingController,
                             key: _usernameKey,
                             onChanged: (val) {
-                              doValidation(_usernameKey, null);
                               _username = val;
                             },
                             decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.black),
+                                  borderSide:
+                                      const BorderSide(color: Colors.black),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.deepPurple),
+                                  borderSide: const BorderSide(
+                                      color: Colors.deepPurple),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 labelText: "Username"),
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return 'nhap lai';
-                              }
-                              return null;
-                            },
                           ),
                           const SizedBox(
                             height: 10,
@@ -169,123 +174,91 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             key: _passwordKey,
                             controller: passwEditingController,
                             onChanged: (val) {
-                              doValidation(_passwordKey, null);
+                        
                               _password = val;
                             },
                             decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.black),
+                                  borderSide:
+                                      const BorderSide(color: Colors.black),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.deepPurple),
+                                  borderSide: const BorderSide(
+                                      color: Colors.deepPurple),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 labelText: "Password"),
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return 'nhap lai';
-                              }
-                              return null;
-                            },
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          // TextFormField(
-                          //   key: _emailKey,
-                          //   controller: emailEditingController,
-                          //   onChanged: (val) {
-                          //     doValidation(_emailKey, null);
-                          //     _email = val;
-                          //   },
-                          //   keyboardType: TextInputType.emailAddress,
-                          //   decoration: InputDecoration(
-                          //       enabledBorder: OutlineInputBorder(
-                          //         borderSide: const BorderSide(color: Colors.black),
-                          //         borderRadius: BorderRadius.circular(12),
-                          //       ),
-                          //       focusedBorder: OutlineInputBorder(
-                          //         borderSide: const BorderSide(color: Colors.deepPurple),
-                          //         borderRadius: BorderRadius.circular(12),
-                          //       ),
-                          //       labelText: "Email"),
-                          //   validator: (val) {
-                          //     if (val == null || val.isEmpty) {
-                          //       return 'nhap lai';
-                          //     }
-                          //     if (!RegExp(_emailRegex).hasMatch(val)) {
-                          //       return 'nhap dung dinh dang';
-                          //     }
-                          //     return null;
-                          //   },
-                          // ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // TextFormField(
-                          //   key: _phoneKey,
-                          //   onChanged: (val) {
-                          //     doValidation(_phoneKey, null);
-                          //     _phone = val;
-                          //   },
-                          //   keyboardType: TextInputType.phone,
-                          //   maxLength: 10,
-                          //   decoration: InputDecoration(
-                          //       enabledBorder: OutlineInputBorder(
-                          //         borderSide: const BorderSide(color: Colors.black),
-                          //         borderRadius: BorderRadius.circular(12),
-                          //       ),
-                          //       focusedBorder: OutlineInputBorder(
-                          //         borderSide: const BorderSide(color: Colors.deepPurple),
-                          //         borderRadius: BorderRadius.circular(12),
-                          //       ),
-                          //       labelText: "So dien thoai"),
-                          //   validator: (val) {
-                          //     if (val == null || val.isEmpty) {
-                          //       return 'nhap lai';
-                          //     }
-                          //     if (val.length != 10) {
-                          //       return 'nhap du';
-                          //     }
-                          //     if (!val.startsWith('0')) {
-                          //       return 'Số điện thoại phải bắt đầu bằng số 0';
-                          //     }
-                          //     return null;
-                          //   },
-                          // ),
-                          // Column(
-                          //   crossAxisAlignment: CrossAxisAlignment.center,
-                          //   children: _gioiTinhList
-                          //       .map(
-                          //         (gender) => RadioListTile(
-                          //           title: Text(gender),
-                          //           groupValue: _gioitinh,
-                          //           value: gender,
-                          //           onChanged: (value) {
-                          //             setState(() {
-                          //               _gioitinh = value.toString();
-                          //             });
-                          //           },
-                          //         ),
-                          //       )
-                          //       .toList(),
-                          // ),
+                          TextFormField(
+                            key: _phoneKey,
+                            onChanged: (val) {
+                              doValidation(_phoneKey, null);
+                              _phone = val;
+                            },
+                            keyboardType: TextInputType.phone,
+                            maxLength: 10,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ], // Chỉ cho phép nhập số
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.black),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: ColorConst.colorPrimary50),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              labelText: "So dien thoai",
+                            ),
+                          ),
                           SizedBox(
                             height: 10,
                           ),
-                         
                           InkWell(
-                          onTap: () async {
-                  
-                       Register(_username, _password);
-                           
-                          
-                          },
-                          child: Container(width: MediaQuery.of(context).size.width/3, decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),color: ColorConst.colorPrimary50), child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Align(alignment: Alignment.center, child: Text('Đăng ký',style: TextStyle(color: Colors.white,fontSize: 18),)),
-                          ),)),
+                              onTap: () async {
+                                Register(_username, _password, _phone).then((value) async {
+                                  Login login = Login();
+                                  var response = await login.signIn(_username, _password);
+          
+                            if (response?.data['success'] == true) {
+                              UserServices us = UserServices();
+                              await us.saveinfologin(jsonEncode(response?.data['data']));
+                              // final storage = new FlutterSecureStorage();
+                             
+                              print('${response?.data['data']}');
+                              Navigator.pushReplacement<void, void>(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const MainScreen(),
+                                ),
+                              );
+                            }
+                                });
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width / 3,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: ColorConst.colorPrimary50),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'Đăng ký',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 18),
+                                      )),
+                                ),
+                              )),
                         ],
                       )),
                 ),
@@ -304,19 +277,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void showSnackBar(BuildContext context, String msg) {
     SnackBar snackBar = SnackBar(
-      backgroundColor: Colors.green,
+      backgroundColor: success ? Colors.green :Colors.red,
       behavior: SnackBarBehavior.floating,
-      duration: Duration(minutes: 1),
+      duration: Duration(milliseconds: 1000),
       content: Text(
         msg,
         style:
             const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
-      action: SnackBarAction(
-          label: 'close',
-          onPressed: () {
-            debugPrint("dissmissed");
-          }),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

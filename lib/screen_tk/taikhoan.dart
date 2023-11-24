@@ -13,6 +13,7 @@ import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/model/user_model2.dart';
 import 'package:loginapp/routes.dart';
+import 'package:loginapp/screen_tk/doimatkhau.dart';
 import 'package:loginapp/screen_tk/huongdan_screen.dart';
 import 'package:loginapp/screen_tk/lichsugiaodich.dart';
 import 'package:loginapp/screen_tk/lienhe.dart';
@@ -288,7 +289,11 @@ Future<void> _refresh() async {
           SizedBox(height: 10),
           InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed(LienHe.routeName);
+              Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>  ChangePasswordScreen(userId: currentUser?.user[0].id ?? '')),
+  );
+             
             },
             child: ListTile(
               title: Transform.translate(

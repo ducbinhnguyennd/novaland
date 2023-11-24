@@ -27,6 +27,7 @@ class ItemBangTin extends StatefulWidget {
       required this.isLike,
       required this.comments,
       this.widgetDelete,
+      this.widgetPostCM,
       required this.useridbaiviet})
       : super(key: key);
 
@@ -41,6 +42,7 @@ class ItemBangTin extends StatefulWidget {
   bool isLike = false;
   final List<Comment> comments;
   Widget? widgetDelete;
+  Widget? widgetPostCM;
 
   @override
   _ItemBangTinState createState() => _ItemBangTinState();
@@ -70,15 +72,8 @@ class _ItemBangTinState extends State<ItemBangTin> {
 
         likeApiService.likeBaiViet(widget.userid ?? '', widget.idbaiviet ?? '');
       } else {
-        // If the post is already liked, show a toast message
         _showToast("Bạn đã thích bài viết này");
-        // if (kDebugMode) {
-        //   setState(() {
-        //     if (widget.like != null) {
-        //       widget.like = widget.like! + 1;
-        //     }
-        //   });
-        // }
+   
       }
     } else {
       _showToast(StringConst.textyeucaudangnhap);
@@ -170,25 +165,7 @@ class _ItemBangTinState extends State<ItemBangTin> {
                     Text(' Tim')
                   ],
                 ),
-                InkWell(
-                  onTap: (() {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CommentScreen(
-                            comments: widget.comments,
-                            baivietID: widget.idbaiviet ?? '',
-                            userID: widget.userid ?? ''),
-                      ),
-                    );
-                  }),
-                  child: Row(
-                    children: [
-                      Icon(Icons.chat, size: 25, color: Colors.grey[350]),
-                      Text(' Bình luận')
-                    ],
-                  ),
-                ),
+                widget.widgetPostCM ?? Container(),
                 Row(
                   children: [
                     Icon(Icons.report, size: 25, color: Colors.grey[350]),

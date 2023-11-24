@@ -20,7 +20,6 @@ final Map<String, WidgetBuilder> routes = {
   RegisterScreen.routeName: (context) => const RegisterScreen(),
   HuongDanScreen.routeName: (context) => const HuongDanScreen(),
   SuaThongTin.routeName: (context) => const SuaThongTin(),
-  DoiMatKhau.routeName: (context) => const DoiMatKhau(),
   LienHe.routeName: (context) => const LienHe(),
   XoaTaiKhoan.routeName: (context) => const XoaTaiKhoan(),
   ThemTienThach.routeName: (context) => ThemTienThach(),

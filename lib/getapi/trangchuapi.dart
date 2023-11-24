@@ -6,6 +6,7 @@ import 'package:loginapp/model/category_model.dart';
 import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/model/lichsuthanhtoan_model.dart';
+import 'package:loginapp/model/thongbao_model.dart';
 import 'package:loginapp/model/topUser_model.dart';
 import 'package:loginapp/model/trangchu_model.dart';
 import 'package:loginapp/model/user_model2.dart';
@@ -329,6 +330,110 @@ class XoaCommentBaiDang {
     } catch (e) {
       // Handle Dio exception
       print('Error: $e');
+    }
+  }
+}
+// thông báo
+class NotificationApi {
+  Future<List<NotificationModel>> getNotifications(String userId) async {
+    try {
+      final response = await dio.get('https://du-an-2023.vercel.app/notifybaiviet/$userId');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data.map((json) => NotificationModel.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load notifications');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+}
+
+// thay đổi pass, username
+class PasswordChangeService {
+  Future<void> changePassword(String userId, String oldPassword, String newPassword) async {
+    try {
+      final response = await dio.post(
+        'https://du-an-2023.vercel.app/repass/$userId',
+        data: {
+          'passOld': oldPassword,
+          'passNew': newPassword,
+        },
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Đổi mật khẩu thất bại');
+      }
+    } catch (error) {
+      throw Exception('Đã xảy ra lỗi: $error');
+    }
+  }
+  Future<void> changeUsername(String userId, String username) async {
+    try {
+      final response = await dio.post(
+        'https://du-an-2023.vercel.app/rename/$userId',
+        data: {
+          'username': username,
+          
+        },
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Đổi mật khẩu thất bại');
+      }
+    } catch (error) {
+      throw Exception('Đã xảy ra lỗi: $error');
+    }
+  }
+}
+class Login{
+  Future<Response?> signIn(String username, String password) async {
+    var dio = Dio();
+    try {
+      var response = await dio.post(
+        'https://du-an-2023.vercel.app/login',
+        data: {"username": username, "password": password},
+      );
+      print('API response status: ${response.statusCode}');
+      print('API response data: ${response.data}');
+      return response;
+    } catch (e) {
+      print(e.toString());
+    }
+    return null;
+  }
+}
+// cmt bài viết
+// class ApiCmtBaiViet {
+
+//   Future<List<Comment>> getComments(String baivietId) async {
+//     try {
+//       Response response = await dio.get('https://du-an-2023.vercel.app/getcmtbaiviet/$baivietId');
+//        if (response.statusCode == 200) {
+//       final List<dynamic> data = json.decode(response.data);
+//       return data.map((commentData) => Comment.fromJson(commentData)).toList();
+//     } else {
+//       throw Exception('Failed to load comments');
+//     }
+//     } catch (error) {
+//       throw (error.toString());
+//     }
+//   }
+// }
+class ApiCmtBaiViet {
+  Future<List<Comment>> getComments(String baivietId) async {
+    try {
+      Response response = await dio.get("https://du-an-2023.vercel.app/getcmtbaiviet/$baivietId");
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        List<Comment> posts = data.map((json) => Comment.fromJson(json)).toList();
+        return posts;
+      } else {
+        throw Exception("Failed to load posts");
+      }
+    } catch (e) {
+      throw Exception("Error: $e");
     }
   }
 }

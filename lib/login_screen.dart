@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
+import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/register_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -31,42 +32,11 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwEditingController = TextEditingController();
   FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   final _storage = const FlutterSecureStorage();
+Login login = Login();
 
-  Future<Response?> signIn(String username, String password) async {
-    var dio = Dio();
-    try {
-      var response = await dio.post(
-        'https://du-an-2023.vercel.app/login',
-        data: {"username": username, "password": password},
-        // options: Options(
-        //   // headers: {
-        //   //   'content-type': 'application/x-www-form-urlencoded',
-        //   //   // 'clientid': '54a0e7371788b51790082b05',
-        //   // },-
-        // )
-      );
-      print('API response status: ${response.statusCode}');
-      print('API response data: ${response.data}');
-      return response;
-    } catch (e) {
-      print(e.toString());
-    }
-    return null;
-  }
-// Future<void> saveLoginInfo(String username) async {
-//   final prefs = await SharedPreferences.getInstance();
-//   prefs.setString('username', username);
-// }
   @override
   void initState() {
-    // _storage.deleteAll();
-    
-    // _storage.read(key: 'nameusserr').then((value) {
-    //   setState(() {
-    //     tt = value ?? '';
-    //     // userEditingController.text = _username;
-    //   });
-    // });
+ 
   }
 
   @override
@@ -116,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: () async {
                   
                             // kiểm tra tính hợp lệ của các trường dữ liệu nhập liệu
-                            var response = await signIn(_username, _password);
+                            var response = await login.signIn(_username, _password);
           
                             if (response?.data['success'] == true) {
                               UserServices us = UserServices();

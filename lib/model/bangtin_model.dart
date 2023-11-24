@@ -45,20 +45,23 @@ class Comment {
   String? userId;
   String? username;
   String? content;
+  String? date;
 
   Comment({
     this.id,
     this.userId,
     this.username,
     this.content,
+    this.date
   });
 
-  factory Comment.fromJson(Map<String, dynamic> json) {
+    factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
       id: json['_id'],
       userId: json['userId'],
-      username: json['username'],
       content: json['cmt'],
+      username: json['username'],
+      date: json['date'],
     );
   }
 }

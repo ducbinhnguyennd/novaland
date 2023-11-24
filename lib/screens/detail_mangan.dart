@@ -325,6 +325,12 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                     decoration: InputDecoration(
                       labelText: 'Nhập bình luận',
                       focusColor: Colors.black,
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
                     ),
                   ),
                 ),

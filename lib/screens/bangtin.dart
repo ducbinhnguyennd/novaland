@@ -8,7 +8,9 @@ import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/bangtin_model.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/routes.dart';
+import 'package:loginapp/screens/binhluan_screen.dart';
 import 'package:loginapp/screens/postbai.dart';
+import 'package:loginapp/screens/thongbao_screen.dart';
 import 'package:loginapp/user_Service.dart';
 import 'package:loginapp/widgets/item_bangtin.dart';
 
@@ -140,10 +142,21 @@ class _BangTinScreenState extends State<BangTinScreen>
                   ),
                   Expanded(
                       flex: 2,
-                      child: Image.asset(
-                        AssetsPathConst.categoryBell,
-                        height: 25,
-                        color: ColorConst.colorPrimary120,
+                      child: InkWell(
+                        onTap: (() {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NotificationScreen(
+                                      userID: currentUser?.user[0].id ?? '',
+                                    )),
+                          );
+                        }),
+                        child: Image.asset(
+                          AssetsPathConst.categoryBell,
+                          height: 25,
+                          color: ColorConst.colorPrimary120,
+                        ),
                       ))
                 ],
               ),
@@ -165,10 +178,10 @@ class _BangTinScreenState extends State<BangTinScreen>
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
                         return ItemBangTin(
-                          widgetDelete: 
-                          (posts[index].userId ==
-                                  currentUser?.user[0].id) ? _item3DauCham(posts, index) : Container()
- ,                            
+                          widgetDelete:
+                              (posts[index].userId == currentUser?.user[0].id)
+                                  ? _item3DauCham(posts, index)
+                                  : Container(),
                           username: posts[index].username,
                           like: posts[index].like,
                           content: posts[index].content,
@@ -179,6 +192,8 @@ class _BangTinScreenState extends State<BangTinScreen>
                           idbaiviet: posts[index].id,
                           isLike: posts[index].isLiked,
                           comments: posts[index].comments ?? [],
+                          widgetPostCM: binhluon(posts[index].comments ?? [],
+                              posts[index].id, currentUser?.user[0].id ?? '-1'),
                         );
                       },
                     );
@@ -194,18 +209,16 @@ class _BangTinScreenState extends State<BangTinScreen>
 
   InkWell _item3DauCham(List<Bangtin> posts, int index) {
     return InkWell(
-                          onTap: () {
-                            if (posts[index].userId ==
-                                currentUser?.user[0].id) {
-                              _showDeleteDialog(posts[index].id,
-                                  currentUser?.user[0].id ?? '');
-                            }
-                          },
-                          child: Icon(
-                            Icons.more_vert,
-                            size: 22,
-                          ),
-                        );
+      onTap: () {
+        if (posts[index].userId == currentUser?.user[0].id) {
+          _showDeleteDialog(posts[index].id, currentUser?.user[0].id ?? '');
+        }
+      },
+      child: Icon(
+        Icons.more_vert,
+        size: 22,
+      ),
+    );
   }
 
   void _showDeleteDialog(String idPost, String userId) {
@@ -225,10 +238,9 @@ class _BangTinScreenState extends State<BangTinScreen>
             TextButton(
               onPressed: () async {
                 await XoaBaiDang.xoaBaiDang(idPost, userId);
-                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
                 setState(() {
-                _loadUser();
-
+                  _loadUser();
                 });
               },
               child: Text('Xóa'),
@@ -236,6 +248,32 @@ class _BangTinScreenState extends State<BangTinScreen>
           ],
         );
       },
+    );
+  }
+
+  Widget binhluon(List<Comment> comments, String baivietID, String userID) {
+    return InkWell(
+      onTap: (() {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CommentScreen(
+              baivietID: baivietID,
+              userID: userID,
+            ),
+          ),
+        ).then((value) {
+          if (value == true) {
+            _loadUser();
+          }
+        });
+      }),
+      child: Row(
+        children: [
+          Icon(Icons.chat, size: 25, color: Colors.grey[350]),
+          Text(' Bình luận')
+        ],
+      ),
     );
   }
 
