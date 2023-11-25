@@ -86,7 +86,7 @@ class _MainScreenState extends State<MainScreen>
               height: DoubleX.kLayoutHeightMedium + 10,
               child: TabBar(
                   unselectedLabelColor: Colors.black,
-                  labelColor: ColorConst.colorPrimary,
+                  labelColor: ColorConst.colorPrimary50,
                   //indicatorColor: ColorConst.colorSecondary,
                   indicatorWeight: DoubleX.kPaddingSizeTiny_0XX,
                   labelPadding: const EdgeInsets.all(0),
@@ -138,10 +138,7 @@ class _MainScreenState extends State<MainScreen>
                       ),
                     ),
                       Tab(
-                      icon: ImageIcon(
-                        AssetImage(AssetsPathConst.tabUser),
-                        size: DoubleX.kSizeLarge - 5,
-                      ),
+                      icon: Icon(Icons.favorite,size: DoubleX.kSizeLarge ),
                       iconMargin:
                           EdgeInsets.only(bottom: DoubleX.kPaddingSizeZero),
                       child: Visibility(

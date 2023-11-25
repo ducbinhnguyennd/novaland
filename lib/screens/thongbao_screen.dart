@@ -86,13 +86,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 Positioned(
                                   right: 0,
                                   bottom: 0,
-                                  child: Icon(Icons.favorite, color: Colors.red),
+                                  child: Container(
+                                    padding: EdgeInsets.all(5),
+                                  
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(50),color: ColorConst.colorPrimary50),
+                                    child: Icon(Icons.favorite, color: Colors.white,size: 15,)),
                                 ),
                               if (!containsThich)
-                                Positioned(
+                                 Positioned(
                                   right: 0,
                                   bottom: 0,
-                                  child: Icon(Icons.comment, color: Colors.blue),
+                                  child: Container(
+                                    padding: EdgeInsets.all(5),
+                                  
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(50),color: Colors.green),
+                                    child: Icon(Icons.comment, color: Colors.white,size: 15,)),
                                 ),
                             ],
                           ),
@@ -105,26 +113,33 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 borderRadius: BorderRadius.circular(15),
                                 color: ColorConst.colorBackgroundGray,
                               ),
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: beforeDa,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                        fontSize: 17,
-                                      ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: beforeDa,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                            fontSize: 17,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: afterDa,
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 17,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    TextSpan(
-                                      text: afterDa,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 17,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(notifications[index].date,style: TextStyle(color: Colors.black.withOpacity(0.4)),)
+                                ],
                               ),
                             ),
                           ),

@@ -54,6 +54,12 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
       appBar: AppBar(
         title: Text('Viết bài mới'),
         backgroundColor: ColorConst.colorPrimary50,
+         leading: InkWell(
+            onTap: (() {
+              Navigator.pop(context, false);
+            }),
+            child: Icon(Icons.arrow_back_ios)),
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
