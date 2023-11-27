@@ -65,7 +65,9 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen> with SingleTi
         color: ColorConst.colorPrimary120,
         onRefresh: _refresh,
         child: currentUser == null
-            ? Container()
+            ? Container(child: Center(
+              child: Text('Bạn chưa có truyện nào yêu thích'),
+            ),)
             : ListView.builder(
                 itemCount: favoriteManga.length,
                 itemBuilder: (context, index) {

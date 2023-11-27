@@ -54,6 +54,7 @@ class _ThemTienThachState extends State<ThemTienThach> {
 
   }
   final List<PaymentItem> paymentItems = [
+    PaymentItem(amount: 1.0, currency: 'USD', quy: '10.00 USD quy đổi ra được 100 xu'),
     PaymentItem(amount: 10.0, currency: 'USD', quy: '10.00 USD quy đổi ra được 100 xu'),
     PaymentItem(amount: 20.0, currency: 'USD', quy: '20.00 USD quy đổi ra được 200 xu'),
     PaymentItem(amount: 30.0, currency: 'USD', quy: '30.00 USD quy đổi ra được 300 xu'),

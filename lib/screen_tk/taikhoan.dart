@@ -288,7 +288,7 @@ Future<void> _refresh() async {
             onTap: () {
               Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) =>  ChangePasswordScreen(userId: currentUser?.user[0].id ?? '')),
+    MaterialPageRoute(builder: (context) =>  ChangePasswordScreen(userId: currentUser?.user[0].id ?? '', username: currentUser?.user[0].username ?? '',)),
   );
              
             },

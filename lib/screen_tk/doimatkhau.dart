@@ -6,11 +6,8 @@ import 'package:loginapp/getapi/trangchuapi.dart';
 class ChangePasswordScreen extends StatefulWidget {
   static const routeName = 'doimatkhau';
   final String userId;
-   const ChangePasswordScreen(
-      {Key? key,
-     
-    required this.userId
-     })
+  final String username;
+  const ChangePasswordScreen({Key? key, required this.userId, required this.username})
       : super(key: key);
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
@@ -21,20 +18,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController newUsernameController = TextEditingController();
 
-bool _isObscureOldPassword = true;
+  bool _isObscureOldPassword = true;
   bool _isObscureNewPassword = true;
-   PasswordChangeService passwordChangeService = PasswordChangeService();
+  PasswordChangeService passwordChangeService = PasswordChangeService();
   void _handleChangePassword() async {
-    final String userId = widget.userId; 
+    final String userId = widget.userId;
     final String oldPassword = oldPasswordController.text;
     final String newPassword = newPasswordController.text;
-   
-    
-
 
     if (oldPassword.isNotEmpty && newPassword.isNotEmpty) {
       try {
-        await passwordChangeService.changePassword(userId, oldPassword, newPassword);
+        await passwordChangeService.changePassword(
+            userId, oldPassword, newPassword);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Đổi mật khẩu thành công'),
@@ -58,13 +53,10 @@ bool _isObscureOldPassword = true;
       );
     }
   }
+
   void _handleUserName() async {
-    final String userId = widget.userId; 
+    final String userId = widget.userId;
     final String newUsername = newUsernameController.text;
-
-   
-    
-
 
     if (newUsername.isNotEmpty) {
       try {
@@ -101,30 +93,85 @@ bool _isObscureOldPassword = true;
         backgroundColor: ColorConst.colorPrimary50,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+                       padding: const EdgeInsets.fromLTRB(13.0,108.0,13.0,8.0),
+
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          
           children: [
-            TextField(
-              controller: newUsernameController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Biệt danh mới',
+            Text('Thay đổi tên'),
+            SizedBox(height: 10),
+
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: ColorConst.colorPrimary80,
+              ),
+              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: newUsernameController,
+                        decoration:  InputDecoration(
+                          hintText: widget.username,
+                          hintStyle: TextStyle(
+                              color: Colors.grey,fontSize: 17),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          // Màu chữ khi đang nhập
+                          labelStyle: TextStyle(color: Colors.black,fontSize: 17),
+                          errorStyle: TextStyle(color: Colors.black),
+                        ),
+                        style: TextStyle(
+                            color: Colors.black,fontSize: 17),
+                      ),
+                    ),
+                     IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: () {
+                      _handleUserName();
+                    },
+                  ),
+                    
+                  ],
+                ),
               ),
             ),
-            SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _handleUserName,
-              child: Text('Thay đổi tên'),
-            ),
-             TextField(
-              controller: oldPasswordController,
+            SizedBox(height: 52),
+           
+            Text('Thay đổi mật khẩu'),
+            SizedBox(height: 10),
+
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: ColorConst.colorPrimary80,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: TextField(
+                  controller: oldPasswordController,
               obscureText: _isObscureOldPassword,
-              decoration: InputDecoration(
-                labelText: 'Mật khẩu cũ',
-                suffixIcon: IconButton(
+
+                  decoration:  InputDecoration(
+                    hintText: 'Mật khẩu cũ',
+                    hintStyle: TextStyle(
+                        color: Colors.grey,fontSize: 17),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    suffixIcon: IconButton(
                   icon: Icon(
-                    _isObscureOldPassword ? Icons.visibility : Icons.visibility_off,
+                    _isObscureOldPassword
+                        ? Icons.visibility
+                        : Icons.visibility_off,
                   ),
                   onPressed: () {
                     setState(() {
@@ -132,17 +179,44 @@ bool _isObscureOldPassword = true;
                     });
                   },
                 ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    // Màu chữ khi đang nhập
+                    labelStyle: TextStyle(color: Colors.black,fontSize: 17),
+                    errorStyle: TextStyle(color: Colors.black),
+                  ),
+                  style: TextStyle(
+                      color: Colors.black,fontSize: 17),
+                ),
               ),
             ),
+           
             SizedBox(height: 16),
-            TextField(
-              controller: newPasswordController,
+             Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: ColorConst.colorPrimary80,
+              ),
+              child: Padding(
+                               padding: const EdgeInsets.symmetric(horizontal: 8.0),
+
+                child: TextField(
+                  controller: newPasswordController,
               obscureText: _isObscureNewPassword,
-              decoration: InputDecoration(
-                labelText: 'Mật khẩu mới',
-                suffixIcon: IconButton(
+
+                  decoration:  InputDecoration(
+                    hintText: 'Mật khẩu mới',
+                    hintStyle: TextStyle(
+                        color: Colors.grey,fontSize: 17),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    suffixIcon: IconButton(
                   icon: Icon(
-                    _isObscureNewPassword ? Icons.visibility : Icons.visibility_off,
+                    _isObscureNewPassword
+                        ? Icons.visibility
+                        : Icons.visibility_off,
                   ),
                   onPressed: () {
                     setState(() {
@@ -150,17 +224,36 @@ bool _isObscureOldPassword = true;
                     });
                   },
                 ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    // Màu chữ khi đang nhập
+                    labelStyle: TextStyle(color: Colors.black,fontSize: 17),
+                    errorStyle: TextStyle(color: Colors.black),
+                  ),
+                  style: TextStyle(
+                      color: Colors.black,fontSize: 17),
+                ),
               ),
             ),
-            SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _handleChangePassword,
-              child: Text('Thay đổi mật khẩu'),
-            ),
+           
+          
+            SizedBox(height: 12),
+          
+            InkWell(
+              onTap: (){
+                _handleChangePassword();
+              },
+              child: Container(
+                padding: EdgeInsets.all(14),
+                width: MediaQuery.of(context).size.width/2,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: ColorConst.colorPrimary50),
+              child: Center(child: Text('Thay đổi mật khẩu',style: TextStyle(color: Colors.white),),),
+              ),
+            )
           ],
         ),
       ),
     );
   }
 }
-

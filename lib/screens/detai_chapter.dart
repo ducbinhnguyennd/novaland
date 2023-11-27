@@ -76,9 +76,8 @@ class _DetailChapterState extends State<DetailChapter> {
     UserServices us = UserServices();
     print('alo123 ${chapterDetail?.id}');
     us.addChuongVuaDocCuaTruyen(
-     widget.chapterId, chapterDetail?.name ?? 'loi', widget.storyId);
-    // _scrollController.addListener(_scrollListener);
-    
+     widget.chapterId, chapterDetail?.name ?? 'lỗi', widget.storyId);
+ 
   }
 
   @override
@@ -100,7 +99,7 @@ class _DetailChapterState extends State<DetailChapter> {
         UserServices us = UserServices();
     print('alo123 ${chapterDetail?.id}');
     us.addChuongVuaDocCuaTruyen(
-       chapterDetail?.id ?? widget.chapterId, chapterDetail?.name ?? 'loi', widget.storyId);
+       chapterDetail?.id ?? widget.chapterId, chapterDetail?.name ?? 'lỗi', widget.storyId);
     // _scrollController.addListener(_scrollListener);
     
       });
@@ -116,7 +115,6 @@ class _DetailChapterState extends State<DetailChapter> {
       children: [
         Container(
           color: ColorConst.colorBgNovelBlack.withOpacity(0.7),
-          // height: 56,
         ),
         SizedBox(
           height: 56,
@@ -141,7 +139,6 @@ class _DetailChapterState extends State<DetailChapter> {
                             ? _showToast('Bạn đang đọc chap đầu tiên')
                             : _goToNewChap(chapterDetail?.prevChap?.id ?? '-1',
                                 currentUser?.user[0].id ?? '');
-                        ;
                         // go to the previous chapter,
                       },
                     ),
@@ -183,7 +180,7 @@ class _DetailChapterState extends State<DetailChapter> {
     return AppBar(
       // toolbarHeight: _isShowBar ? 100 : 0.0,
       title: Text(
-         chapterDetail?.name?? 'Tanvlog',
+         chapterDetail?.name?? 'Đang tải...',
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -279,7 +276,7 @@ class _DetailChapterState extends State<DetailChapter> {
         });
       }
     } catch (e) {
-      // Xử lý lỗi nếu có
+      _showToast('Bạn không đủ xu, vui lòng nạp thêm');
     }
   }
 

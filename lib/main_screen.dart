@@ -138,7 +138,7 @@ class _MainScreenState extends State<MainScreen>
                       ),
                     ),
                       Tab(
-                      icon: Icon(Icons.favorite,size: DoubleX.kSizeLarge ),
+                      icon: Icon(Icons.favorite_border_rounded,size: DoubleX.kSizeLarge ),
                       iconMargin:
                           EdgeInsets.only(bottom: DoubleX.kPaddingSizeZero),
                       child: Visibility(
