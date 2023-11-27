@@ -27,7 +27,8 @@ class TaikhoanScreen extends StatefulWidget {
   State<TaikhoanScreen> createState() => _TaikhoanScreenState();
 }
 
-class _TaikhoanScreenState extends State<TaikhoanScreen> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+class _TaikhoanScreenState extends State<TaikhoanScreen>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   Data? currentUser;
   bool isSwitchedModeDarkTheme = Globals.isDarkModeTheme;
   bool isSwitchedModeRight = Globals.isRight;
@@ -56,9 +57,11 @@ class _TaikhoanScreenState extends State<TaikhoanScreen> with SingleTickerProvid
     super.initState();
     _loadUser();
   }
-Future<void> _refresh() async {
+
+  Future<void> _refresh() async {
     await _loadUser();
   }
+
   @override
   Widget build(BuildContext context) {
     if (currentUser == null) {
@@ -132,32 +135,33 @@ Future<void> _refresh() async {
                                 )),
                             Column(
                               children: [
-                             
-                       Container(
-                height: 80,
-                width: 80,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  boxShadow: const <BoxShadow>[
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.17),
-                      blurRadius: 10,
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Center(
-                  child: Text(
-                   userData.username.toString().substring(0, 1),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                      color: ColorConst.colorBackgroundStory,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 5),
+                                Container(
+                                  height: 80,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    boxShadow: const <BoxShadow>[
+                                      BoxShadow(
+                                        color: Color.fromRGBO(0, 0, 0, 0.17),
+                                        blurRadius: 10,
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      userData.username
+                                          .toString()
+                                          .substring(0, 1),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 30,
+                                        color: ColorConst.colorBackgroundStory,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 5),
                                 Text(
                                   userData.username,
                                   style: TextStyle(
@@ -268,7 +272,8 @@ Future<void> _refresh() async {
       );
     }
   }
-@override
+
+  @override
   bool get wantKeepAlive => true;
   bool hot18 = false;
   bool noichap = false;
@@ -287,10 +292,9 @@ Future<void> _refresh() async {
           InkWell(
             onTap: () {
               Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) =>  ChangePasswordScreen(userId: currentUser?.user[0].id ?? '', username: currentUser?.user[0].username ?? '',)),
-  );
-             
+                context,
+                MaterialPageRoute(builder: (context) => SuaThongTin()),
+              );
             },
             child: ListTile(
               title: Transform.translate(
@@ -303,7 +307,14 @@ Future<void> _refresh() async {
           ),
           InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed(SuaThongTin.routeName);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChangePasswordScreen(
+                          userId: currentUser?.user[0].id ?? '',
+                          username: currentUser?.user[0].username ?? '',
+                        )),
+              );
             },
             child: ListTile(
                 title: Transform.translate(
@@ -328,7 +339,6 @@ Future<void> _refresh() async {
                 ),
                 leading: Image.asset(AssetsPathConst.ico_6, height: 22)),
           ),
-          
           Visibility(
             visible: true,
             child: InkWell(
@@ -435,7 +445,7 @@ Future<void> _refresh() async {
                 ),
               ),
             ),
-        
+
             InkWell(
               onTap: () {
                 setState(() {
@@ -472,7 +482,6 @@ Future<void> _refresh() async {
                 ),
                 leading: ImageIcon(AssetImage(AssetsPathConst.ico_12),
                     size: 22, color: ColorConst.colorPrimary30),
-        
               ),
             ),
           ]),
@@ -568,7 +577,10 @@ Future<void> _refresh() async {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text('Không'),
+                          child: Text(
+                            'Không',
+                            style: TextStyle(color: Colors.black),
+                          ),
                         ),
                         ElevatedButton(
                           onPressed: () async {
@@ -592,8 +604,8 @@ Future<void> _refresh() async {
                             ; // Thực hiện đăng xuất
                           },
                           style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.purple),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                ColorConst.colorPrimary50),
                           ),
                           child: Text(
                             'Có',

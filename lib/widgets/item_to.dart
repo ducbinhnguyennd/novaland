@@ -32,32 +32,28 @@ class _ItemToMoiState extends State<ItemTo> {
   _loadUser() {
     UserServices us = UserServices();
     us.getInfoLogin().then((value) {
-     
       if (value != "") {
         setState(() {
           currentUser = Data.fromJson(jsonDecode(value));
-       
         });
-        
       } else {
         setState(() {
           currentUser = null;
         });
       }
     }, onError: (error) {
-    print('loi cmnr');
-    }
-    );
+      print('loi cmnr');
+    });
   }
-    
+
   @override
   void initState() {
     super.initState();
-  
-    _loadUser();
 
+    _loadUser();
   }
-   void _showToast(String msg) {
+
+  void _showToast(String msg) {
     if (msg.contains(StringConst.textyeucaudangnhap)) {
       // update count show user need login: only first show toast need login, after will show snack bar to go to login screen,
       // show snack bar login here,
@@ -75,7 +71,6 @@ class _ItemToMoiState extends State<ItemTo> {
   Widget build(BuildContext context) {
     final widthS = MediaQuery.of(context).size.width;
 
- 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SizedBox(
@@ -86,8 +81,8 @@ class _ItemToMoiState extends State<ItemTo> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      MangaDetailScreen(mangaId: widget.id, storyName: widget.name),
+                  builder: (context) => MangaDetailScreen(
+                      mangaId: widget.id, storyName: widget.name),
                 ),
               );
             } else {
@@ -108,8 +103,12 @@ class _ItemToMoiState extends State<ItemTo> {
                   ),
                   height: 155,
                 ),
-                placeholder: (context, url) => CircularProgressIndicator(), // Hiển thị khi đang tải ảnh
-                errorWidget: (context, url, error) => Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
+                placeholder: (context, url) => Center(
+                    child: CircularProgressIndicator(
+                  color: ColorConst.colorPrimary50,
+                )), // Hiển thị khi đang tải ảnh
+                errorWidget: (context, url, error) =>
+                    Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
               ),
               Positioned(
                 bottom: 0,
@@ -118,9 +117,10 @@ class _ItemToMoiState extends State<ItemTo> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    color: ColorConst.colorPrimary120,
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))
-                  ),
+                      color: ColorConst.colorPrimary120,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20))),
                 ),
               ),
               Positioned(
@@ -137,7 +137,6 @@ class _ItemToMoiState extends State<ItemTo> {
                   ],
                 ),
               )
-              
             ],
           ),
         ),

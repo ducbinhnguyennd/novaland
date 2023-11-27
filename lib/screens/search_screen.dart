@@ -15,13 +15,14 @@ class _SearchScreenState extends State<SearchScreen> {
   List<Manga> _items = [];
   List<Manga> _foundUsers = [];
   String? currentImage = '';
-   MangaService mangaService = MangaService();
+  MangaService mangaService = MangaService();
 
   @override
   void initState() {
     super.initState();
     fetchData();
   }
+
   Future<void> fetchData() async {
     try {
       List<Manga> listT = await MangaService.fetchMangaList();
@@ -33,7 +34,8 @@ class _SearchScreenState extends State<SearchScreen> {
       print('Error: $error');
     }
   }
-    String removeAccents(String input) {
+
+  String removeAccents(String input) {
     var str = input.toLowerCase();
     str = str.replaceAll(RegExp(r'[àáạảãâầấậẩẫăằắặẳẵ]'), 'a');
     str = str.replaceAll(RegExp(r'[èéẹẻẽêềếệểễ]'), 'e');
@@ -44,7 +46,8 @@ class _SearchScreenState extends State<SearchScreen> {
     str = str.replaceAll(RegExp(r'[đ]'), 'd');
     return str;
   }
- void _runFilter(String query) {
+
+  void _runFilter(String query) {
     List<Manga> results = [];
     if (query.isEmpty) {
       //results = _items.cast<ItemModel>();
@@ -52,7 +55,7 @@ class _SearchScreenState extends State<SearchScreen> {
       results = _items.where((book) {
         String nameLower = removeAccents(book.mangaName);
         // String authorLower = removeAccents(book.);
-        String category= removeAccents(book.category);
+        String category = removeAccents(book.category);
         String queryLower = removeAccents(query.toLowerCase());
 
         return nameLower.contains(queryLower) ||
@@ -73,7 +76,7 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: AppBar(
         title: Text('Tìm kiếm kho truyện'),
         centerTitle: true,
-        backgroundColor: ColorConst.colorPrimary,
+        backgroundColor: ColorConst.colorPrimary50,
       ),
       body: Column(children: [
         Padding(
@@ -105,8 +108,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           child: ItemSearch(
                             imagePath: _foundUsers[index].image,
                             title: _foundUsers[index].mangaName,
-                            id: _foundUsers[index].id, theloai: _foundUsers[index].category,
-                          
+                            id: _foundUsers[index].id,
+                            theloai: _foundUsers[index].category,
                           ),
                         ),
                       );
@@ -123,5 +126,4 @@ class _SearchScreenState extends State<SearchScreen> {
       ]),
     );
   }
-
 }

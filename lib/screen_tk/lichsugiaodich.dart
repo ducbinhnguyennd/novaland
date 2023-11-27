@@ -4,7 +4,7 @@ import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/lichsuthanhtoan_model.dart';
 
 class LichSuGiaoDich extends StatefulWidget {
-   LichSuGiaoDich({super.key,  required this.userId});
+  LichSuGiaoDich({super.key, required this.userId});
   static const routeName = 'lichsugiaodich';
   String userId;
   @override
@@ -12,7 +12,7 @@ class LichSuGiaoDich extends StatefulWidget {
 }
 
 class _LichSuGiaoDichState extends State<LichSuGiaoDich> {
-   final PaymentApi _paymentApi = PaymentApi();
+  final PaymentApi _paymentApi = PaymentApi();
   late Future<List<PaymentHistory>> _paymentHistory;
 
   @override
@@ -32,10 +32,13 @@ class _LichSuGiaoDichState extends State<LichSuGiaoDich> {
         future: _paymentHistory,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(
+                child: CircularProgressIndicator(
+              color: ColorConst.colorPrimary50,
+            ));
           } else if (snapshot.hasError) {
             return Text('Đã xảy ra lỗi: ${snapshot.error}');
-          } else if ( snapshot.data!.isEmpty  ) {
+          } else if (snapshot.data!.isEmpty) {
             return Center(child: Text('Chưa có lịch sử thanh toán'));
           } else {
             final paymentHistory = snapshot.data;
@@ -48,26 +51,40 @@ class _LichSuGiaoDichState extends State<LichSuGiaoDich> {
               itemBuilder: (context, index) {
                 final history = paymentHistory?[index];
                 return Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0,15.0,8.0,0),
+                  padding: const EdgeInsets.fromLTRB(8.0, 15.0, 8.0, 0),
                   child: Container(
                     padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: ColorConst.colorPrimary80),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: ColorConst.colorPrimary80),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(history?.success ?? '', style: TextStyle(fontWeight: FontWeight.w500,fontSize: 17),),
+                        Text(
+                          history?.success ?? '',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 17),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('${history?.totalAmount.toStringAsFixed(2)} USD', style: TextStyle(fontWeight: FontWeight.w500,fontSize: 17,color: ColorConst.colorPrimary50)),
-                            
+                            Text(
+                                '${history?.totalAmount.toStringAsFixed(2)} USD',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17,
+                                    color: ColorConst.colorPrimary50)),
                             Text('${history?.date}')
                           ],
                         ),
                         Row(
                           children: [
                             Text('Xu bạn nhận được: '),
-                            Text('${history?.coin} xu', style: TextStyle(fontWeight: FontWeight.w500,fontSize: 17,color: ColorConst.colorPrimary50)),
+                            Text('${history?.coin} xu',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17,
+                                    color: ColorConst.colorPrimary50)),
                           ],
                         )
                       ],

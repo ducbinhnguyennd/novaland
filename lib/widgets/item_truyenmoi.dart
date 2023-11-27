@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/strings_const.dart';
 import 'package:loginapp/model/user_model.dart';
@@ -31,32 +32,28 @@ class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
   _loadUser() {
     UserServices us = UserServices();
     us.getInfoLogin().then((value) {
-     
       if (value != "") {
         setState(() {
           currentUser = Data.fromJson(jsonDecode(value));
-       
         });
-        
       } else {
         setState(() {
           currentUser = null;
         });
       }
     }, onError: (error) {
-    print('loi cmnr');
-    }
-    );
+      print('loi cmnr');
+    });
   }
-    
+
   @override
   void initState() {
     super.initState();
-  
-    _loadUser();
 
+    _loadUser();
   }
-   void _showToast(String msg) {
+
+  void _showToast(String msg) {
     if (msg.contains(StringConst.textyeucaudangnhap)) {
       // update count show user need login: only first show toast need login, after will show snack bar to go to login screen,
       // show snack bar login here,
@@ -74,19 +71,17 @@ class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
   Widget build(BuildContext context) {
     final widthS = MediaQuery.of(context).size.width;
 
- 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SizedBox(
-        // height: widthS * 6 / 8,
         child: GestureDetector(
           onTap: () {
             if (currentUser != null && currentUser!.user != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      MangaDetailScreen(mangaId: widget.id, storyName: widget.name),
+                  builder: (context) => MangaDetailScreen(
+                      mangaId: widget.id, storyName: widget.name),
                 ),
               );
             } else {
@@ -107,8 +102,12 @@ class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
                   ),
                   height: 155,
                 ),
-                placeholder: (context, url) => CircularProgressIndicator(), // Hiển thị khi đang tải ảnh
-                errorWidget: (context, url, error) => Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
+                placeholder: (context, url) => Center(
+                    child: CircularProgressIndicator(
+                  color: ColorConst.colorPrimary50,
+                )), // Hiển thị khi đang tải ảnh
+                errorWidget: (context, url, error) =>
+                    Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

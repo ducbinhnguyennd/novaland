@@ -12,8 +12,7 @@ class MangaDetailModel {
   final List<Chapter> chapters;
   final List<Comments> cmts;
 
-   bool? isLiked;
-
+  bool? isLiked;
 
   MangaDetailModel({
     required this.mangaName,
@@ -27,31 +26,29 @@ class MangaDetailModel {
     required this.chapters,
     required this.cmts,
     required this.totalcomment,
-     this.isLiked,
+    this.isLiked,
   });
 
   factory MangaDetailModel.fromJson(Map<String, dynamic> json) {
     List<Chapter> chapterList = (json['chapters'] as List).map((chapterJson) {
       return Chapter.fromJson(chapterJson);
     }).toList();
-   List<Comments> cmtList = (json['comments'] as List).map((cmtJson) {
+    List<Comments> cmtList = (json['comments'] as List).map((cmtJson) {
       return Comments.fromJson(cmtJson);
     }).toList();
     return MangaDetailModel(
-      mangaName: json['manganame'],
-      author: json['author'],
-      content: json['content'],
-      image: json['image'],
-      category: json['category'],
-      view: json['view'],
-      like: json['like'],
-      totalChapters: json['totalChapters'],
-      chapters: chapterList,
-      cmts: cmtList,
-      isLiked: json['isLiked'],
-      totalcomment: json['totalcomment']
-   
-    );
+        mangaName: json['manganame'],
+        author: json['author'],
+        content: json['content'],
+        image: json['image'],
+        category: json['category'],
+        view: json['view'],
+        like: json['like'],
+        totalChapters: json['totalChapters'],
+        chapters: chapterList,
+        cmts: cmtList,
+        isLiked: json['isLiked'],
+        totalcomment: json['totalcomment']);
   }
 }
 
@@ -74,26 +71,27 @@ class Chapter {
     );
   }
 }
+
 class Comments {
   final String idcmt;
   final String usernamecmt;
   final String noidung;
   final String userIdcmt;
+  final String date;
 
-  Comments( {
-    required this.idcmt,
-    required this.usernamecmt,
-    required this.noidung,
-   required this.userIdcmt
-     
-  });
+  Comments(
+      {required this.idcmt,
+      required this.usernamecmt,
+      required this.noidung,
+      required this.userIdcmt,
+      required this.date});
 
   factory Comments.fromJson(Map<String, dynamic> json) {
     return Comments(
-      idcmt: json['cmt_id'],
-      usernamecmt: json['username'],
-      noidung: json['cmt'],
-      userIdcmt: json['userID']
-    );
+        idcmt: json['cmt_id'],
+        usernamecmt: json['username'],
+        noidung: json['cmt'],
+        userIdcmt: json['userID'],
+        date: json['date']);
   }
 }

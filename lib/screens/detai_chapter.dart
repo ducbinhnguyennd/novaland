@@ -48,12 +48,12 @@ class _DetailChapterState extends State<DetailChapter> {
         setState(() {
           currentUser = Data.fromJson(jsonDecode(value));
           ChapterDetail.fetchChapterImages(
-            widget.chapterId, currentUser?.user[0].id ?? '')
-        .then((value) {
-      setState(() {
-        chapterDetail = value;
-      });
-    });
+                  widget.chapterId, currentUser?.user[0].id ?? '')
+              .then((value) {
+            setState(() {
+              chapterDetail = value;
+            });
+          });
         });
       } else {
         setState(() {
@@ -72,12 +72,11 @@ class _DetailChapterState extends State<DetailChapter> {
   void initState() {
     super.initState();
     _loadUser();
-    
+
     UserServices us = UserServices();
     print('alo123 ${chapterDetail?.id}');
     us.addChuongVuaDocCuaTruyen(
-     widget.chapterId, chapterDetail?.name ?? 'lỗi', widget.storyId);
- 
+        widget.chapterId, chapterDetail?.name ?? 'lỗi', widget.storyId);
   }
 
   @override
@@ -90,18 +89,16 @@ class _DetailChapterState extends State<DetailChapter> {
     print('object $chapId');
     await ChapterDetail.fetchChapterImages(chapId, userId).then((value) {
       setState(() {
-        
         chapterDetail = value;
         // if (chapterDetail?.nextChap?.vipOrFree == 'vip') {
         //   widget.viporfree = 'vip';
         // }
         widget.viporfree = chapterDetail?.viporfree ?? 'vip';
         UserServices us = UserServices();
-    print('alo123 ${chapterDetail?.id}');
-    us.addChuongVuaDocCuaTruyen(
-       chapterDetail?.id ?? widget.chapterId, chapterDetail?.name ?? 'lỗi', widget.storyId);
-    // _scrollController.addListener(_scrollListener);
-    
+        print('alo123 ${chapterDetail?.id}');
+        us.addChuongVuaDocCuaTruyen(chapterDetail?.id ?? widget.chapterId,
+            chapterDetail?.name ?? 'lỗi', widget.storyId);
+        // _scrollController.addListener(_scrollListener);
       });
     });
   }
@@ -180,7 +177,7 @@ class _DetailChapterState extends State<DetailChapter> {
     return AppBar(
       // toolbarHeight: _isShowBar ? 100 : 0.0,
       title: Text(
-         chapterDetail?.name?? 'Đang tải...',
+        chapterDetail?.name ?? 'Đang tải...',
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -266,7 +263,7 @@ class _DetailChapterState extends State<DetailChapter> {
   void bychapterlock() async {
     final apiUrl =
         // 'https://mangaland.site/purchaseChapter/${currentUser!.user[0].id}/${widget.chapterId}';
-        'https://mangaland.site/purchaseChapter/${currentUser!.user[0].id}/${chapterDetail?.id}';
+        'https://du-an-2023.vercel.app/purchaseChapter/${currentUser!.user[0].id}/${chapterDetail?.id}';
 
     try {
       final response = await dio.post(apiUrl);
@@ -295,7 +292,6 @@ class _DetailChapterState extends State<DetailChapter> {
         alignment: Alignment.topCenter,
         height: MediaQuery.of(context).size.height,
         child: ListView(
-
           cacheExtent: 0,
           padding: EdgeInsets.only(bottom: 30),
           shrinkWrap: true,
@@ -319,7 +315,7 @@ class _DetailChapterState extends State<DetailChapter> {
                   StringConst.textThongBaoChapVip,
                   style: TextStyle(fontSize: DoubleX.kFontSizeTiny_1X1X),
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(top: DoubleX.kPaddingSizeLarge_1XX),
                   child: Wrap(
                     children: [
@@ -403,7 +399,7 @@ class _DetailChapterState extends State<DetailChapter> {
     // List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
 
     return Container(
-      height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height,
         child: imageUrls.isNotEmpty
             ? InkWell(
                 splashColor: Colors.transparent,

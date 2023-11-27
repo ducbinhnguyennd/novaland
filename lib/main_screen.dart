@@ -73,7 +73,7 @@ class _MainScreenState extends State<MainScreen>
             BangTinScreen(),
             BXHScreen(),
             TaikhoanScreen()
-            
+
             // Add more TabBarView children as needed
           ],
         ),
@@ -87,7 +87,7 @@ class _MainScreenState extends State<MainScreen>
               child: TabBar(
                   unselectedLabelColor: Colors.black,
                   labelColor: ColorConst.colorPrimary50,
-                  //indicatorColor: ColorConst.colorSecondary,
+                  indicatorColor: Colors.transparent,
                   indicatorWeight: DoubleX.kPaddingSizeTiny_0XX,
                   labelPadding: const EdgeInsets.all(0),
                   controller: _tabController,
@@ -137,8 +137,9 @@ class _MainScreenState extends State<MainScreen>
                         ),
                       ),
                     ),
-                      Tab(
-                      icon: Icon(Icons.favorite_border_rounded,size: DoubleX.kSizeLarge ),
+                    Tab(
+                      icon: Icon(Icons.favorite_border_rounded,
+                          size: DoubleX.kSizeLarge),
                       iconMargin:
                           EdgeInsets.only(bottom: DoubleX.kPaddingSizeZero),
                       child: Visibility(

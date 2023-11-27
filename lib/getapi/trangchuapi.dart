@@ -13,8 +13,10 @@ import 'package:loginapp/model/user_model2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Dio dio = Dio();
-String urlapi = 'https://mangaland.site';
-// String urlapi = 'https://du-an-2023.vercel.app';
+// String urlapi = 'https://mangaland.site';
+
+String urlapi = 'https://du-an-2023.vercel.app';
+
 class MangaService {
   static String apiUrl = "$urlapi/mangas";
 
@@ -37,8 +39,7 @@ class MangaService {
 class MangaDetail {
   static Future<MangaDetailModel> fetchMangaDetail(
       String mangaId, String userId) async {
-    final apiUrl =
-        "$urlapi/mangachitiet/$mangaId/$userId";
+    final apiUrl = "$urlapi/mangachitiet/$mangaId/$userId";
 
     Response response = await dio.get(apiUrl);
     if (response.statusCode == 200) {
@@ -54,8 +55,7 @@ class MangaDetail {
 class ChapterDetail {
   static Future<ComicChapter> fetchChapterImages(
       String chapterId, String userId) async {
-    final apiUrl =
-        '$urlapi/$chapterId/$userId/images';
+    final apiUrl = '$urlapi/chapter/$chapterId/$userId/images';
 
     try {
       final response = await dio.get(apiUrl);
@@ -75,8 +75,7 @@ class ChapterDetail {
 
 class ApiListYeuThich {
   static Future<List<Manga>> fetchFavoriteManga(String userId) async {
-    final response = await dio
-        .get('$urlapi/user/favoriteManga/$userId');
+    final response = await dio.get('$urlapi/user/favoriteManga/$userId');
     if (response.statusCode == 200) {
       print(response.data);
       final List<dynamic> jsonData = response.data;
@@ -140,8 +139,7 @@ class CommentService {
       String userId, String mangaId, String comment) async {
     final dio = Dio();
     try {
-      final response = await dio.post(
-          '$urlapi/postcomment/$userId/$mangaId',
+      final response = await dio.post('$urlapi/postcomment/$userId/$mangaId',
           data: {'comment': comment});
       if (response.statusCode == 200) {
         print('binh cmt ${response.data}');
@@ -159,7 +157,6 @@ class CommentService {
 class XoaComment {
   static Future<void> xoaComment(
       String comment, String mangaId, String userId) async {
-   
     try {
       final response = await dio.post(
         '$urlapi/deletecomment/$comment/$mangaId/$userId',
@@ -178,7 +175,6 @@ class XoaComment {
 
 // lịch sử thanh toán
 class PaymentApi {
-  
   Future<List<PaymentHistory>> getPaymentHistory(String userId) async {
     final response = await dio.get('$urlapi/paymentdetail/$userId');
     if (response.statusCode == 200) {
@@ -197,6 +193,7 @@ class ApiUser {
     return UserModel.fromJson(response.data);
   }
 }
+
 // bxh
 class ApiTopUser {
   Future<List<TopUserModel>> getUsers() async {
@@ -215,6 +212,7 @@ class ApiTopUser {
     }
   }
 }
+
 // trang bangtin chưa login
 class ApiBangTin {
   Future<List<Bangtin>> getPosts() async {
@@ -222,7 +220,8 @@ class ApiBangTin {
       Response response = await dio.get("$urlapi/getbaiviet");
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
-        List<Bangtin> posts = data.map((json) => Bangtin.fromJson(json)).toList();
+        List<Bangtin> posts =
+            data.map((json) => Bangtin.fromJson(json)).toList();
         return posts;
       } else {
         throw Exception("Failed to load posts");
@@ -232,6 +231,7 @@ class ApiBangTin {
     }
   }
 }
+
 // đã log
 class ApiBangTinDaLog {
   Future<List<Bangtin>> getPosts(String userId) async {
@@ -239,7 +239,8 @@ class ApiBangTinDaLog {
       Response response = await dio.get("$urlapi/getbaiviet/$userId");
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
-        List<Bangtin> posts = data.map((json) => Bangtin.fromJson(json)).toList();
+        List<Bangtin> posts =
+            data.map((json) => Bangtin.fromJson(json)).toList();
         return posts;
       } else {
         throw Exception("Failed to load posts");
@@ -262,13 +263,11 @@ class ApiPostBaiDang {
       throw error;
     }
   }
-
 }
-// xoa bài viết 
+
+// xoa bài viết
 class XoaBaiDang {
-  static Future<void> xoaBaiDang(
-      String baivietId, String userId) async {
-   
+  static Future<void> xoaBaiDang(String baivietId, String userId) async {
     try {
       final response = await dio.post(
         '$urlapi/deletebaiviet/$baivietId/$userId',
@@ -284,6 +283,7 @@ class XoaBaiDang {
     }
   }
 }
+
 // like bài viết
 class LikeApiService {
   Future<void> likeBaiViet(String userId, String baiVietId) async {
@@ -299,7 +299,8 @@ class LikeApiService {
 
 // post cmt bài đăng
 class ApiSCommentBaiDang {
-  Future<void> postComment(String baivietId, String userId, String comment) async {
+  Future<void> postComment(
+      String baivietId, String userId, String comment) async {
     try {
       final response = await dio.post(
         '$urlapi/postcmtbaiviet/$baivietId/$userId',
@@ -311,11 +312,11 @@ class ApiSCommentBaiDang {
     }
   }
 }
-// xoa cmt bài viết 
+
+// xoa cmt bài viết
 class XoaCommentBaiDang {
   static Future<void> xoaComment(
       String commentId, String baivietId, String userId) async {
-   
     try {
       final response = await dio.post(
         '$urlapi/deletecmtbaiviet/$commentId/$baivietId/$userId',
@@ -331,6 +332,7 @@ class XoaCommentBaiDang {
     }
   }
 }
+
 // thông báo
 class NotificationApi {
   Future<List<NotificationModel>> getNotifications(String userId) async {
@@ -350,7 +352,8 @@ class NotificationApi {
 
 // thay đổi pass, username
 class PasswordChangeService {
-  Future<void> changePassword(String userId, String oldPassword, String newPassword) async {
+  Future<void> changePassword(
+      String userId, String oldPassword, String newPassword) async {
     try {
       final response = await dio.post(
         '$urlapi/repass/$userId',
@@ -367,13 +370,13 @@ class PasswordChangeService {
       throw Exception('Đã xảy ra lỗi: $error');
     }
   }
+
   Future<void> changeUsername(String userId, String username) async {
     try {
       final response = await dio.post(
         '$urlapi/rename/$userId',
         data: {
           'username': username,
-          
         },
       );
 
@@ -385,7 +388,8 @@ class PasswordChangeService {
     }
   }
 }
-class Login{
+
+class Login {
   Future<Response?> signIn(String username, String password) async {
     var dio = Dio();
     try {
@@ -409,7 +413,8 @@ class ApiCmtBaiViet {
       Response response = await dio.get("$urlapi/getcmtbaiviet/$baivietId");
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
-        List<Comment> posts = data.map((json) => Comment.fromJson(json)).toList();
+        List<Comment> posts =
+            data.map((json) => Comment.fromJson(json)).toList();
         return posts;
       } else {
         throw Exception("Failed to load posts");
@@ -419,17 +424,18 @@ class ApiCmtBaiViet {
     }
   }
 }
+
 // detail bai viet
 class ApiDetailBaiViet {
-  Future<Bangtin> fetchDetailBaiviet(String baivietID,String userId) async {
+  Future<Bangtin> fetchDetailBaiviet(String baivietID, String userId) async {
     final response = await dio.get('$urlapi/detailbaiviet/$baivietID/$userId');
     return Bangtin.fromJson(response.data);
   }
 }
+
 //xóa user
 class XoaUser {
-  static Future<void> xoaUser(
-    String userId) async {
+  static Future<void> xoaUser(String userId) async {
     try {
       final response = await dio.post(
         '$urlapi/userdelete/$userId',

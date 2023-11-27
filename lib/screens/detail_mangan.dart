@@ -91,18 +91,21 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   }
 
   buildContent(String content) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Giới thiệu:'),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            content,
-            style: TextStyle(fontSize: 15),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Giới thiệu:'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              content,
+              style: TextStyle(fontSize: 15),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -130,13 +133,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
             },
             child: Container(
               margin: EdgeInsets.only(right: 0.5),
-              color: ColorConst.colorPrimary,
+              color: ColorConst.colorPrimary50,
               height: 70,
-              child: Center(
+              child: const Center(
                 child: Text(
                   'Đọc từ đầu',
                   maxLines: 1,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: ColorConst.colorPrimaryText,
                     fontWeight: FontWeight.bold,
                     fontSize: DoubleX.kFontSizeTiny_1XX,
@@ -177,11 +180,11 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                   ? ColorConst.colorPrimary
                   : ColorConst.colorPrimary.withOpacity(0.6),
               height: 70,
-              child: Center(
+              child: const Center(
                 child: Text(
                   'Đọc tiếp',
                   maxLines: 1,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: ColorConst.colorPrimaryText,
                     fontWeight: FontWeight.bold,
                     fontSize: DoubleX.kFontSizeTiny_1XX,
@@ -220,66 +223,69 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   // }
 
   buildThongSo(String follow, String view, String chap, String binhluan) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Column(
-          children: [
-            Text(
-              follow,
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: DoubleX.kFontSizeTiny_1XXX),
-            ),
-            Text(
-              'Theo dõi',
-              style: TextStyle(color: Colors.grey),
-            )
-          ],
-        ),
-        Column(
-          children: [
-            Text(
-              view,
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: DoubleX.kFontSizeTiny_1XXX),
-            ),
-            Text(
-              'Lượt xem',
-              style: TextStyle(color: Colors.grey),
-            )
-          ],
-        ),
-        Column(
-          children: [
-            Text(
-              chap,
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: DoubleX.kFontSizeTiny_1XXX),
-            ),
-            Text(
-              'Chapters',
-              style: TextStyle(color: Colors.grey),
-            )
-          ],
-        ),
-        Column(
-          children: [
-            Text(
-              binhluan,
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: DoubleX.kFontSizeTiny_1XXX),
-            ),
-            Text(
-              'Bình luận',
-              style: TextStyle(color: Colors.grey),
-            )
-          ],
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 18.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Column(
+            children: [
+              Text(
+                follow,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: DoubleX.kFontSizeTiny_1XXX),
+              ),
+              const Text(
+                'Theo dõi',
+                style: TextStyle(color: Colors.grey),
+              )
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                view,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: DoubleX.kFontSizeTiny_1XXX),
+              ),
+              const Text(
+                'Lượt xem',
+                style: TextStyle(color: Colors.grey),
+              )
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                chap,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: DoubleX.kFontSizeTiny_1XXX),
+              ),
+              const Text(
+                'Chapters',
+                style: TextStyle(color: Colors.grey),
+              )
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                binhluan,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: DoubleX.kFontSizeTiny_1XXX),
+              ),
+              const Text(
+                'Bình luận',
+                style: TextStyle(color: Colors.grey),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -306,7 +312,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
           backgroundColor: ColorConst.colorPrimary50,
           title: Text('Đang tải...'),
         ),
-        body: Center(
+        body: const Center(
           child: CircularProgressIndicator(
             color: ColorConst.colorPrimary,
           ),
@@ -317,8 +323,10 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         appBar: AppBar(
           backgroundColor: ColorConst.colorPrimary50,
           title: Text(widget.storyName),
-          bottom:
-              TabBar(controller: _controller, tabs: _buildTabBarTitlesList()),
+          bottom: TabBar(
+              controller: _controller,
+              indicatorColor: Colors.white,
+              tabs: _buildTabBarTitlesList()),
         ),
         body: TabBarView(
           controller: _controller,
@@ -405,7 +413,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                                           .toString()
                                           .substring(0, 1) ??
                                       '',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
@@ -417,11 +426,20 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                                   Text(
                                       mangaDetail?.cmts[index].usernamecmt ??
                                           '',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15)),
-                                  Text(mangaDetail?.cmts[index].noidung ?? ''),
-                                  // Text(mangaDetail?.cmts[index].date ?? ''),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 3.0),
+                                    child: Text(
+                                        mangaDetail?.cmts[index].noidung ?? ''),
+                                  ),
+                                  Text(
+                                    mangaDetail?.cmts[index].date ?? '',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 13),
+                                  ),
                                 ],
                               ),
                             ),
@@ -457,13 +475,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                   Expanded(
                     child: TextFormField(
                       controller: commentController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Nhập bình luận',
                         focusColor: Colors.black,
-                        enabledBorder: const UnderlineInputBorder(
+                        enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.transparent),
                         ),
-                        focusedBorder: const UnderlineInputBorder(
+                        focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.transparent),
                         ),
                       ),
@@ -492,7 +510,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                         );
                       }
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.send_rounded,
                       color: ColorConst.colorPrimary50,
                     ),
@@ -550,25 +568,30 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         children: [
           Stack(
             children: [
-              ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Image.network(
-                  mangaDetail?.image ?? '',
-                  height: 230,
-                  width: MediaQuery.of(context).size.width,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  },
-                  errorBuilder: (BuildContext context, Object error,
-                      StackTrace? stackTrace) {
-                    return Icon(Icons.error);
-                  },
+              Image.network(
+                mangaDetail?.image ?? '',
+                height: 230,
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.cover,
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                },
+                errorBuilder: (BuildContext context, Object error,
+                    StackTrace? stackTrace) {
+                  return Icon(Icons.error);
+                },
+              ),
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    color: Colors.transparent,
+                  ),
                 ),
               ),
               Positioned(
@@ -593,8 +616,9 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                           height: 180,
                         ),
                         placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                     ),
                     Expanded(
@@ -604,46 +628,48 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Truyện: ${mangaDetail?.mangaName}',
-                              style: TextStyle(
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.white,
-                                    blurRadius:
-                                        1.0, // Điều chỉnh mức độ mờ của shadow
-                                    offset: Offset(0.0,
-                                        1.0), // Điều chỉnh vị trí của shadow
-                                  ),
-                                ],
-                              ),
+                            Text('Truyện: ${mangaDetail?.mangaName}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                      offset: Offset(2, 2),
+                                      color: Colors.black,
+                                      blurRadius: 3,
+                                    ),
+                                  ],
+                                )),
+                            const SizedBox(
+                              height: 10,
                             ),
-                            Text(
-                              'Tác giả: ${mangaDetail?.author}',
-                              style: TextStyle(
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.white,
-                                    blurRadius:
-                                        1.0, // Điều chỉnh mức độ mờ của shadow
-                                    offset: Offset(0.0,
-                                        1.0), // Điều chỉnh vị trí của shadow
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              'Thể loại: ${mangaDetail?.category}',
-                              style: TextStyle(
-                                shadows: [
-                                  Shadow(
+                            Text('Tác giả: ${mangaDetail?.author}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  shadows: [
+                                    Shadow(
+                                      offset: Offset(1, 1),
                                       color: Colors.white,
-                                      blurRadius:
-                                          1.0, // Điều chỉnh mức độ mờ của shadow
-                                      offset: Offset(0.0, 1.0)),
-                                ],
-                              ),
-                            ),
+                                      blurRadius: 3,
+                                    ),
+                                  ],
+                                )),
+                            Text('Thể loại: ${mangaDetail?.category}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  shadows: [
+                                    Shadow(
+                                      offset: Offset(1, 1),
+                                      color: Colors.white,
+                                      blurRadius: 3,
+                                    ),
+                                  ],
+                                )),
                           ],
                         ),
                       ),
@@ -653,21 +679,17 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
               ),
             ],
           ),
-
-          // buildGenresChips(),
-          SizedBox(height: 15),
-
           buildThongSo(
               mangaDetail!.like.toString(),
               mangaDetail!.view.toString(),
               mangaDetail!.totalChapters.toString(),
               mangaDetail!.totalcomment.toString()),
-          SizedBox(height: 15),
-          Divider(
+          const SizedBox(height: 15),
+          const Divider(
             color: Colors.grey,
             height: 0.2,
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           buildContent(mangaDetail!.content),
           buildFavorite(),
         ],
@@ -677,12 +699,11 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   }
 
   final dio = Dio();
-//  String userId = currentUser.user[0].id;
 
   void toggleLike() async {
     final apiUrl = nutlike
-        ? 'https://mangaland.site/user/removeFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}'
-        : 'https://mangaland.site/user/addFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}';
+        ? 'https://du-an-2023.vercel.app/user/removeFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}'
+        : 'https://du-an-2023.vercel.app/user/addFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}';
 
     try {
       final response = await dio.post(apiUrl);
@@ -692,6 +713,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
           nutlike = !nutlike;
         });
 
+        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (context) {
@@ -723,7 +745,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     return [
       Tab(
         child: Container(
-          child: Text(
+          child: const Text(
             'Giới thiệu',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -734,7 +756,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
           ),
         ),
       ),
-      Tab(
+      const Tab(
         child: Text(
           'Chapter',
           textAlign: TextAlign.center,
@@ -745,7 +767,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
           ),
         ),
       ),
-      Tab(
+      const Tab(
         child: Text(
           'Bình luận',
           textAlign: TextAlign.left,

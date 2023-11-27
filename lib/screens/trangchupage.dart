@@ -29,7 +29,6 @@ class _HomePageState extends State<HomePage>
   bool _isLoading = true;
 
   final List<ItemCarousel> itemList = [
-
     ItemCarousel(
         id: '',
         image:
@@ -40,17 +39,15 @@ class _HomePageState extends State<HomePage>
             'https://canhrau.com/wp-content/uploads/2022/01/truyen-tranh-ngon-tinh-thanh-xuan-vuon-truong-trung-quoc-hinh-2.png'),
   ];
 
-  
-Widget Search() {
+  Widget Search() {
     return Padding(
-      padding: const EdgeInsets.all(22.0),
-      child: Row(      
+      padding: EdgeInsets.fromLTRB(8.0, 70.0, 8.0, 0),
+      child: Row(
         children: [
           Expanded(
             flex: 9,
             child: Container(
               height: 40,
-              
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: ColorConst.colorPrimary),
@@ -79,21 +76,21 @@ Widget Search() {
           ),
           Expanded(
             flex: 1,
-            child: IconButton(onPressed: (){
-             
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => CategoriesScreen(),
-                              ),
-                            );
-                          
-            }, icon: Icon(Icons.category)),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CategoriesScreen(),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.density_medium_rounded)),
           )
         ],
       ),
     );
   }
-  
+
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -111,57 +108,55 @@ Widget Search() {
           ),
         ),
         child: ListView(
-          // shrinkWrap: true,
+          padding: EdgeInsets.all(0),
           children: [
             Search(),
-           SizedBox(
-            height: 200,
-                    child: Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: PageView.builder(
-                        controller: _pageController,
-                        itemCount: itemList.length,
-                        onPageChanged: (int page) {
-                          setState(() {
-                            _currentPage = page;
-                          });
-                        },
-                        itemBuilder: (context, index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25)),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(25),
-
-                              child: Image.network(
-                                itemList[index].image,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(itemList.length, (index) {
-                      return Container(
-                        width: 10,
-                        height: 10,
-                        margin: EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: ColorConst.colorPrimary80, width: 0.5),
-                          shape: BoxShape.circle,
-                          color: _currentPage == index
-                              ? ColorConst.colorPrimary30
-                              : Colors.transparent,
+            SizedBox(
+              height: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: itemList.length,
+                  onPageChanged: (int page) {
+                    setState(() {
+                      _currentPage = page;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(25),
+                        child: Image.network(
+                          itemList[index].image,
+                          fit: BoxFit.cover,
                         ),
-                      );
-                    }),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(itemList.length, (index) {
+                return Container(
+                  width: 10,
+                  height: 10,
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: ColorConst.colorPrimary80, width: 0.5),
+                    shape: BoxShape.circle,
+                    color: _currentPage == index
+                        ? ColorConst.colorPrimary30
+                        : Colors.transparent,
                   ),
-         
-          
+                );
+              }),
+            ),
             ItemTrangChu()
           ],
         ),
@@ -172,6 +167,7 @@ Widget Search() {
   @override
   bool get wantKeepAlive => true;
 }
+
 class TheloaiItem {
   final String image;
   final String theloaiID;

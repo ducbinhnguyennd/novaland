@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/widgets/item_card_huongdan.dart';
 
 class HuongDanScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class _HuongDanScreenState extends State<HuongDanScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple,
+        backgroundColor: ColorConst.colorPrimary50,
         centerTitle: true,
         title: Text('Hướng dẫn'),
       ),

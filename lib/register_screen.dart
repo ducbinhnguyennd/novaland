@@ -50,12 +50,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     ),
   );
 
-  Future<Response?> Register(
+  Future<Response?> register(
       String username, String password, String phone) async {
     var dio = Dio();
-    if (userEditingController.text.isEmpty) {
+
+    if (username.isEmpty) {
       showSnackBar(context, 'Username đang trống');
-    } else if (passwEditingController.text.isEmpty) {
+    } else if (password.isEmpty) {
       showSnackBar(context, 'Password đang trống');
     } else if (phone.isEmpty) {
       showSnackBar(context, 'Số điện thoại đang trống');
@@ -65,41 +66,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
       showSnackBar(context, 'Số điện thoại đầu 0');
     } else {
       try {
-        var response = await dio.post('https://mangaland.site/register',
-            data: {"username": username, "password": password, "phone": phone},
-            options: Options(
-              headers: {
-                'content-type': 'application/x-www-form-urlencoded',
-              },
-            ));
+        var response = await dio.post(
+          'https://du-an-2023.vercel.app/register',
+          options: Options(
+            followRedirects: true,
+            maxRedirects: 5,
+          ),
+          data: {"username": username, "password": password, "phone": phone},
+        );
+
         print(response.data);
-       setState(() {
-        success =true;
-         showSnackBar(context, 'Đăng ký tài khoản thành công');
-       });
-        
-                    
+
+        setState(() {
+          success = true;
+          showSnackBar(context, 'Đăng ký tài khoản thành công');
+        });
+
         return response;
       } catch (e) {
-       
-        showSnackBar(context, 'Tên tài khoản đã tồn tại');
+        print('binh login: $e');
+        // showSnackBar(context, 'Tên tài khoản đã tồn tại');
       }
     }
+
     return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
-          Image.asset(AssetsPathConst.bgintro),
+          Image.asset(
+            AssetsPathConst.bgintro,
+            width: MediaQuery.of(context).size.width,
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height / 1.8,
-              decoration: BoxDecoration(
+              height: MediaQuery.of(context).size.height / 2,
+              decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -116,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ),
           Positioned(
-            bottom: 200,
+            bottom: 50,
             left: 10,
             right: 10,
             child: Column(
@@ -162,10 +169,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
-                                      color: Colors.deepPurple),
+                                      color: ColorConst.colorPrimary50),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                labelText: "Username"),
+                                labelText: "Tên đăng nhập"),
                           ),
                           const SizedBox(
                             height: 10,
@@ -174,7 +181,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             key: _passwordKey,
                             controller: passwEditingController,
                             onChanged: (val) {
-                        
                               _password = val;
                             },
                             decoration: InputDecoration(
@@ -185,10 +191,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
-                                      color: Colors.deepPurple),
+                                      color: ColorConst.colorPrimary50),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                labelText: "Password"),
+                                labelText: "Mật khẩu"),
                           ),
                           const SizedBox(
                             height: 10,
@@ -215,7 +221,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     color: ColorConst.colorPrimary50),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              labelText: "So dien thoai",
+                              labelText: "Số điện thoại",
                             ),
                           ),
                           SizedBox(
@@ -223,24 +229,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           InkWell(
                               onTap: () async {
-                                Register(_username, _password, _phone).then((value) async {
+                                register(_username, _password, _phone)
+                                    .then((value) async {
                                   Login login = Login();
-                                  var response = await login.signIn(_username, _password);
-          
-                            if (response?.data['success'] == true) {
-                              UserServices us = UserServices();
-                              await us.saveinfologin(jsonEncode(response?.data['data']));
-                              // final storage = new FlutterSecureStorage();
-                             
-                              print('${response?.data['data']}');
-                              Navigator.pushReplacement<void, void>(
-                                context,
-                                MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      const MainScreen(),
-                                ),
-                              );
-                            }
+                                  var response =
+                                      await login.signIn(_username, _password);
+
+                                  if (response?.data['success'] == true) {
+                                    UserServices us = UserServices();
+                                    await us.saveinfologin(
+                                        jsonEncode(response?.data['data']));
+                                    // final storage = new FlutterSecureStorage();
+
+                                    print('${response?.data['data']}');
+                                    Navigator.pushReplacement<void, void>(
+                                      context,
+                                      MaterialPageRoute<void>(
+                                        builder: (BuildContext context) =>
+                                            const MainScreen(),
+                                      ),
+                                    );
+                                  }
                                 });
                               },
                               child: Container(
@@ -277,7 +286,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void showSnackBar(BuildContext context, String msg) {
     SnackBar snackBar = SnackBar(
-      backgroundColor: success ? Colors.green :Colors.red,
+      backgroundColor: success ? Colors.green : Colors.red,
       behavior: SnackBarBehavior.floating,
       duration: Duration(milliseconds: 1000),
       content: Text(

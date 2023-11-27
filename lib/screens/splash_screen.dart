@@ -33,16 +33,18 @@ class _SplashScreenState extends State<SplashScreen> {
   void dispose() {
     super.dispose();
   }
+
   void checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final username = prefs.getString('username');
-    
+
     if (username != null) {
       Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
     } else {
       Navigator.of(context).pushReplacementNamed(IntroSigin.routeName);
     }
   }
+
   Future<void> checkFirstRead() async {
     await Future.delayed(Duration(seconds: 2));
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -84,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             SizedBox(height: 20),
             Text(
-             'Novaland',
+              'MangaLand',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/trangchu_model.dart';
 import 'package:loginapp/screens/detail_category_screen.dart';
@@ -39,7 +40,10 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
       future: mangaList,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+              child: CircularProgressIndicator(
+            color: ColorConst.colorPrimary50,
+          ));
         } else if (snapshot.hasError) {
           return Text('Đã xảy ra lỗi: ${snapshot.error}');
         } else {
@@ -86,6 +90,7 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                 width: double.infinity,
                                 height: 220,
                                 child: GridView(
+                                  padding: EdgeInsets.all(0),
                                   shrinkWrap: true,
                                   physics: const BouncingScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
@@ -111,10 +116,9 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                               )
                             : category == 'Anime'
                                 ? SizedBox(
-                                    height:
-                                        MediaQuery.of(context).size.height / 2,
                                     width: widthS,
                                     child: GridView.builder(
+                                      padding: EdgeInsets.all(0),
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
@@ -142,58 +146,69 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                   )
                                 : category == 'Romance'
                                     ? Column(
-                                      children: [
-                                         SizedBox(
-                                           width: widthS,
-                                           height: MediaQuery.of(context).size.height/5,
-                                           child: Padding(
-                                             padding: const EdgeInsets.all(8.0),
-                                             child: ItemTo(
-                                                                                   id: categoryMangas[0].id,
-                                                                                   name: categoryMangas[0]
-                                                                                       .mangaName,
-                                                                                   image:
-                                                                                       categoryMangas[0].image,
-                                                                                   sochap: categoryMangas[0]
-                                                                                       .totalChapters
-                                                                                       .toString(),
-                                                                                 ),
-                                           )
-                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: GridView.builder(
-                                            gridDelegate:
-                                                SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3,
-                                              crossAxisSpacing: 0,
-                                              mainAxisSpacing: 0,
-                                              childAspectRatio: 3 / 4.5,
+                                        children: [
+                                          SizedBox(
+                                              width: widthS,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  4,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: ItemTo(
+                                                  id: categoryMangas[0].id,
+                                                  name: categoryMangas[0]
+                                                      .mangaName,
+                                                  image:
+                                                      categoryMangas[0].image,
+                                                  sochap: categoryMangas[0]
+                                                      .totalChapters
+                                                      .toString(),
+                                                ),
+                                              )),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: GridView.builder(
+                                              padding: EdgeInsets.all(0),
+                                              gridDelegate:
+                                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 3,
+                                                crossAxisSpacing: 0,
+                                                mainAxisSpacing: 0,
+                                                childAspectRatio: 3 / 5,
+                                              ),
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount: 3,
+                                              itemBuilder:
+                                                  (context, innerIndex) {
+                                                return ItemTruyenMoi(
+                                                  id: categoryMangas[
+                                                          innerIndex + 1]
+                                                      .id,
+                                                  name: categoryMangas[
+                                                          innerIndex + 1]
+                                                      .mangaName,
+                                                  image: categoryMangas[
+                                                          innerIndex + 1]
+                                                      .image,
+                                                  sochap: categoryMangas[
+                                                          innerIndex + 1]
+                                                      .totalChapters
+                                                      .toString(),
+                                                );
+                                              },
                                             ),
-                                            shrinkWrap: true,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            itemCount: 3,
-                                            itemBuilder: (context, innerIndex) {
-                                              return ItemTruyenMoi(
-                                                id: categoryMangas[innerIndex + 1].id,
-                                                name: categoryMangas[innerIndex + 1]
-                                                    .mangaName,
-                                                image: categoryMangas[innerIndex + 1]
-                                                    .image,
-                                                sochap: categoryMangas[innerIndex + 1]
-                                                    .totalChapters
-                                                    .toString(),
-                                              );
-                                            },
                                           ),
-                                        ),
-                                      ],
-                                    )
+                                        ],
+                                      )
                                     : SizedBox(
                                         width: double.infinity,
                                         height: 220,
                                         child: GridView(
+                                          padding: EdgeInsets.all(0),
                                           shrinkWrap: true,
                                           physics:
                                               const BouncingScrollPhysics(),

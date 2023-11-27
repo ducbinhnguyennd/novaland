@@ -58,22 +58,19 @@ class _ItemBangTinState extends State<ItemBangTin> {
     });
   }
 
-
   void toggleLike() {
     if (widget.userid != null) {
       if (!widget.isLike) {
         // If the post is not liked, allow the user to like it
         setState(() {
           widget.isLike = true;
-          
-            widget.like = widget.like! + 1;
-          
+
+          widget.like = widget.like! + 1;
         });
 
         likeApiService.likeBaiViet(widget.userid ?? '', widget.idbaiviet ?? '');
       } else {
         _showToast("Bạn đã thích bài viết này");
-   
       }
     } else {
       _showToast(StringConst.textyeucaudangnhap);

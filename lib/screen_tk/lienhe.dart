@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/colors_const.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LienHe extends StatefulWidget {
@@ -16,7 +17,7 @@ class _LienHeState extends State<LienHe> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple,
+        backgroundColor: ColorConst.colorPrimary50,
         centerTitle: true,
         title: const Text('Liên hệ'),
       ),
@@ -30,7 +31,7 @@ class _LienHeState extends State<LienHe> {
             child: const Text(
               'Facebook',
               style: TextStyle(
-                color: Colors.blue,
+                color: ColorConst.colorPrimary50,
                 decoration: TextDecoration.underline,
                 fontWeight: FontWeight.bold,
               ),
