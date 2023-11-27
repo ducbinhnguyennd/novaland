@@ -84,8 +84,7 @@ Login login = Login();
                       children: [
                         InkWell(
                           onTap: () async {
-                  
-                            // kiểm tra tính hợp lệ của các trường dữ liệu nhập liệu
+
                             var response = await login.signIn(_username, _password);
           
                             if (response?.data['success'] == true) {

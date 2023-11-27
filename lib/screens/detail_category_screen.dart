@@ -21,7 +21,7 @@ class CategoryDetailScreen extends StatelessWidget {
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3, // Số cột
-            childAspectRatio: 2 / 3, // Tỷ lệ chiều rộng so với chiều cao của mỗi item
+            childAspectRatio: 3 / 5, // Tỷ lệ chiều rộng so với chiều cao của mỗi item
           ),
           itemCount: categoryMangas.length,
           itemBuilder: (context, index) {

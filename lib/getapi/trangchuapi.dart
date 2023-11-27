@@ -13,9 +13,10 @@ import 'package:loginapp/model/user_model2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Dio dio = Dio();
-
+String urlapi = 'https://mangaland.site';
+// String urlapi = 'https://du-an-2023.vercel.app';
 class MangaService {
-  static String apiUrl = "https://du-an-2023.vercel.app/mangas";
+  static String apiUrl = "$urlapi/mangas";
 
   static Future<List<Manga>> fetchMangaList() async {
     try {
@@ -37,7 +38,7 @@ class MangaDetail {
   static Future<MangaDetailModel> fetchMangaDetail(
       String mangaId, String userId) async {
     final apiUrl =
-        "https://du-an-2023.vercel.app/mangachitiet/$mangaId/$userId";
+        "$urlapi/mangachitiet/$mangaId/$userId";
 
     Response response = await dio.get(apiUrl);
     if (response.statusCode == 200) {
@@ -54,7 +55,7 @@ class ChapterDetail {
   static Future<ComicChapter> fetchChapterImages(
       String chapterId, String userId) async {
     final apiUrl =
-        'https://du-an-2023.vercel.app/chapter/$chapterId/$userId/images';
+        '$urlapi/$chapterId/$userId/images';
 
     try {
       final response = await dio.get(apiUrl);
@@ -75,7 +76,7 @@ class ChapterDetail {
 class ApiListYeuThich {
   static Future<List<Manga>> fetchFavoriteManga(String userId) async {
     final response = await dio
-        .get('https://du-an-2023.vercel.app/user/favoriteManga/$userId');
+        .get('$urlapi/user/favoriteManga/$userId');
     if (response.statusCode == 200) {
       print(response.data);
       final List<dynamic> jsonData = response.data;
@@ -88,7 +89,7 @@ class ApiListYeuThich {
 
 // cục thể loại
 class CategoryService {
-  final String apiUrl = 'https://du-an-2023.vercel.app/categorys';
+  final String apiUrl = '$urlapi/categorys';
 
   Future<List<CategoryModel>> getCategories() async {
     try {
@@ -110,7 +111,7 @@ class CategoryService {
 class ApiThanhToan {
   static Future<void> sendPaymentData(
       String userId, double totalAmount, String currency) async {
-    final url = 'https://du-an-2023.vercel.app/pay/$userId';
+    final url = '$urlapi/pay/$userId';
     try {
       final response = await dio.post(
         url,
@@ -140,7 +141,7 @@ class CommentService {
     final dio = Dio();
     try {
       final response = await dio.post(
-          'https://du-an-2023.vercel.app/postcomment/$userId/$mangaId',
+          '$urlapi/postcomment/$userId/$mangaId',
           data: {'comment': comment});
       if (response.statusCode == 200) {
         print('binh cmt ${response.data}');
@@ -161,7 +162,7 @@ class XoaComment {
    
     try {
       final response = await dio.post(
-        'https://du-an-2023.vercel.app/deletecomment/$comment/$mangaId/$userId',
+        '$urlapi/deletecomment/$comment/$mangaId/$userId',
       );
       if (response.statusCode == 200) {
         print('binh xoa ${response.data}');
@@ -177,10 +178,9 @@ class XoaComment {
 
 // lịch sử thanh toán
 class PaymentApi {
-  final String baseUrl = 'https://du-an-2023.vercel.app';
-
+  
   Future<List<PaymentHistory>> getPaymentHistory(String userId) async {
-    final response = await dio.get('$baseUrl/paymentdetail/$userId');
+    final response = await dio.get('$urlapi/paymentdetail/$userId');
     if (response.statusCode == 200) {
       final List<dynamic> data = response.data;
       return data.map((item) => PaymentHistory.fromJson(item)).toList();
@@ -192,10 +192,8 @@ class PaymentApi {
 
 // lay info user
 class ApiUser {
-  final String baseUrl = 'https://du-an-2023.vercel.app';
-
   Future<UserModel> fetchUserData(String userId) async {
-    final response = await dio.get('$baseUrl/user/$userId');
+    final response = await dio.get('$urlapi/user/$userId');
     return UserModel.fromJson(response.data);
   }
 }
@@ -203,7 +201,7 @@ class ApiUser {
 class ApiTopUser {
   Future<List<TopUserModel>> getUsers() async {
     try {
-      Response response = await dio.get('https://du-an-2023.vercel.app/topUsers');
+      Response response = await dio.get('$urlapi/topUsers');
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         List<TopUserModel> users =
@@ -221,7 +219,7 @@ class ApiTopUser {
 class ApiBangTin {
   Future<List<Bangtin>> getPosts() async {
     try {
-      Response response = await dio.get("https://du-an-2023.vercel.app/getbaiviet");
+      Response response = await dio.get("$urlapi/getbaiviet");
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         List<Bangtin> posts = data.map((json) => Bangtin.fromJson(json)).toList();
@@ -238,7 +236,7 @@ class ApiBangTin {
 class ApiBangTinDaLog {
   Future<List<Bangtin>> getPosts(String userId) async {
     try {
-      Response response = await dio.get("https://du-an-2023.vercel.app/getbaiviet/$userId");
+      Response response = await dio.get("$urlapi/getbaiviet/$userId");
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         List<Bangtin> posts = data.map((json) => Bangtin.fromJson(json)).toList();
@@ -257,7 +255,7 @@ class ApiPostBaiDang {
   Future<Response> postBaiViet(String userId, String content) async {
     try {
       return await dio.post(
-        'https://du-an-2023.vercel.app/postbaiviet/$userId',
+        '$urlapi/postbaiviet/$userId',
         data: {'content': content},
       );
     } catch (error) {
@@ -273,7 +271,7 @@ class XoaBaiDang {
    
     try {
       final response = await dio.post(
-        'https://du-an-2023.vercel.app/deletebaiviet/$baivietId/$userId',
+        '$urlapi/deletebaiviet/$baivietId/$userId',
       );
       if (response.statusCode == 200) {
         print('binh xoa ${response.data}');
@@ -291,7 +289,7 @@ class LikeApiService {
   Future<void> likeBaiViet(String userId, String baiVietId) async {
     try {
       await dio.post(
-        'https://du-an-2023.vercel.app/addfavoritebaiviet/$userId/$baiVietId',
+        '$urlapi/addfavoritebaiviet/$userId/$baiVietId',
       );
     } catch (error) {
       throw error;
@@ -304,7 +302,7 @@ class ApiSCommentBaiDang {
   Future<void> postComment(String baivietId, String userId, String comment) async {
     try {
       final response = await dio.post(
-        'https://du-an-2023.vercel.app/postcmtbaiviet/$baivietId/$userId',
+        '$urlapi/postcmtbaiviet/$baivietId/$userId',
         data: {'comment': comment},
       );
       print('Response from postComment API: $response');
@@ -320,7 +318,7 @@ class XoaCommentBaiDang {
    
     try {
       final response = await dio.post(
-        'https://du-an-2023.vercel.app/deletecmtbaiviet/$commentId/$baivietId/$userId',
+        '$urlapi/deletecmtbaiviet/$commentId/$baivietId/$userId',
       );
       if (response.statusCode == 200) {
         print('binh xoa ${response.data}');
@@ -337,7 +335,7 @@ class XoaCommentBaiDang {
 class NotificationApi {
   Future<List<NotificationModel>> getNotifications(String userId) async {
     try {
-      final response = await dio.get('https://du-an-2023.vercel.app/notifybaiviet/$userId');
+      final response = await dio.get('$urlapi/notifybaiviet/$userId');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
         return data.map((json) => NotificationModel.fromJson(json)).toList();
@@ -355,7 +353,7 @@ class PasswordChangeService {
   Future<void> changePassword(String userId, String oldPassword, String newPassword) async {
     try {
       final response = await dio.post(
-        'https://du-an-2023.vercel.app/repass/$userId',
+        '$urlapi/repass/$userId',
         data: {
           'passOld': oldPassword,
           'passNew': newPassword,
@@ -372,7 +370,7 @@ class PasswordChangeService {
   Future<void> changeUsername(String userId, String username) async {
     try {
       final response = await dio.post(
-        'https://du-an-2023.vercel.app/rename/$userId',
+        '$urlapi/rename/$userId',
         data: {
           'username': username,
           
@@ -392,7 +390,7 @@ class Login{
     var dio = Dio();
     try {
       var response = await dio.post(
-        'https://du-an-2023.vercel.app/login',
+        '$urlapi/login',
         data: {"username": username, "password": password},
       );
       print('API response status: ${response.statusCode}');
@@ -408,7 +406,7 @@ class Login{
 class ApiCmtBaiViet {
   Future<List<Comment>> getComments(String baivietId) async {
     try {
-      Response response = await dio.get("https://du-an-2023.vercel.app/getcmtbaiviet/$baivietId");
+      Response response = await dio.get("$urlapi/getcmtbaiviet/$baivietId");
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         List<Comment> posts = data.map((json) => Comment.fromJson(json)).toList();
@@ -424,7 +422,7 @@ class ApiCmtBaiViet {
 // detail bai viet
 class ApiDetailBaiViet {
   Future<Bangtin> fetchDetailBaiviet(String baivietID,String userId) async {
-    final response = await dio.get('https://du-an-2023.vercel.app/detailbaiviet/$baivietID/$userId');
+    final response = await dio.get('$urlapi/detailbaiviet/$baivietID/$userId');
     return Bangtin.fromJson(response.data);
   }
 }
@@ -434,7 +432,7 @@ class XoaUser {
     String userId) async {
     try {
       final response = await dio.post(
-        'https://du-an-2023.vercel.app/userdelete/$userId',
+        '$urlapi/userdelete/$userId',
       );
       if (response.statusCode == 200) {
         print('binh xoa ${response.data}');

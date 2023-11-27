@@ -97,7 +97,10 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         Text('Giới thiệu:'),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(content),
+          child: Text(
+            content,
+            style: TextStyle(fontSize: 15),
+          ),
         ),
       ],
     );
@@ -111,21 +114,19 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         Expanded(
           flex: 5,
           child: InkWell(
-            onTap:(){
-                Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailChapter(
-                            idUser: currentUser!.user[0].id,
-                            chapterId:  
-                                detail?.chapters[0].idchap ??
-                                '',
-                            storyName:  detail?.chapters[0].namechap,
-                            storyId: widget.mangaId,
-                            viporfree: detail!.chapters[0].viporfree,
-                          ),
-                        ),
-                      );
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailChapter(
+                    idUser: currentUser!.user[0].id,
+                    chapterId: detail?.chapters[0].idchap ?? '',
+                    storyName: detail?.chapters[0].namechap,
+                    storyId: widget.mangaId,
+                    viporfree: detail!.chapters[0].viporfree,
+                  ),
+                ),
+              );
             },
             child: Container(
               margin: EdgeInsets.only(right: 0.5),
@@ -148,8 +149,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
         Expanded(
           flex: 5,
           child: InkWell(
-            onTap: (chapterDocTiepId == null ||
-                    chapterDocTiepId!.length <= 2)
+            onTap: (chapterDocTiepId == null || chapterDocTiepId!.length <= 2)
                 ? () {
                     Container();
                   }
@@ -177,7 +177,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                   ? ColorConst.colorPrimary
                   : ColorConst.colorPrimary.withOpacity(0.6),
               height: 70,
-               child: Center(
+              child: Center(
                 child: Text(
                   'Đọc tiếp',
                   maxLines: 1,
@@ -329,46 +329,48 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   }
 
   Widget buildChapter() {
-  return ListView.builder(
-    shrinkWrap: true,
-    itemCount: mangaDetail?.chapters.length,
-    itemBuilder: (context, index) {
-      return InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailChapter(
-                idUser: currentUser!.user[0].id,
-                chapterId: mangaDetail?.chapters[index].idchap ?? '',
-                storyName: mangaDetail?.chapters[index].namechap,
-                storyId: widget.mangaId,
-                viporfree: mangaDetail!.chapters[index].viporfree,
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: mangaDetail?.chapters.length,
+      itemBuilder: (context, index) {
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailChapter(
+                  idUser: currentUser!.user[0].id,
+                  chapterId: mangaDetail?.chapters[index].idchap ?? '',
+                  storyName: mangaDetail?.chapters[index].namechap,
+                  storyId: widget.mangaId,
+                  viporfree: mangaDetail!.chapters[index].viporfree,
+                ),
               ),
-            ),
-          ).then((value) {
-            setState(() {
-              _loadData();
-              _loadUser();
+            ).then((value) {
+              setState(() {
+                _loadData();
+                _loadUser();
+              });
             });
-          });
-        },
-        child: ListTile(
-          title: Text('Chapter ${mangaDetail?.chapters[index].namechap}'),
-          subtitle: Text('Loại: ${mangaDetail?.chapters[index].viporfree}'),
-          trailing: _buildChapterIcon(mangaDetail!.chapters[index].viporfree),
-        ),
-      );
-    },
-  );
-}
-Widget _buildChapterIcon(String vipOrFree) {
-  if (vipOrFree.toLowerCase() == 'vip') {
-    return Icon(Icons.lock, color: ColorConst.colorPrimary50);
-  } else {
-    return Icon(Icons.lock_open, color: Colors.green);
+          },
+          child: ListTile(
+            title: Text('Chapter ${mangaDetail?.chapters[index].namechap}'),
+            subtitle: Text('Loại: ${mangaDetail?.chapters[index].viporfree}'),
+            trailing: _buildChapterIcon(mangaDetail!.chapters[index].viporfree),
+          ),
+        );
+      },
+    );
   }
-}
+
+  Widget _buildChapterIcon(String vipOrFree) {
+    if (vipOrFree.toLowerCase() == 'vip') {
+      return Icon(Icons.lock, color: ColorConst.colorPrimary50);
+    } else {
+      return Icon(Icons.lock_open, color: Colors.green);
+    }
+  }
+
   final TextEditingController commentController = TextEditingController();
   Widget buildComments() {
     return Column(
@@ -544,7 +546,7 @@ Widget _buildChapterIcon(String vipOrFree) {
 
   Widget buildGioiThieu() {
     return Scaffold(
-      body: Column(
+      body: ListView(
         children: [
           Stack(
             children: [
@@ -602,9 +604,46 @@ Widget _buildChapterIcon(String vipOrFree) {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Truyện: ${mangaDetail?.mangaName}'),
-                            Text('Tác giả: ${mangaDetail?.author}'),
-                            Text('Thể loại: ${mangaDetail?.category}'),
+                            Text(
+                              'Truyện: ${mangaDetail?.mangaName}',
+                              style: TextStyle(
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.white,
+                                    blurRadius:
+                                        1.0, // Điều chỉnh mức độ mờ của shadow
+                                    offset: Offset(0.0,
+                                        1.0), // Điều chỉnh vị trí của shadow
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              'Tác giả: ${mangaDetail?.author}',
+                              style: TextStyle(
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.white,
+                                    blurRadius:
+                                        1.0, // Điều chỉnh mức độ mờ của shadow
+                                    offset: Offset(0.0,
+                                        1.0), // Điều chỉnh vị trí của shadow
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              'Thể loại: ${mangaDetail?.category}',
+                              style: TextStyle(
+                                shadows: [
+                                  Shadow(
+                                      color: Colors.white,
+                                      blurRadius:
+                                          1.0, // Điều chỉnh mức độ mờ của shadow
+                                      offset: Offset(0.0, 1.0)),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -614,10 +653,10 @@ Widget _buildChapterIcon(String vipOrFree) {
               ),
             ],
           ),
-    
+
           // buildGenresChips(),
           SizedBox(height: 15),
-    
+
           buildThongSo(
               mangaDetail!.like.toString(),
               mangaDetail!.view.toString(),
@@ -631,10 +670,9 @@ Widget _buildChapterIcon(String vipOrFree) {
           SizedBox(height: 15),
           buildContent(mangaDetail!.content),
           buildFavorite(),
-         
         ],
       ),
-      bottomNavigationBar:  buildDocTiep(mangaDetail!),
+      bottomNavigationBar: buildDocTiep(mangaDetail!),
     );
   }
 
@@ -643,8 +681,8 @@ Widget _buildChapterIcon(String vipOrFree) {
 
   void toggleLike() async {
     final apiUrl = nutlike
-        ? 'https://du-an-2023.vercel.app/user/removeFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}'
-        : 'https://du-an-2023.vercel.app/user/addFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}';
+        ? 'https://mangaland.site/user/removeFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}'
+        : 'https://mangaland.site/user/addFavoriteManga/${currentUser!.user[0].id}/${widget.mangaId}';
 
     try {
       final response = await dio.post(apiUrl);

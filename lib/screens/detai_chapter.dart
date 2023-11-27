@@ -265,8 +265,8 @@ class _DetailChapterState extends State<DetailChapter> {
 
   void bychapterlock() async {
     final apiUrl =
-        // 'https://du-an-2023.vercel.app/purchaseChapter/${currentUser!.user[0].id}/${widget.chapterId}';
-        'https://du-an-2023.vercel.app/purchaseChapter/${currentUser!.user[0].id}/${chapterDetail?.id}';
+        // 'https://mangaland.site/purchaseChapter/${currentUser!.user[0].id}/${widget.chapterId}';
+        'https://mangaland.site/purchaseChapter/${currentUser!.user[0].id}/${chapterDetail?.id}';
 
     try {
       final response = await dio.post(apiUrl);

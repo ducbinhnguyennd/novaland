@@ -65,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       showSnackBar(context, 'Số điện thoại đầu 0');
     } else {
       try {
-        var response = await dio.post('https://du-an-2023.vercel.app/register',
+        var response = await dio.post('https://mangaland.site/register',
             data: {"username": username, "password": password, "phone": phone},
             options: Options(
               headers: {

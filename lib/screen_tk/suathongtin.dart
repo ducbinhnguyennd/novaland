@@ -50,7 +50,7 @@ class _SuaThongTinState extends State<SuaThongTin> {
     } else {
       try {
         var response = await dio.post(
-            'https://du-an-2023.vercel.app/userput/${currentUser?.user[0].id}',
+            'https://mangaland.site/userput/${currentUser?.user[0].id}',
             data: {
               "username": username,
               "password": password
