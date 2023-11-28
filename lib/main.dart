@@ -8,6 +8,7 @@ import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/routes.dart';
 import 'package:loginapp/screen_tk/taikhoan.dart';
 import 'package:loginapp/screens/splash_screen.dart';
+import 'package:loginapp/screens/test_upanh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -48,8 +49,8 @@ class MyApp extends StatelessWidget {
             }
             return false;
           },
-          child: SplashScreen(),
-          // child: TaikhoanScreen(),
+          // child: SplashScreen(),
+          child: UploadImageScreen(),
         ),
       ),
     );

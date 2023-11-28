@@ -72,7 +72,7 @@ class _ItemToMoiState extends State<ItemTo> {
     final widthS = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         // height: widthS * 6 / 8,
         child: GestureDetector(
@@ -95,7 +95,9 @@ class _ItemToMoiState extends State<ItemTo> {
                 imageUrl: widget.image,
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(topLeft:Radius.circular(20),topRight: Radius.circular(20)),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
                     image: DecorationImage(
                       image: imageProvider,
                       fit: BoxFit.cover,
@@ -113,22 +115,21 @@ class _ItemToMoiState extends State<ItemTo> {
               Container(
                 width: double.infinity,
                 height: 40,
-                child:  Column(
-                children: [
-                  Text(widget.name,
-                      style: TextStyle(fontSize: 15),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
-                  Text('Chapter ${widget.sochap}')
-                ],
-              ),
+                child: Column(
+                  children: [
+                    Text(widget.name,
+                        style: TextStyle(fontSize: 15),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis),
+                    Text('Chapter ${widget.sochap}')
+                  ],
+                ),
                 decoration: BoxDecoration(
                     color: ColorConst.colorPrimary120,
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(20),
                         bottomRight: Radius.circular(20))),
               ),
-             
             ],
           ),
         ),

@@ -104,13 +104,15 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                   children: List.generate(categoryMangas.length,
                                       (index) {
                                     return ItemTruyenMoi(
-                                      id: categoryMangas[index].id,
-                                      name: categoryMangas[index].mangaName,
-                                      image: categoryMangas[index].image,
-                                      sochap: categoryMangas[index]
-                                          .totalChapters
-                                          .toString(),view: categoryMangas[index].view.toString()
-                                    );
+                                        id: categoryMangas[index].id,
+                                        name: categoryMangas[index].mangaName,
+                                        image: categoryMangas[index].image,
+                                        sochap: categoryMangas[index]
+                                            .totalChapters
+                                            .toString(),
+                                        view: categoryMangas[index]
+                                            .view
+                                            .toString());
                                   }),
                                 ),
                               )
@@ -139,7 +141,10 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                               categoryMangas[innerIndex].image,
                                           sochap: categoryMangas[innerIndex]
                                               .totalChapters
-                                              .toString(), view: categoryMangas[innerIndex].view.toString(),
+                                              .toString(),
+                                          view: categoryMangas[innerIndex]
+                                              .view
+                                              .toString(),
                                         );
                                       },
                                     ),
@@ -152,7 +157,7 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height /
-                                                  4,
+                                                  3.4,
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
@@ -165,7 +170,6 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                                   sochap: categoryMangas[0]
                                                       .totalChapters
                                                       .toString(),
-                                                      
                                                 ),
                                               )),
                                           Padding(
@@ -186,20 +190,23 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                               itemBuilder:
                                                   (context, innerIndex) {
                                                 return ItemTruyenMoi(
-                                                  id: categoryMangas[
-                                                          innerIndex + 1]
-                                                      .id,
-                                                  name: categoryMangas[
-                                                          innerIndex + 1]
-                                                      .mangaName,
-                                                  image: categoryMangas[
-                                                          innerIndex + 1]
-                                                      .image,
-                                                  sochap: categoryMangas[
-                                                          innerIndex + 1]
-                                                      .totalChapters
-                                                      .toString(),view: categoryMangas[innerIndex].view.toString()
-                                                );
+                                                    id: categoryMangas[
+                                                            innerIndex + 1]
+                                                        .id,
+                                                    name: categoryMangas[
+                                                            innerIndex + 1]
+                                                        .mangaName,
+                                                    image: categoryMangas[
+                                                            innerIndex + 1]
+                                                        .image,
+                                                    sochap: categoryMangas[
+                                                            innerIndex + 1]
+                                                        .totalChapters
+                                                        .toString(),
+                                                    view: categoryMangas[
+                                                            innerIndex]
+                                                        .view
+                                                        .toString());
                                               },
                                             ),
                                           ),
@@ -224,15 +231,17 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                           children: List.generate(
                                               categoryMangas.length, (index) {
                                             return ItemTruyenMoi(
-                                              id: categoryMangas[index].id,
-                                              name: categoryMangas[index]
-                                                  .mangaName,
-                                              image:
-                                                  categoryMangas[index].image,
-                                              sochap: categoryMangas[index]
-                                                  .totalChapters
-                                                  .toString(),view: categoryMangas[index].view.toString()
-                                            );
+                                                id: categoryMangas[index].id,
+                                                name: categoryMangas[index]
+                                                    .mangaName,
+                                                image:
+                                                    categoryMangas[index].image,
+                                                sochap: categoryMangas[index]
+                                                    .totalChapters
+                                                    .toString(),
+                                                view: categoryMangas[index]
+                                                    .view
+                                                    .toString());
                                           }),
                                         ),
                                       ))

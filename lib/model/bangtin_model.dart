@@ -8,17 +8,20 @@ class Bangtin {
   bool isLiked;
   int cmt;
   List<Comment>? comments;
+  List<String>? images; // Thêm trường để lưu trữ danh sách URL ảnh
 
-  Bangtin(
-      {required this.id,
-      required this.userId,
-      required this.username,
-      required this.content,
-      required this.like,
-      required this.isLiked,
-      required this.date,
-      this.comments,
-      required this.cmt});
+  Bangtin({
+    required this.id,
+    required this.userId,
+    required this.username,
+    required this.content,
+    required this.like,
+    required this.isLiked,
+    required this.date,
+    this.comments,
+    required this.cmt,
+    this.images,
+  });
 
   factory Bangtin.fromJson(Map<String, dynamic> json) {
     List<Comment>? comments = [];
@@ -28,15 +31,17 @@ class Bangtin {
       );
     }
     return Bangtin(
-        id: json['_id'],
-        userId: json['userId'],
-        username: json['username'],
-        content: json['content'],
-        like: json['like'],
-        isLiked: json['isLiked'],
-        date: json['date'],
-        comments: comments,
-        cmt: json['commentCount']);
+      id: json['_id'],
+      userId: json['userId'],
+      username: json['username'],
+      content: json['content'],
+      like: json['like'],
+      isLiked: json['isLiked'],
+      date: json['date'],
+      comments: comments,
+      cmt: json['commentCount'],
+      images: List<String>.from(json['images'] ?? []),
+    );
   }
 }
 
@@ -52,10 +57,10 @@ class Comment {
     this.userId,
     this.username,
     this.content,
-    this.date
+    this.date,
   });
 
-    factory Comment.fromJson(Map<String, dynamic> json) {
+  factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
       id: json['_id'],
       userId: json['userId'],
