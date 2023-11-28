@@ -6,7 +6,7 @@ class AssetsPathConst {
   static const String icoFile = 'assets/images/ico_file2.png';
   static const String icoPass = 'assets/images/ico_pass2.png';
   static const String bgGift = 'assets/images/bg_gift.jpeg';
-  static const String gifava = 'assets/images/gif_ava.gif';
+  static const String gifloading = 'assets/images/gifloading.gif';
   static const String icoUser = 'assets/images/ico_user.png';
   static const String icoFree = 'assets/images/ico_free.png';
   static const String icoVip = 'assets/images/ico_vip.png';

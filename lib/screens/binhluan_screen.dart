@@ -211,7 +211,8 @@ class _CommentScreenState extends State<CommentScreen> {
     String userId = widget.userID;
     String comment = _commentController.text.trim();
 
-    if (comment.isNotEmpty && comment.length >= 5) {
+    if(userId != ''){
+      if (comment.isNotEmpty && comment.length >= 5) {
       _apiService.postComment(baivietId, userId, comment).then((_) {
         _commentController.clear();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -227,6 +228,14 @@ class _CommentScreenState extends State<CommentScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Bình luận quá ngắn, vui lòng nhập ít nhất 5 ký tự.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đăng nhập để bình luận'),
           backgroundColor: Colors.red,
         ),
       );

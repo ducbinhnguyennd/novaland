@@ -17,12 +17,12 @@ class ItemSearch extends StatelessWidget {
 
       required this.imagePath,
       required this.title,
-
+      required this.author,
       required this.id});
   final String imagePath;
   final String title;
   final String theloai;
-  // final String audioPath;
+  final String author;
 
   final String id;
 
@@ -78,8 +78,10 @@ class ItemSearch extends StatelessWidget {
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),
                       SizedBox(height: 20),
-                      Text('Tác giả: ${theloai}'),
+                      Text('Tác giả: ${author}'),
                       SizedBox(height: 10),
+                      Text('Thể loại: ${theloai}'),
+
                      
                     ],
                   ),

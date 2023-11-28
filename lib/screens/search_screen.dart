@@ -110,6 +110,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             title: _foundUsers[index].mangaName,
                             id: _foundUsers[index].id,
                             theloai: _foundUsers[index].category,
+                            author: _foundUsers[index].author,
                           ),
                         ),
                       );

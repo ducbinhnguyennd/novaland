@@ -193,7 +193,7 @@ class _BangTinScreenState extends State<BangTinScreen>
                           isLike: posts[index].isLiked,
                           comments: posts[index].comments ?? [],
                           widgetPostCM: binhluon(posts[index].comments ?? [],
-                              posts[index].id, currentUser?.user[0].id ?? '-1'),
+                              posts[index].id, currentUser?.user[0].id ?? ''),
                         );
                       },
                     );

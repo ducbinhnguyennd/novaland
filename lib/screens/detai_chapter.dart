@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:html/parser.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/double_x.dart';
@@ -86,6 +87,7 @@ class _DetailChapterState extends State<DetailChapter> {
   }
 
   Future<void> _goToNewChap(String chapId, String userId) async {
+     _scrollToTop();
     print('object $chapId');
     await ChapterDetail.fetchChapterImages(chapId, userId).then((value) {
       setState(() {
@@ -231,6 +233,17 @@ class _DetailChapterState extends State<DetailChapter> {
     if (!mounted) return;
     CommonService.showToast(ms, context);
   }
+
+  void _scrollToTop() {
+    if (_scrollController.hasClients == false) return;
+    _scrollController.jumpTo(0);
+    // _scrollController.animateTo(
+    //   0,
+    //   duration: const Duration(milliseconds: 500),
+    //   curve: Curves.easeInOut,
+    // );
+  }
+
 
   List<String> _extractImageUrlsFromHtml(String htmlString) {
     List<String> imageUrls = [];
@@ -392,63 +405,66 @@ class _DetailChapterState extends State<DetailChapter> {
     }
   }
 
-  Widget _buildChapterBodyPartNormal(String sChapContent) {
-    // List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
-    // List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
-    List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
-    // List<String> imageUrls = extractImageUrlsFromHtml(Globals.urlImgCode);
+ Widget _buildChapterBodyPartNormal(String sChapContent) {
+  List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
 
-    return Container(
-        height: MediaQuery.of(context).size.height,
-        child: imageUrls.isNotEmpty
-            ? InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                onTap: () {
-                  setState(() {});
-                },
-                child: SingleChildScrollView(
-                  controller: _scrollController,
-                  // physics: const CustomScrollPhysics(),
-                  padding: const EdgeInsets.only(bottom: 0, top: 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: List.generate(
-                          imageUrls.length,
-                          (index) => CachedNetworkImage(
-                            // filterQuality: FilterQuality.low,
-                            fit: BoxFit.fitWidth,
-                            width: MediaQuery.of(context).size.width,
-                            imageUrl: imageUrls[index],
-                            placeholder: (context, url) {
-                              return Center(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: index < 5
-                                          ? 120
-                                          : MediaQuery.of(context).size.height /
-                                              4),
-                                  child: CircularProgressIndicator.adaptive(),
-                                ),
-                              );
-                            },
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
-                        ),
+  return Container(
+    height: MediaQuery.of(context).size.height,
+    child: imageUrls.isNotEmpty
+        ? InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            onTap: () {
+              setState(() {});
+            },
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              padding: const EdgeInsets.only(bottom: 0, top: 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    children: List.generate(
+                      imageUrls.length,
+                      (index) => CachedNetworkImage(
+                        fit: BoxFit.fitWidth,
+                        width: MediaQuery.of(context).size.width,
+                        imageUrl: imageUrls[index],
+                        placeholder: (context, url) {
+                          // Replace CircularProgressIndicator with a GIF
+                          return Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: index < 5
+                                    ? 120
+                                    : MediaQuery.of(context).size.height / 4,
+                              ),
+                              child: Image.asset(
+                                AssetsPathConst.gifloading,
+                                width: 50, 
+                              ),
+                            ),
+                          );
+                        },
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              )
-            : Center(
-                child: CircularProgressIndicator(),
-              ));
-  }
+                ],
+              ),
+            ),
+          )
+        : Center(
+            child: Image.asset(
+              AssetsPathConst.gifloading,
+              width: 50,
+            ),
+          ),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {

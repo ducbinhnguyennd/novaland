@@ -37,15 +37,11 @@ class _LichSuGiaoDichState extends State<LichSuGiaoDich> {
               color: ColorConst.colorPrimary50,
             ));
           } else if (snapshot.hasError) {
-            return Text('Đã xảy ra lỗi: ${snapshot.error}');
+            return Center(child: Text('Chưa có lịch sử thanh toán'));
           } else if (snapshot.data!.isEmpty) {
             return Center(child: Text('Chưa có lịch sử thanh toán'));
           } else {
             final paymentHistory = snapshot.data;
-            //  return ListTile(
-            //       title: Text('Total Amount: ${history?.totalAmount.toStringAsFixed(2)} ${history?.currency}'),
-            //       subtitle: Text('Coin: ${history?.coin}, Date: ${history?.date}, Success: ${history?.success}'),
-            //     );
             return ListView.builder(
               itemCount: paymentHistory?.length,
               itemBuilder: (context, index) {

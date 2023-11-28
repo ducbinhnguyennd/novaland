@@ -15,13 +15,14 @@ class ItemTruyenMoi extends StatefulWidget {
   final String image;
   final String name;
   final String sochap;
+  final String view;
 
   ItemTruyenMoi(
       {Key? key,
       required this.id,
       required this.image,
       required this.name,
-      required this.sochap});
+      required this.sochap,required this.view});
 
   @override
   _ItemTruyenMoiState createState() => _ItemTruyenMoiState();
@@ -90,24 +91,43 @@ class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
           },
           child: Column(
             children: [
-              CachedNetworkImage(
-                imageUrl: widget.image,
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
+              Stack(
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: widget.image,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      height: 155,
                     ),
+                    placeholder: (context, url) => Center(
+                        child: CircularProgressIndicator(
+                      color: ColorConst.colorPrimary50,
+                    )), // Hiển thị khi đang tải ảnh
+                    errorWidget: (context, url, error) =>
+                        Icon(Icons.error),
                   ),
-                  height: 155,
-                ),
-                placeholder: (context, url) => Center(
-                    child: CircularProgressIndicator(
-                  color: ColorConst.colorPrimary50,
-                )), // Hiển thị khi đang tải ảnh
-                errorWidget: (context, url, error) =>
-                    Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
+                  Positioned(
+                    bottom: 0,left: 40,right: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(color: ColorConst.colorPrimary80),
+                      child: Row(
+                        children: [
+                          Icon(Icons.remove_red_eye_outlined),
+                          Text(widget.view)
+                        ],
+                      ),
+                    ),
+                  )
+
+
+                ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

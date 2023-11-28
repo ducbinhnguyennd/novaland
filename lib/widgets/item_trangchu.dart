@@ -109,7 +109,7 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                       image: categoryMangas[index].image,
                                       sochap: categoryMangas[index]
                                           .totalChapters
-                                          .toString(),
+                                          .toString(),view: categoryMangas[index].view.toString()
                                     );
                                   }),
                                 ),
@@ -139,7 +139,7 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                               categoryMangas[innerIndex].image,
                                           sochap: categoryMangas[innerIndex]
                                               .totalChapters
-                                              .toString(),
+                                              .toString(), view: categoryMangas[innerIndex].view.toString(),
                                         );
                                       },
                                     ),
@@ -165,6 +165,7 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                                   sochap: categoryMangas[0]
                                                       .totalChapters
                                                       .toString(),
+                                                      
                                                 ),
                                               )),
                                           Padding(
@@ -197,7 +198,7 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                                   sochap: categoryMangas[
                                                           innerIndex + 1]
                                                       .totalChapters
-                                                      .toString(),
+                                                      .toString(),view: categoryMangas[innerIndex].view.toString()
                                                 );
                                               },
                                             ),
@@ -230,7 +231,7 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                                   categoryMangas[index].image,
                                               sochap: categoryMangas[index]
                                                   .totalChapters
-                                                  .toString(),
+                                                  .toString(),view: categoryMangas[index].view.toString()
                                             );
                                           }),
                                         ),

@@ -472,22 +472,54 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
               ),
             ),
             InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(XoaTaiKhoan.routeName);
-              },
-              child: ListTile(
-                title: Transform.translate(
-                  offset: Offset(-20, 0),
-                  child: Text('Xóa tài khoản'),
-                ),
-                leading: ImageIcon(AssetImage(AssetsPathConst.ico_12),
-                    size: 22, color: ColorConst.colorPrimary30),
-              ),
-            ),
+  onTap: () {
+    _showDeleteConfirmationDialog();
+  },
+  child: ListTile(
+    title: Transform.translate(
+      offset: Offset(-20, 0),
+      child: Text('Xóa tài khoản'),
+    ),
+    leading: ImageIcon(
+      AssetImage(AssetsPathConst.ico_12),
+      size: 22,
+      color: ColorConst.colorPrimary30,
+    ),
+  ),
+),
           ]),
         ));
   }
-
+void _showDeleteConfirmationDialog() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Xác nhận xóa tài khoản"),
+        content: Text("Bạn có chắc chắn muốn xóa tài khoản không?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: Text("Hủy",style: TextStyle(color: Colors.black),),
+          ),
+          InkWell(
+            onTap: () async {
+                await XoaUser.xoaUser(currentUser?.user[0].id ?? '');
+              Navigator.of(context).pop(); 
+            },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              color: ColorConst.colorPrimary50,
+              child: Text('Xóa',style: TextStyle(color: Colors.white)),
+            ),
+          )
+        ],
+      );
+    },
+  );
+}
   _buildSetting2() {
     return Padding(
       padding: const EdgeInsets.all(8.0),

@@ -76,16 +76,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
 
         print(response.data);
+        if (response?.data['success'] == true){
+          Login login = Login();
+                                  var response =
+                                      await login.signIn(_username, _password);
 
+                                  if (response?.data['success'] == true) {
+                                    UserServices us = UserServices();
+                                    await us.saveinfologin(
+                                        jsonEncode(response?.data['data']));
+                                    // final storage = new FlutterSecureStorage();
+
+                                    print('${response?.data['data']}');
+                                    Navigator.pushReplacement<void, void>(
+                                      context,
+                                      MaterialPageRoute<void>(
+                                        builder: (BuildContext context) =>
+                                            const MainScreen(),
+                                      ),
+                                    );
+                                  }
+        }
         setState(() {
           success = true;
           showSnackBar(context, 'Đăng ký tài khoản thành công');
+
         });
 
         return response;
       } catch (e) {
         print('binh login: $e');
-        // showSnackBar(context, 'Tên tài khoản đã tồn tại');
+        showSnackBar(context, 'Tên tài khoản đã tồn tại');
       }
     }
 
@@ -229,28 +250,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           InkWell(
                               onTap: () async {
-                                register(_username, _password, _phone)
-                                    .then((value) async {
-                                  Login login = Login();
-                                  var response =
-                                      await login.signIn(_username, _password);
-
-                                  if (response?.data['success'] == true) {
-                                    UserServices us = UserServices();
-                                    await us.saveinfologin(
-                                        jsonEncode(response?.data['data']));
-                                    // final storage = new FlutterSecureStorage();
-
-                                    print('${response?.data['data']}');
-                                    Navigator.pushReplacement<void, void>(
-                                      context,
-                                      MaterialPageRoute<void>(
-                                        builder: (BuildContext context) =>
-                                            const MainScreen(),
-                                      ),
-                                    );
-                                  }
-                                });
+                                register(_username, _password, _phone);
+                                    
                               },
                               child: Container(
                                 width: MediaQuery.of(context).size.width / 3,

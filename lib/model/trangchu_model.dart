@@ -5,6 +5,8 @@ class Manga {
   final String image;
   final String category;
   final int totalChapters;
+  final String author;
+  final int view;
 
   Manga({
     required this.id,
@@ -12,6 +14,9 @@ class Manga {
     required this.image,
     required this.category,
     required this.totalChapters,
+    required this.author,
+    required this.view
+
   });
 
   factory Manga.fromJson(Map<String, dynamic> json) {
@@ -20,8 +25,9 @@ class Manga {
       mangaName: json['manganame'],
       image: json['image'],
       category: json['category'],
-      
+      author: json['author'],
       totalChapters: json['totalChapters'],
+      view: json['view']
     );
   }
 

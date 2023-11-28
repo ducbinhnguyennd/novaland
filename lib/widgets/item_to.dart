@@ -89,13 +89,13 @@ class _ItemToMoiState extends State<ItemTo> {
               _showToast(StringConst.textyeucaudangnhap);
             }
           },
-          child: Stack(
+          child: Column(
             children: [
               CachedNetworkImage(
                 imageUrl: widget.image,
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.only(topLeft:Radius.circular(20),topRight: Radius.circular(20)),
                     image: DecorationImage(
                       image: imageProvider,
                       fit: BoxFit.cover,
@@ -110,33 +110,25 @@ class _ItemToMoiState extends State<ItemTo> {
                 errorWidget: (context, url, error) =>
                     Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
               ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: ColorConst.colorPrimary120,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20),
-                          bottomRight: Radius.circular(20))),
-                ),
+              Container(
+                width: double.infinity,
+                height: 40,
+                child:  Column(
+                children: [
+                  Text(widget.name,
+                      style: TextStyle(fontSize: 15),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                  Text('Chapter ${widget.sochap}')
+                ],
               ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Column(
-                  children: [
-                    Text(widget.name,
-                        style: TextStyle(fontSize: 15),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis),
-                    Text('Chapter ${widget.sochap}')
-                  ],
-                ),
-              )
+                decoration: BoxDecoration(
+                    color: ColorConst.colorPrimary120,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20))),
+              ),
+             
             ],
           ),
         ),

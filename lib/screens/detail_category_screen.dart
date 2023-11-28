@@ -30,6 +30,7 @@ class CategoryDetailScreen extends StatelessWidget {
               name: categoryMangas[index].mangaName,
               image: categoryMangas[index].image,
               sochap: categoryMangas[index].totalChapters.toString(),
+              view: categoryMangas[index].view.toString(),
             );
           },
         ),

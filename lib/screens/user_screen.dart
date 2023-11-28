@@ -97,7 +97,7 @@ class _BXHScreenState extends State<BXHScreen> with SingleTickerProviderStateMix
                               ),
                             ],
                           ),
-                          height: MediaQuery.of(context).size.height / 2.5,
+                          height: Platform.isIOS ? MediaQuery.of(context).size.height / 2.5 : MediaQuery.of(context).size.height / 3.5,
                           child: ListView.builder(
                             padding: const EdgeInsets.fromLTRB(
                               DoubleX.kPaddingSizeMedium_1X,

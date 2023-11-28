@@ -68,6 +68,7 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen>
   onRefresh: _refresh,
   child: favoriteManga.isEmpty
       ? ListView(
+        padding: EdgeInsets.all(50),
         children: [
             Container(
               child: Center(
