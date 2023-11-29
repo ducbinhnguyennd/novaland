@@ -23,18 +23,19 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         future: categoryService.getCategories(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: ColorConst.colorPrimary120,));
+            return const Center(
+                child: CircularProgressIndicator(
+              color: ColorConst.colorPrimary120,
+            ));
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
             final categories = snapshot.data;
-    // print('object ${categories}');
+            // print('object ${categories}');
 
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 4/2
-              ),
+                  crossAxisCount: 2, childAspectRatio: 4 / 2),
               itemCount: categories!.length,
               itemBuilder: (context, index) {
                 final category = categories[index];
@@ -42,14 +43,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => MangaListScreen(category: category),
+                        builder: (context) =>
+                            MangaListScreen(category: category),
                       ),
                     );
                   },
                   child: Card(
                     color: ColorConst.colorPrimary80,
                     child: Center(
-                      child: Text(category.categoryName),
+                      child: Text(category.categoryName ?? ' loi'),
                     ),
                   ),
                 );

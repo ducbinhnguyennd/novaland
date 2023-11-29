@@ -28,7 +28,8 @@ class ItemBangTin extends StatefulWidget {
       required this.comments,
       this.widgetDelete,
       this.widgetPostCM,
-      required this.useridbaiviet})
+      required this.useridbaiviet,
+      required this.images})
       : super(key: key);
 
   final String? username;
@@ -41,6 +42,7 @@ class ItemBangTin extends StatefulWidget {
   final String? useridbaiviet;
   bool isLike = false;
   final List<Comment> comments;
+  List<String>? images;
   Widget? widgetDelete;
   Widget? widgetPostCM;
 
@@ -131,6 +133,11 @@ class _ItemBangTinState extends State<ItemBangTin> {
               style: TextStyle(fontSize: 15),
             ),
           ),
+          for (String imageBase64 in widget.images!)
+            Image.memory(
+              base64Decode(imageBase64),
+              height: 100,
+            ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

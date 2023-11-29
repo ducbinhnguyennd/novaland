@@ -100,7 +100,8 @@ class CategoryService {
         return categories;
       }
     } catch (e) {
-      throw Exception('Failed to load categories');
+      print(e);
+      throw Exception(e);
     }
     return [];
   }

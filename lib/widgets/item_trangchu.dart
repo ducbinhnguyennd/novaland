@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
@@ -26,7 +28,7 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
     Map<String, List<Manga>> groupedMangas = {};
     for (var manga in mangas) {
       if (!groupedMangas.containsKey(manga.category)) {
-        groupedMangas[manga.category] = [];
+        groupedMangas[manga.category!] = [];
       }
       groupedMangas[manga.category]!.add(manga);
     }
@@ -104,9 +106,9 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                   children: List.generate(categoryMangas.length,
                                       (index) {
                                     return ItemTruyenMoi(
-                                        id: categoryMangas[index].id,
-                                        name: categoryMangas[index].mangaName,
-                                        image: categoryMangas[index].image,
+                                        id: categoryMangas[index].id!,
+                                        name: categoryMangas[index].mangaName!,
+                                        image: categoryMangas[index].image!,
                                         sochap: categoryMangas[index]
                                             .totalChapters
                                             .toString(),
@@ -126,7 +128,8 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                         crossAxisCount: 3,
                                         crossAxisSpacing: 0,
                                         mainAxisSpacing: 0,
-                                        childAspectRatio: 3 / 4.5,
+                                        childAspectRatio:
+                                            Platform.isIOS ? 3 / 5 : 3 / 4.5,
                                       ),
                                       shrinkWrap: true,
                                       physics:
@@ -134,11 +137,11 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                       itemCount: 6,
                                       itemBuilder: (context, innerIndex) {
                                         return ItemTruyenMoi(
-                                          id: categoryMangas[innerIndex].id,
+                                          id: categoryMangas[innerIndex].id!,
                                           name: categoryMangas[innerIndex]
-                                              .mangaName,
+                                              .mangaName!,
                                           image:
-                                              categoryMangas[innerIndex].image,
+                                              categoryMangas[innerIndex].image!,
                                           sochap: categoryMangas[innerIndex]
                                               .totalChapters
                                               .toString(),
@@ -162,11 +165,11 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: ItemTo(
-                                                  id: categoryMangas[0].id,
+                                                  id: categoryMangas[0].id!,
                                                   name: categoryMangas[0]
-                                                      .mangaName,
+                                                      .mangaName!,
                                                   image:
-                                                      categoryMangas[0].image,
+                                                      categoryMangas[0].image!,
                                                   sochap: categoryMangas[0]
                                                       .totalChapters
                                                       .toString(),
@@ -192,13 +195,13 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                                 return ItemTruyenMoi(
                                                     id: categoryMangas[
                                                             innerIndex + 1]
-                                                        .id,
+                                                        .id!,
                                                     name: categoryMangas[
                                                             innerIndex + 1]
-                                                        .mangaName,
+                                                        .mangaName!,
                                                     image: categoryMangas[
                                                             innerIndex + 1]
-                                                        .image,
+                                                        .image!,
                                                     sochap: categoryMangas[
                                                             innerIndex + 1]
                                                         .totalChapters
@@ -231,11 +234,11 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                           children: List.generate(
                                               categoryMangas.length, (index) {
                                             return ItemTruyenMoi(
-                                                id: categoryMangas[index].id,
+                                                id: categoryMangas[index].id!,
                                                 name: categoryMangas[index]
-                                                    .mangaName,
-                                                image:
-                                                    categoryMangas[index].image,
+                                                    .mangaName!,
+                                                image: categoryMangas[index]
+                                                    .image!,
                                                 sochap: categoryMangas[index]
                                                     .totalChapters
                                                     .toString(),

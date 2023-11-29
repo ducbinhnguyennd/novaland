@@ -49,8 +49,8 @@ class MyApp extends StatelessWidget {
             }
             return false;
           },
-          // child: SplashScreen(),
-          child: UploadImageScreen(),
+          child: SplashScreen(),
+          // child: UploadImageScreen(),
         ),
       ),
     );

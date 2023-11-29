@@ -63,96 +63,96 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen>
         title: Text('Truyện Yêu Thích'),
         backgroundColor: ColorConst.colorPrimary50,
       ),
-     body: RefreshIndicator(
-  color: ColorConst.colorPrimary120,
-  onRefresh: _refresh,
-  child: favoriteManga.isEmpty
-      ? ListView(
-        padding: EdgeInsets.all(50),
-        children: [
-            Container(
-              child: Center(
-                child: Text('Bạn chưa có truyện nào yêu thích'),
-              ),
-            ),
-          ],
-      )
-      : ListView.builder(
-          itemCount: favoriteManga.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MangaDetailScreen(
-                          mangaId: favoriteManga[index].id,
-                          storyName: favoriteManga[index].mangaName),
+      body: RefreshIndicator(
+        color: ColorConst.colorPrimary120,
+        onRefresh: _refresh,
+        child: favoriteManga.isEmpty
+            ? ListView(
+                padding: EdgeInsets.all(50),
+                children: [
+                  Container(
+                    child: Center(
+                      child: Text('Bạn chưa có truyện nào yêu thích'),
+                    ),
+                  ),
+                ],
+              )
+            : ListView.builder(
+                itemCount: favoriteManga.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MangaDetailScreen(
+                                mangaId: favoriteManga[index].id!,
+                                storyName: favoriteManga[index].mangaName!),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: MediaQuery.of(context).size.height / 7,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: ColorConst.colorPrimary120),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: CachedNetworkImage(
+                                imageUrl: favoriteManga[index].image!,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(
+                                            DoubleX.kRadiusSizeGeneric_1XX)),
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                      colorFilter: ColorFilter.mode(
+                                          Colors.red.withOpacity(0.10),
+                                          BlendMode.colorBurn),
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) => Center(
+                                    child: CircularProgressIndicator(
+                                  color: ColorConst.colorPrimary120,
+                                )),
+                                errorWidget: (context, url, error) =>
+                                    const Center(child: Icon(Icons.error)),
+                              ),
+                            ),
+                            Expanded(
+                                flex: 7,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(favoriteManga[index].mangaName!,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text(
+                                          'Thể loại: ${favoriteManga[index].category}'),
+                                      Text(
+                                          'Chapter ${favoriteManga[index].totalChapters.toString()}'),
+                                    ],
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 },
-                child: Container(
-                  height: MediaQuery.of(context).size.height / 7,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: ColorConst.colorPrimary120),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: CachedNetworkImage(
-                          imageUrl: favoriteManga[index].image,
-                          imageBuilder: (context, imageProvider) =>
-                              Container(
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(
-                                      DoubleX.kRadiusSizeGeneric_1XX)),
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                                colorFilter: ColorFilter.mode(
-                                    Colors.red.withOpacity(0.10),
-                                    BlendMode.colorBurn),
-                              ),
-                            ),
-                          ),
-                          placeholder: (context, url) => Center(
-                              child: CircularProgressIndicator(
-                            color: ColorConst.colorPrimary120,
-                          )),
-                          errorWidget: (context, url, error) =>
-                              const Center(child: Icon(Icons.error)),
-                        ),
-                      ),
-                      Expanded(
-                          flex: 7,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(favoriteManga[index].mangaName,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                                Text(
-                                    'Thể loại: ${favoriteManga[index].category}'),
-                                Text(
-                                    'Chapter ${favoriteManga[index].totalChapters.toString()}'),
-                              ],
-                            ),
-                          ))
-                    ],
-                  ),
-                ),
               ),
-            );
-          },
-        ),
-),
-
+      ),
     );
   }
 

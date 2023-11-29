@@ -2,22 +2,22 @@ class Bangtin {
   String id;
   String userId;
   String username;
-  String content;
+  String? content;
   int like;
-  String date;
+  String? date;
   bool isLiked;
   int cmt;
   List<Comment>? comments;
-  List<String>? images; // Thêm trường để lưu trữ danh sách URL ảnh
+  List<String>? images;
 
   Bangtin({
     required this.id,
     required this.userId,
     required this.username,
-    required this.content,
+    this.content,
     required this.like,
     required this.isLiked,
-    required this.date,
+    this.date,
     this.comments,
     required this.cmt,
     this.images,
@@ -30,6 +30,7 @@ class Bangtin {
         json['comment'].map((commentJson) => Comment.fromJson(commentJson)),
       );
     }
+
     return Bangtin(
       id: json['_id'],
       userId: json['userId'],
@@ -40,7 +41,8 @@ class Bangtin {
       date: json['date'],
       comments: comments,
       cmt: json['commentCount'],
-      images: List<String>.from(json['images'] ?? []),
+      images:
+          (json['images'] != null) ? List<String>.from(json['images']) : null,
     );
   }
 }

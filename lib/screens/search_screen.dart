@@ -53,9 +53,9 @@ class _SearchScreenState extends State<SearchScreen> {
       //results = _items.cast<ItemModel>();
     } else {
       results = _items.where((book) {
-        String nameLower = removeAccents(book.mangaName);
+        String nameLower = removeAccents(book.mangaName!);
         // String authorLower = removeAccents(book.);
-        String category = removeAccents(book.category);
+        String category = removeAccents(book.category!);
         String queryLower = removeAccents(query.toLowerCase());
 
         return nameLower.contains(queryLower) ||
@@ -106,11 +106,11 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Card(
                           elevation: 1,
                           child: ItemSearch(
-                            imagePath: _foundUsers[index].image,
-                            title: _foundUsers[index].mangaName,
-                            id: _foundUsers[index].id,
-                            theloai: _foundUsers[index].category,
-                            author: _foundUsers[index].author,
+                            imagePath: _foundUsers[index].image!,
+                            title: _foundUsers[index].mangaName!,
+                            id: _foundUsers[index].id!,
+                            theloai: _foundUsers[index].category!,
+                            author: _foundUsers[index].author!,
                           ),
                         ),
                       );

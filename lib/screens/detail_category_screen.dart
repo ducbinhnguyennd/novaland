@@ -7,11 +7,12 @@ class CategoryDetailScreen extends StatelessWidget {
   final List<Manga> categoryMangas;
   final String categoryName;
 
-  CategoryDetailScreen({required this.categoryMangas, required this.categoryName});
+  CategoryDetailScreen(
+      {required this.categoryMangas, required this.categoryName});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(         
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorConst.colorPrimary50,
         title: Text(categoryName),
@@ -21,14 +22,15 @@ class CategoryDetailScreen extends StatelessWidget {
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3, // Số cột
-            childAspectRatio: 3 / 5, // Tỷ lệ chiều rộng so với chiều cao của mỗi item
+            childAspectRatio:
+                3 / 5, // Tỷ lệ chiều rộng so với chiều cao của mỗi item
           ),
           itemCount: categoryMangas.length,
           itemBuilder: (context, index) {
             return ItemTruyenMoi(
-              id: categoryMangas[index].id,
-              name: categoryMangas[index].mangaName,
-              image: categoryMangas[index].image,
+              id: categoryMangas[index].id!,
+              name: categoryMangas[index].mangaName!,
+              image: categoryMangas[index].image!,
               sochap: categoryMangas[index].totalChapters.toString(),
               view: categoryMangas[index].view.toString(),
             );
