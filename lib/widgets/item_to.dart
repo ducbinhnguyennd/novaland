@@ -74,7 +74,6 @@ class _ItemToMoiState extends State<ItemTo> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        // height: widthS * 6 / 8,
         child: GestureDetector(
           onTap: () {
             if (currentUser != null && currentUser!.user != null) {
@@ -103,7 +102,7 @@ class _ItemToMoiState extends State<ItemTo> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  height: 155,
+                  height: 150,
                 ),
                 placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(
@@ -114,13 +113,10 @@ class _ItemToMoiState extends State<ItemTo> {
               ),
               Container(
                 width: double.infinity,
-                height: 40,
                 child: Column(
                   children: [
                     Text(widget.name,
-                        style: TextStyle(fontSize: 15),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis),
+                        maxLines: 1, overflow: TextOverflow.ellipsis),
                     Text('Chapter ${widget.sochap}')
                   ],
                 ),

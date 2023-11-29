@@ -161,57 +161,48 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
                                                       .size
                                                       .height /
                                                   3.4,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: ItemTo(
-                                                  id: categoryMangas[0].id!,
-                                                  name: categoryMangas[0]
+                                              child: ItemTo(
+                                                id: categoryMangas[0].id!,
+                                                name: categoryMangas[0]
+                                                    .mangaName!,
+                                                image: categoryMangas[0].image!,
+                                                sochap: categoryMangas[0]
+                                                    .totalChapters
+                                                    .toString(),
+                                              )),
+                                          GridView.builder(
+                                            padding: EdgeInsets.all(0),
+                                            gridDelegate:
+                                                SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              crossAxisSpacing: 0,
+                                              mainAxisSpacing: 0,
+                                              childAspectRatio: 3 / 5,
+                                            ),
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount: 3,
+                                            itemBuilder: (context, innerIndex) {
+                                              return ItemTruyenMoi(
+                                                  id: categoryMangas[
+                                                          innerIndex + 1]
+                                                      .id!,
+                                                  name: categoryMangas[
+                                                          innerIndex + 1]
                                                       .mangaName!,
-                                                  image:
-                                                      categoryMangas[0].image!,
-                                                  sochap: categoryMangas[0]
+                                                  image: categoryMangas[
+                                                          innerIndex + 1]
+                                                      .image!,
+                                                  sochap: categoryMangas[
+                                                          innerIndex + 1]
                                                       .totalChapters
                                                       .toString(),
-                                                ),
-                                              )),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: GridView.builder(
-                                              padding: EdgeInsets.all(0),
-                                              gridDelegate:
-                                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 3,
-                                                crossAxisSpacing: 0,
-                                                mainAxisSpacing: 0,
-                                                childAspectRatio: 3 / 5,
-                                              ),
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              itemCount: 3,
-                                              itemBuilder:
-                                                  (context, innerIndex) {
-                                                return ItemTruyenMoi(
-                                                    id: categoryMangas[
-                                                            innerIndex + 1]
-                                                        .id!,
-                                                    name: categoryMangas[
-                                                            innerIndex + 1]
-                                                        .mangaName!,
-                                                    image: categoryMangas[
-                                                            innerIndex + 1]
-                                                        .image!,
-                                                    sochap: categoryMangas[
-                                                            innerIndex + 1]
-                                                        .totalChapters
-                                                        .toString(),
-                                                    view: categoryMangas[
-                                                            innerIndex]
-                                                        .view
-                                                        .toString());
-                                              },
-                                            ),
+                                                  view:
+                                                      categoryMangas[innerIndex]
+                                                          .view
+                                                          .toString());
+                                            },
                                           ),
                                         ],
                                       )
