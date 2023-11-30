@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loginapp/Globals.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
@@ -163,17 +164,17 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                                             ),
                                           )
                                         : Container(
-                              height: 45,
-                              width: 45,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: MemoryImage(base64Decode(
-                                      userData.avatar)),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
+                                            height: 45,
+                                            width: 45,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                image: MemoryImage(base64Decode(
+                                                    userData.avatar)),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
                                   ),
                                 ),
                                 SizedBox(height: 5),
@@ -308,8 +309,15 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SuaThongTin()),
-              );
+                MaterialPageRoute(
+                    builder: (context) => SuaThongTin(
+                          userID: currentUser?.user[0].id ?? '',
+                          image: currentUser?.user[0].avatar ?? '',
+                        )),
+              ).then((value) {
+                _loadUser();
+              });
+              ;
             },
             child: ListTile(
               title: Transform.translate(
@@ -526,13 +534,12 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
             InkWell(
               onTap: () async {
                 await XoaUser.xoaUser(currentUser?.user[0].id ?? '');
-                 Navigator.pushReplacement<void, void>(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (BuildContext context) =>
-                                    const MainScreen(),
-                              ),
-                            );
+                Navigator.pushReplacement<void, void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const MainScreen(),
+                  ),
+                );
               },
               child: Container(
                 padding: EdgeInsets.all(10),
@@ -659,7 +666,6 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                             } catch (err) {
                               print(err);
                             }
-                         
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(

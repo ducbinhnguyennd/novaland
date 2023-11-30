@@ -22,7 +22,8 @@ class ItemTruyenMoi extends StatefulWidget {
       required this.id,
       required this.image,
       required this.name,
-      required this.sochap,required this.view});
+      required this.sochap,
+      required this.view});
 
   @override
   _ItemTruyenMoiState createState() => _ItemTruyenMoiState();
@@ -109,24 +110,21 @@ class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
                         child: CircularProgressIndicator(
                       color: ColorConst.colorPrimary50,
                     )), // Hiển thị khi đang tải ảnh
-                    errorWidget: (context, url, error) =>
-                        Icon(Icons.error),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
-                  Positioned(
-                    bottom: 0,left: 40,right: 0,
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(color: ColorConst.colorPrimary80),
-                      child: Row(
-                        children: [
-                          Icon(Icons.remove_red_eye_outlined),
-                          Text(widget.view)
-                        ],
-                      ),
-                    ),
-                  )
-
-
+                  // Positioned(
+                  //   bottom: 0,left: 40,right: 0,
+                  //   child: Container(
+                  //     padding: EdgeInsets.all(5),
+                  //     decoration: BoxDecoration(color: ColorConst.colorPrimary80),
+                  //     child: Row(
+                  //       children: [
+                  //         Icon(Icons.remove_red_eye_outlined),
+                  //         Text(widget.view)
+                  //       ],
+                  //     ),
+                  //   ),
+                  // )
                 ],
               ),
               Column(

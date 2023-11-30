@@ -93,7 +93,6 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
             ),
             InkWell(
               onTap: (() async {
-            
                 try {
                   String imagePath = '';
                   if (_imageFile != null) {
@@ -113,7 +112,8 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
                     imagePath = image2.path;
                   }
 
-                  uploadImageAvatar(contentController.text, imagePath, context)
+                  uploadImageAvatar(widget.userId, contentController.text,
+                          imagePath, context)
                       .then((data) {
                     if (data != null) {
                       print("Thienlogin : uploadImageAvatar : $data");
@@ -137,7 +137,7 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
                       backgroundColor: Colors.black,
                       textColor: Colors.white,
                       fontSize: 16.0);
-                      await Future.delayed(Duration(seconds: 2));
+                  await Future.delayed(Duration(seconds: 2));
                   Navigator.pop(context, true);
                 } catch (e) {
                   print('lỗi gì đây $e');
@@ -171,7 +171,7 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
   }
 
   static Future<dynamic> uploadImageAvatar(
-      String content, String? path, BuildContext context) async {
+      String userId, String content, String? path, BuildContext context) async {
     print('Thienlogin : uploadImageAvatar : Dang upload... ');
     var body = FormData();
     if (path != null && path != '') {
@@ -186,20 +186,13 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
       MapEntry('content', content),
     ]);
     Dio dio = Dio();
-    String urlTrangChu =
-        'https://du-an-2023.vercel.app/postbaiviet/65646ca0d7a5053612d43992';
+    String urlTrangChu = 'https://du-an-2023.vercel.app/postbaiviet/$userId';
 
     Map<String, String> header = {};
     dio.options.headers = header;
     try {
       Response response = await dio.post(urlTrangChu, data: body);
-      // await CommonService.hideLoading(context);
-      if (kDebugMode) {
-        print('thienlogin___ : response.data ${response.data}');
-        print('thienlogin___ : urlTrangChu $urlTrangChu');
-        print('thienlogin___ : header $header');
-        print('thienlogin___ : body $body');
-      }
+
       return response.data;
     } catch (e) {
       DioError di = e as DioError;

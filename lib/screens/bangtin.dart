@@ -126,31 +126,24 @@ class _BangTinScreenState extends State<BangTinScreen>
               child: Row(
                 children: [
                   Expanded(
-                    flex: 2,
-                    child: CircleAvatar(
-                      backgroundColor: ColorConst.colorPrimary,
-                      child: currentUser?.user[0].avatar == ''
-                          ? Text(
-                              currentUser?.user[0].username
-                                      .toString()
-                                      .substring(0, 1) ??
-                                  'Login',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            )
-                          : Container(
-                              height: 45,
-                              width: 45,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: MemoryImage(base64Decode(
-                                      currentUser?.user[0].avatar ?? '')),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                    ),
-                  ),
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Xin chào',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          Text(
+                            currentUser?.user[0].username ?? 'bạn',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 19),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      )),
                   Expanded(
                     flex: 8,
                     child: Padding(

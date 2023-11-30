@@ -19,11 +19,11 @@ final Map<String, WidgetBuilder> routes = {
   SplashScreen.routeName: (context) => const SplashScreen(),
   RegisterScreen.routeName: (context) => const RegisterScreen(),
   HuongDanScreen.routeName: (context) => const HuongDanScreen(),
-  SuaThongTin.routeName: (context) => const SuaThongTin(),
   LienHe.routeName: (context) => const LienHe(),
   XoaTaiKhoan.routeName: (context) => const XoaTaiKhoan(),
   ThemTienThach.routeName: (context) => ThemTienThach(),
 };
+
 class CustomPageRouteBuilder<T> extends PageRoute<T> {
   final RoutePageBuilder pageBuilder;
   final PageTransitionsBuilder matchingBuilder =
@@ -59,23 +59,26 @@ class CustomPageRouteBuilder<T> extends PageRoute<T> {
         this, context, animation, secondaryAnimation, child);
   }
 }
-class RouteUtil{
-    static Route _createRouteByName(
+
+class RouteUtil {
+  static Route _createRouteByName(
       String routeName, Widget toScreen, bool isFullscreenDialog) {
     return CustomPageRouteBuilder(
       pageBuilder: (context, animation, _) => toScreen,
     );
-      }
-    static bool redirectToLoginScreen(BuildContext context) {
+  }
+
+  static bool redirectToLoginScreen(BuildContext context) {
     try {
-      Navigator.of(context).push(
-          _createRouteByName(MainScreen.routeName, LoginScreen(), false));
+      Navigator.of(context)
+          .push(_createRouteByName(MainScreen.routeName, LoginScreen(), false));
       return true;
     } catch (e) {
       return false;
     }
   }
-    static bool redirectToRegisterScreen(BuildContext context) {
+
+  static bool redirectToRegisterScreen(BuildContext context) {
     try {
       Navigator.of(context).push(_createRouteByName(
           MainScreen.routeName, const RegisterScreen(), false));
@@ -84,4 +87,4 @@ class RouteUtil{
       return false;
     }
   }
-  }
+}
