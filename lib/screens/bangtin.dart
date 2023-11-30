@@ -32,6 +32,11 @@ class _BangTinScreenState extends State<BangTinScreen>
   Bangtin? bangtin;
   ApiBangTin apiBangTin = ApiBangTin();
   ApiBangTinDaLog apiBangTinDaLog = ApiBangTinDaLog();
+  bool isLoading = false;
+
+  late ScrollController _scrollController;
+  List<Bangtin> posts = [];
+
   Future<void> _refresh() async {
     await _loadUser();
   }
@@ -40,6 +45,32 @@ class _BangTinScreenState extends State<BangTinScreen>
   void initState() {
     super.initState();
     _loadUser();
+    _scrollController = ScrollController()..addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      setState(() {
+        isLoading = true;
+      });
+      _loadMorePosts();
+    }
+  }
+
+  Future<void> _loadMorePosts() async {
+    List<Bangtin> morePosts = await _fetchPosts();
+    setState(() {
+      posts.addAll(morePosts);
+      isLoading = false;
+    });
   }
 
   Future<List<Bangtin>> _fetchPosts() {
@@ -76,8 +107,6 @@ class _BangTinScreenState extends State<BangTinScreen>
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-
-        // toolbarHeight: 40,
         centerTitle: true,
         backgroundColor: ColorConst.colorPrimary50,
         elevation: 0,
@@ -100,13 +129,26 @@ class _BangTinScreenState extends State<BangTinScreen>
                     flex: 2,
                     child: CircleAvatar(
                       backgroundColor: ColorConst.colorPrimary,
-                      child: Text(
-                        currentUser?.user[0].username
-                                .toString()
-                                .substring(0, 1) ??
-                            'Login',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      child: currentUser?.user[0].avatar == ''
+                          ? Text(
+                              currentUser?.user[0].username
+                                      .toString()
+                                      .substring(0, 1) ??
+                                  'Login',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            )
+                          : Container(
+                              height: 45,
+                              width: 45,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: MemoryImage(base64Decode(
+                                      currentUser?.user[0].avatar ?? '')),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                     ),
                   ),
                   Expanded(
@@ -173,8 +215,9 @@ class _BangTinScreenState extends State<BangTinScreen>
                   } else if (snapshot.hasError) {
                     return Text("Error: ${snapshot.error}");
                   } else {
-                    List<Bangtin> posts = snapshot.data!;
+                    posts = snapshot.data!;
                     return ListView.builder(
+                      controller: _scrollController,
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
                         return ItemBangTin(
@@ -198,6 +241,7 @@ class _BangTinScreenState extends State<BangTinScreen>
                             currentUser?.user[0].id ?? '',
                           ),
                           images: posts[index].images ?? [],
+                          avatar: posts[index].avatar,
                         );
                       },
                     );
@@ -283,15 +327,11 @@ class _BangTinScreenState extends State<BangTinScreen>
 
   void _showToast(String msg) {
     if (msg.contains(StringConst.textyeucaudangnhap)) {
-      // update count show user need login: only first show toast need login, after will show snack bar to go to login screen,
-      // show snack bar login here,
       CommonService.showSnackBar(StringConst.textyeucaudangnhap, context, () {
-        // go to login screen
         RouteUtil.redirectToLoginScreen(context);
       });
       return;
     }
-    // SHOW TOAST
     CommonService.showToast(msg, context);
   }
 

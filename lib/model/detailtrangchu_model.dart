@@ -78,13 +78,14 @@ class Comments {
   final String noidung;
   final String userIdcmt;
   final String date;
+  final String avatar;
 
   Comments(
       {required this.idcmt,
       required this.usernamecmt,
       required this.noidung,
       required this.userIdcmt,
-      required this.date});
+      required this.date, required this.avatar});
 
   factory Comments.fromJson(Map<String, dynamic> json) {
     return Comments(
@@ -92,6 +93,7 @@ class Comments {
         usernamecmt: json['username'],
         noidung: json['cmt'],
         userIdcmt: json['userID'],
-        date: json['date']);
+        date: json['date'],
+        avatar: json['avatar']);
   }
 }

@@ -148,17 +148,32 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                                     ],
                                     borderRadius: BorderRadius.circular(50),
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      userData.username
-                                          .toString()
-                                          .substring(0, 1),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 30,
-                                        color: ColorConst.colorBackgroundStory,
-                                      ),
-                                    ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: userData.avatar == ''
+                                        ? Center(
+                                            child: Text(
+                                              userData.username.substring(0, 1),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 30,
+                                                color: ColorConst
+                                                    .colorBackgroundStory,
+                                              ),
+                                            ),
+                                          )
+                                        : Container(
+                              height: 45,
+                              width: 45,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: MemoryImage(base64Decode(
+                                      userData.avatar)),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                                   ),
                                 ),
                                 SizedBox(height: 5),
@@ -472,54 +487,65 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
               ),
             ),
             InkWell(
-  onTap: () {
-    _showDeleteConfirmationDialog();
-  },
-  child: ListTile(
-    title: Transform.translate(
-      offset: Offset(-20, 0),
-      child: Text('Xóa tài khoản'),
-    ),
-    leading: ImageIcon(
-      AssetImage(AssetsPathConst.ico_12),
-      size: 22,
-      color: ColorConst.colorPrimary30,
-    ),
-  ),
-),
+              onTap: () {
+                _showDeleteConfirmationDialog();
+              },
+              child: ListTile(
+                title: Transform.translate(
+                  offset: Offset(-20, 0),
+                  child: Text('Xóa tài khoản'),
+                ),
+                leading: ImageIcon(
+                  AssetImage(AssetsPathConst.ico_12),
+                  size: 22,
+                  color: ColorConst.colorPrimary30,
+                ),
+              ),
+            ),
           ]),
         ));
   }
-void _showDeleteConfirmationDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Xác nhận xóa tài khoản"),
-        content: Text("Bạn có chắc chắn muốn xóa tài khoản không?"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child: Text("Hủy",style: TextStyle(color: Colors.black),),
-          ),
-          InkWell(
-            onTap: () async {
-                await XoaUser.xoaUser(currentUser?.user[0].id ?? '');
-              Navigator.of(context).pop(); 
-            },
-            child: Container(
-              padding: EdgeInsets.all(10),
-              color: ColorConst.colorPrimary50,
-              child: Text('Xóa',style: TextStyle(color: Colors.white)),
+
+  void _showDeleteConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Xác nhận xóa tài khoản"),
+          content: Text("Bạn có chắc chắn muốn xóa tài khoản không?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text(
+                "Hủy",
+                style: TextStyle(color: Colors.black),
+              ),
             ),
-          )
-        ],
-      );
-    },
-  );
-}
+            InkWell(
+              onTap: () async {
+                await XoaUser.xoaUser(currentUser?.user[0].id ?? '');
+                 Navigator.pushReplacement<void, void>(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    const MainScreen(),
+                              ),
+                            );
+              },
+              child: Container(
+                padding: EdgeInsets.all(10),
+                color: ColorConst.colorPrimary50,
+                child: Text('Xóa', style: TextStyle(color: Colors.white)),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   _buildSetting2() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -633,7 +659,7 @@ void _showDeleteConfirmationDialog() {
                             } catch (err) {
                               print(err);
                             }
-                            ; // Thực hiện đăng xuất
+                         
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
@@ -659,23 +685,6 @@ void _showDeleteConfirmationDialog() {
       ),
     );
   }
-
-  // _toggleSwitchModeDarkTheme(bool value) {
-  //   // update theme value status
-  //   Globals.isDarkModeTheme = value;
-  //   final provider = Provider.of<ThemeProvider>(context, listen: false);
-  //   provider.toggleTheme(value);
-
-  //   if (isSwitchedModeDarkTheme == false) {
-  //     setState(() {
-  //       isSwitchedModeDarkTheme = true;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       isSwitchedModeDarkTheme = false;
-  //     });
-  //   }
-  // }
 
   _toggleSwitchModeRight(bool value) {
     Globals.isRight = value;

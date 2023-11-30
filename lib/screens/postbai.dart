@@ -29,35 +29,6 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
   final _picker = ImagePicker();
   final Dio _dio = Dio();
   Data? currentUser;
-  void _sendPost() async {
-    String content = contentController.text;
-
-    if (content.isNotEmpty) {
-      try {
-        await apiService.postBaiViet(widget.userId, content);
-        Fluttertoast.showToast(
-            msg: 'Đăng bài viết thành công',
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.TOP,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.black,
-            textColor: Colors.white,
-            fontSize: 16.0);
-
-        Navigator.pop(context, true);
-      } catch (error) {
-        Fluttertoast.showToast(
-            msg: '${error}',
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.TOP,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.black,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,11 +93,7 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
             ),
             InkWell(
               onTap: (() async {
-                // _sendPost();
-                // if (_imageFile == null) {
-                //     print("Vui lòng chọn ảnh để upload");
-                //     return;
-                //   }
+            
                 try {
                   String imagePath = '';
                   if (_imageFile != null) {
@@ -170,7 +137,7 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
                       backgroundColor: Colors.black,
                       textColor: Colors.white,
                       fontSize: 16.0);
-
+                      await Future.delayed(Duration(seconds: 2));
                   Navigator.pop(context, true);
                 } catch (e) {
                   print('lỗi gì đây $e');

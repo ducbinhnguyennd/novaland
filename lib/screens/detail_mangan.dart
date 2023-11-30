@@ -403,7 +403,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                         //     color: ColorConst.colorPrimary80),
                         child: Row(
                           children: [
-                            SizedBox(
+                           mangaDetail?.cmts[index].avatar=='' ? SizedBox(
                               width: DoubleX.kSizeLarge_1X,
                               height: DoubleX.kSizeLarge_1X,
                               child: CircleAvatar(
@@ -417,7 +417,19 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                            ),
+                            ): Container(
+                                          height: 44,
+                                          width: 44,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: MemoryImage(base64Decode(
+                                                  mangaDetail?.cmts[index].avatar ??
+                                                      '')),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
                             SizedBox(width: 10),
                             Expanded(
                               child: Column(

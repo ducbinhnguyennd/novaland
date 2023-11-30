@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -163,7 +164,7 @@ class _BXHScreenState extends State<BXHScreen> with SingleTickerProviderStateMix
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Container(
+             topUserList[index].avatar =='' ? Container(
                 height: widthAvatar * 1.5,
                 width: widthAvatar * 1.5,
                 decoration: BoxDecoration(
@@ -176,7 +177,7 @@ class _BXHScreenState extends State<BXHScreen> with SingleTickerProviderStateMix
                   ],
                   borderRadius: BorderRadius.circular(widthAvatar * 1.5),
                 ),
-                child: Center(
+                child:   Center(
                   child: Text(
                     topUserList[index].username.toString().substring(0, 1),
                     style: const TextStyle(
@@ -185,8 +186,18 @@ class _BXHScreenState extends State<BXHScreen> with SingleTickerProviderStateMix
                       color: ColorConst.colorBackgroundStory,
                     ),
                   ),
-                ),
-              ),
+                )
+      ): Container(
+        height: widthAvatar * 1.5,
+                width: widthAvatar * 1.5,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            image: MemoryImage(base64Decode(topUserList[index].avatar)),
+            fit: BoxFit.cover,
+          ),
+        ),),
+              
               Image.asset(
                 levelImage,
                 height: widthAvatar * 1.5 + 20,

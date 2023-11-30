@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
@@ -85,21 +87,36 @@ class _CommentScreenState extends State<CommentScreen> {
                                   },
                                 ),
                               if (!isMyComment)
-                                SizedBox(
+                               comments[index].avatar == ''
+                                      ?  SizedBox(
                                   width: DoubleX.kSizeLarge_1X,
                                   height: DoubleX.kSizeLarge_1X,
                                   child: CircleAvatar(
-                                    backgroundColor: ColorConst.colorPrimary,
-                                    child: Text(
-                                      comments[index]
-                                          .username
-                                          .toString()
-                                          .substring(0, 1),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
+                                          backgroundColor:
+                                              ColorConst.colorPrimary,
+                                          child: Text(
+                                            comments[index]
+                                                .username
+                                                .toString()
+                                                .substring(0, 1),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        )
+                                      
+                                ): Container(
+                                          height: 44,
+                                          width: 44,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: MemoryImage(base64Decode(
+                                                  comments[index].avatar ??
+                                                      '')),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
                               Expanded(
                                 child: Padding(
                                   padding: isMyComment
@@ -142,21 +159,36 @@ class _CommentScreenState extends State<CommentScreen> {
                                 ),
                               ),
                               if (isMyComment)
-                                SizedBox(
+                                 comments[index].avatar == ''
+                                      ?  SizedBox(
                                   width: DoubleX.kSizeLarge_1X,
                                   height: DoubleX.kSizeLarge_1X,
                                   child: CircleAvatar(
-                                    backgroundColor: ColorConst.colorPrimary,
-                                    child: Text(
-                                      comments[index]
-                                          .username
-                                          .toString()
-                                          .substring(0, 1),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
+                                          backgroundColor:
+                                              ColorConst.colorPrimary,
+                                          child: Text(
+                                            comments[index]
+                                                .username
+                                                .toString()
+                                                .substring(0, 1),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        )
+                                      
+                                ): Container(
+                                          height: 44,
+                                          width: 44,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: MemoryImage(base64Decode(
+                                                  comments[index].avatar ??
+                                                      '')),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
                             ],
                           ),
                         );
@@ -211,28 +243,28 @@ class _CommentScreenState extends State<CommentScreen> {
     String userId = widget.userID;
     String comment = _commentController.text.trim();
 
-    if(userId != ''){
+    if (userId != '') {
       if (comment.isNotEmpty && comment.length >= 5) {
-      _apiService.postComment(baivietId, userId, comment).then((_) {
-        _commentController.clear();
+        _apiService.postComment(baivietId, userId, comment).then((_) {
+          _commentController.clear();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Đăng bình luận thành công'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          setState(() {});
+          // Navigator.pop(context, true);
+        });
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Đăng bình luận thành công'),
-            backgroundColor: Colors.green,
+            content: Text('Bình luận quá ngắn, vui lòng nhập ít nhất 5 ký tự.'),
+            backgroundColor: Colors.red,
           ),
         );
-        setState(() {});
-        // Navigator.pop(context, true);
-      });
+      }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Bình luận quá ngắn, vui lòng nhập ít nhất 5 ký tự.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-    }else{
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Đăng nhập để bình luận'),

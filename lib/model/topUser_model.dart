@@ -5,13 +5,15 @@ class TopUserModel {
   final String role;
   final int totalAmount;
   final int coin;
+  final String avatar;
 
   TopUserModel({
     required this.userID,
     required this.username,
     required this.role,
     required this.totalAmount,
-    required this.coin
+    required this.coin,
+    required this.avatar
   });
 
   factory TopUserModel.fromJson(Map<String, dynamic> json) {
@@ -20,7 +22,7 @@ class TopUserModel {
       coin: json['coin'],
       username: json['username'],
       role: json['role'],
-      totalAmount: json['totalAmount'],
+      totalAmount: json['totalAmount'],avatar: json['avatar']
     );
   }
 }

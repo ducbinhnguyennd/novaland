@@ -28,6 +28,7 @@ class ItemBangTin extends StatefulWidget {
       required this.comments,
       this.widgetDelete,
       this.widgetPostCM,
+      required this.avatar,
       required this.useridbaiviet,
       required this.images})
       : super(key: key);
@@ -40,6 +41,7 @@ class ItemBangTin extends StatefulWidget {
   final String? userid;
   final String? idbaiviet;
   final String? useridbaiviet;
+  final String? avatar;
   bool isLike = false;
   final List<Comment> comments;
   List<String>? images;
@@ -101,13 +103,28 @@ class _ItemBangTinState extends State<ItemBangTin> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 8.0, 8.0, 8.0),
-                child: CircleAvatar(
-                  backgroundColor: ColorConst.colorPrimary,
-                  child: Text(
-                    widget.username?.substring(0, 1) ?? '',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
+ child: ClipOval(
+  child: widget.avatar == ''
+    ? CircleAvatar(
+        backgroundColor: ColorConst.colorPrimary,
+        child: Text(
+          widget.username?.substring(0, 1) ?? '',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      )
+    : Container(
+        height: 40,width: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            image: MemoryImage(base64Decode(widget.avatar ?? '')),
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+),
+
+
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,13 +154,17 @@ class _ItemBangTinState extends State<ItemBangTin> {
             Image.memory(
               base64Decode(imageBase64),
               height: 100,
+              width: double.infinity,
             ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('${widget.like} lượt thích'),
-              Text('${widget.cmt} bình luận')
-            ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0,8.0,8.0,0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('${widget.like} lượt thích'),
+                Text('${widget.cmt} bình luận')
+              ],
+            ),
           ),
           Divider(
             color: Colors.grey,
