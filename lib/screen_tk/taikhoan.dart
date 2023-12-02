@@ -1,24 +1,19 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:loginapp/Globals.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
-import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/login_screen.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/model/user_model2.dart';
-import 'package:loginapp/routes.dart';
 import 'package:loginapp/screen_tk/doimatkhau.dart';
 import 'package:loginapp/screen_tk/huongdan_screen.dart';
 import 'package:loginapp/screen_tk/lichsugiaodich.dart';
 import 'package:loginapp/screen_tk/lienhe.dart';
 import 'package:loginapp/screen_tk/suathongtin.dart';
 import 'package:loginapp/screen_tk/themtienthach.dart';
-import 'package:loginapp/screen_tk/xoataikhoan.dart';
 import 'package:loginapp/user_Service.dart';
 
 class TaikhoanScreen extends StatefulWidget {
@@ -312,12 +307,16 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                 MaterialPageRoute(
                     builder: (context) => SuaThongTin(
                           userID: currentUser?.user[0].id ?? '',
-                          image: currentUser?.user[0].avatar ?? '',
+                         
                         )),
-              ).then((value) {
-                _loadUser();
+              ).then((result) {
+                if (result.dataToPass == true) {
+                  setState(() {
+                    _loadUser();
+                  });
+                }
               });
-              ;
+              
             },
             child: ListTile(
               title: Transform.translate(
@@ -368,13 +367,16 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
               onTap: () {
                 Navigator.of(context).pushNamed(ThemTienThach.routeName);
               },
-              child: const ListTile(
-                title: Text('Nạp Xu'),
+               child: ListTile(
+                title: Transform.translate(
+                  offset: Offset(-20, 0),
+                  child: Text('Nạp Xu'),
+                ),
                 leading: Icon(
                   Icons.euro,
-                  color: ColorConst.colorSecondary,
-                ),
-              ),
+                  color: ColorConst.colorPrimary50,
+                ),),
+              
             ),
           ),
         ]),
@@ -394,28 +396,6 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             SizedBox(height: 10),
-
-            // InkWell(
-            //   onTap: () {
-            //     //
-            //   },
-            //   child: ListTile(
-            //     title: Transform.translate(
-            //       offset: Offset(-20, 0),
-            //       child: Text('Chế độ nền'),
-            //     ),
-            //     leading: ImageIcon(AssetImage(AssetsPathConst.ico_7),
-            //         size: 22, color: ColorConst.colorPrimary30),
-            //     trailing: Switch.adaptive(
-            //       onChanged: _toggleSwitchModeDarkTheme,
-            //       value: isSwitchedModeDarkTheme,
-            //       activeColor: ColorConst.colorPrimary30,
-            //       // trackColor: Colors.grey,
-            //     ),
-            //   ),
-
-            // hướng dẫn
-// Navigator.of(context).pushNamed(HuongDanScreen.routeName);
             InkWell(
               onTap: () {
                 setState(() {
@@ -565,69 +545,63 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           SizedBox(height: 10),
-          ListTile(
-            title: Transform.translate(
-              offset: Offset(-20, 0),
-              child: Text('Chăm sóc khách hàng'),
-            ),
-            leading: ImageIcon(
-              AssetImage(AssetsPathConst.ico_1),
-              color: ColorConst.colorPrimary30,
-              size: 22,
-            ),
-            trailing: Container(
-              width: 80,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  InkWell(
-                    onTap: () {
+          InkWell(
+             onTap: () {
                       Navigator.of(context).pushNamed(LienHe.routeName);
                     },
-                    child:
-                        //  AssetImage(AssetsPathConst.ico_face),
-                        Image.asset(
-                      AssetsPathConst.ico_face,
-                      height: 23,
+            child: ListTile(
+              title: Transform.translate(
+                offset: Offset(-20, 0),
+                child: Text('Chăm sóc khách hàng'),
+              ),
+              leading: ImageIcon(
+                AssetImage(AssetsPathConst.ico_1),
+                color: ColorConst.colorPrimary30,
+                size: 22,
+              ),
+              trailing: Container(
+                width: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Image.asset(
+                        AssetsPathConst.ico_face,
+                        height: 23,
+                      ),
+                    SizedBox(width: 15),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(LienHe.routeName);
+                      },
+                      child:
+                          //  AssetImage(AssetsPathConst.ico_face),
+                          Image.asset(
+                        AssetsPathConst.ico_tiktok,
+                        height: 21,
+                      ),
                     ),
-
-                    // color: Theme.of(context).brightness == Brightness.dark
-                    //     ? Colors.white
-                    //     : Colors.black,
-                  ),
-                  SizedBox(width: 15),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(LienHe.routeName);
-                    },
-                    child:
-                        //  AssetImage(AssetsPathConst.ico_face),
-                        Image.asset(
-                      AssetsPathConst.ico_tiktok,
-                      height: 21,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                ],
+                    SizedBox(width: 5),
+                  ],
+                ),
               ),
             ),
           ),
           //
-          Visibility(
-            visible: true,
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(HuongDanScreen.routeName);
-              },
-              child: const ListTile(
-                title: Text('Hướng dẫn'),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).pushNamed(HuongDanScreen.routeName);
+            },
+             child: ListTile(
+                title: Transform.translate(
+                  offset: Offset(-20, 0),
+                  child: Text('Hướng dẫn'),
+                ),
                 leading: Icon(
                   Icons.integration_instructions_outlined,
                   color: ColorConst.colorPrimary50,
-                ),
-              ),
-            ),
+                ),),
+           
           ),
           InkWell(
               onTap: () {

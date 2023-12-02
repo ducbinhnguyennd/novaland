@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
@@ -23,9 +25,10 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
   LikeApiService likeApiService = LikeApiService();
 
   // void toggleLike() {
- bool isMyComment(String commentUserId) {
+  bool isMyComment(String commentUserId) {
     return commentUserId == widget.userID;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,22 +67,36 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                             Row(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      0, 8.0, 8.0, 8.0),
-                                  child: CircleAvatar(
-                                    backgroundColor: ColorConst.colorPrimary,
-                                    child: Text(
-                                      bangtin.username?.substring(0, 1) ?? '',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                                  padding:
+                                      EdgeInsets.fromLTRB(0, 8.0, 8.0, 8.0),
+                                  child: bangtin.avatar == ""
+                                      ? CircleAvatar(
+                                          backgroundColor:
+                                              ColorConst.colorPrimary,
+                                          child: Text(
+                                            bangtin.username.substring(0, 1),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        )
+                                      : Container(
+                                          height: 44,
+                                          width: 44,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: MemoryImage(base64Decode(
+                                                  bangtin.avatar ?? '')),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      bangtin.username ?? '',
+                                      bangtin.username,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -104,6 +121,13 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                 style: TextStyle(fontSize: 15),
                               ),
                             ),
+                            if (bangtin.images != null)
+                              for (String imageBase64 in bangtin.images ?? [])
+                                Image.memory(
+                                  base64Decode(imageBase64),
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -125,6 +149,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                     children: [
                                       InkWell(
                                         onTap: () {
+                                          // ignore: unnecessary_null_comparison
                                           if (bangtin.userId != null) {
                                             if (!bangtin.isLiked) {
                                               // If the post is not liked, allow the user to like it
@@ -132,8 +157,8 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                                 bangtin.isLiked = true;
                                               });
                                               likeApiService.likeBaiViet(
-                                                  bangtin.userId ?? '',
-                                                  widget.baivietID ?? '');
+                                                  bangtin.userId,
+                                                  widget.baivietID);
                                             } else {
                                               // If the post is already liked, show a toast message
                                               _showToast(
@@ -148,7 +173,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                           bangtin.isLiked
                                               ? Icons.favorite
                                               : Icons.favorite_border,
-                                          color: bangtin.isLiked ?? false
+                                          color: bangtin.isLiked
                                               ? ColorConst.colorPrimary50
                                               : Colors.grey[350],
                                           size: 25,
@@ -173,18 +198,16 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                               thickness: 5,
                             ),
                             if (bangtin.comments != null)
-                            
                               for (Comment comment in bangtin.comments!)
-                                
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
-                                    mainAxisAlignment: isMyComment(comment.userId ??'')
-                                        ? MainAxisAlignment.end
-                                        : MainAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        isMyComment(comment.userId ?? '')
+                                            ? MainAxisAlignment.end
+                                            : MainAxisAlignment.start,
                                     children: [
-                                      if (comment.userId ==
-                                          widget.userID)
+                                      if (comment.userId == widget.userID)
                                         IconButton(
                                           icon: Icon(Icons.delete),
                                           onPressed: () {
@@ -193,9 +216,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                               widget.baivietID,
                                               widget.userID,
                                             ).then((_) {
-                                              setState(() {
-                                             
-                                              });
+                                              setState(() {});
                                             });
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
@@ -206,62 +227,75 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                               ),
                                             );
                                             setState(() {});
-                                            // Navigator.pop(context, true);
                                           },
                                         ),
-                                      if (!isMyComment(comment.userId ??''))
-                                        SizedBox(
-                                          width: DoubleX.kSizeLarge_1X,
-                                          height: DoubleX.kSizeLarge_1X,
-                                          child: CircleAvatar(
-                                            backgroundColor:
-                                                ColorConst.colorPrimary,
-                                            child: Text(
-                                              comment
-                                                  .username
-                                                  .toString()
-                                                  .substring(0, 1),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
+                                      if (!isMyComment(comment.userId ?? ''))
+                                        comment.avatar == ""
+                                            ? SizedBox(
+                                                width: DoubleX.kSizeLarge_1X,
+                                                height: DoubleX.kSizeLarge_1X,
+                                                child: CircleAvatar(
+                                                  backgroundColor:
+                                                      ColorConst.colorPrimary,
+                                                  child: Text(
+                                                    comment.username
+                                                        .toString()
+                                                        .substring(0, 1),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(
+                                                height: 44,
+                                                width: 44,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                    image: MemoryImage(
+                                                        base64Decode(
+                                                            comment.avatar ??
+                                                                '')),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
                                       Expanded(
                                         child: Padding(
-                                          padding: isMyComment(comment.userId ??'')
-                                              ? EdgeInsets.only(right: 8.0)
-                                              : EdgeInsets.only(left: 8.0),
+                                          padding:
+                                              isMyComment(comment.userId ?? '')
+                                                  ? EdgeInsets.only(right: 8.0)
+                                                  : EdgeInsets.only(left: 8.0),
                                           child: Container(
                                             padding: EdgeInsets.all(15),
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(15),
-                                              color: isMyComment(comment.userId ??'')
+                                              color: isMyComment(
+                                                      comment.userId ?? '')
                                                   ? ColorConst.colorPrimary80
                                                   : Colors.grey[300],
                                             ),
                                             child: Column(
-                                              crossAxisAlignment:isMyComment(comment.userId ??'')
+                                              crossAxisAlignment: isMyComment(
+                                                      comment.userId ?? '')
                                                   ? CrossAxisAlignment.start
                                                   : CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  comment.username ??
-                                                      '',
+                                                  comment.username ?? '',
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 16),
                                                 ),
-                                                Text(comment.content ??
-                                                    ''),
+                                                Text(comment.content ?? ''),
                                                 Row(
                                                   children: [
                                                     Spacer(),
-                                                    Text(
-                                                        comment.date ??
-                                                            'aloo',
+                                                    Text(comment.date ?? 'aloo',
                                                         style: TextStyle(
                                                             color: Colors.black
                                                                 .withOpacity(
@@ -274,27 +308,41 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                           ),
                                         ),
                                       ),
-                                      if (isMyComment(comment.userId ??''))
-                                        SizedBox(
-                                          width: DoubleX.kSizeLarge_1X,
-                                          height: DoubleX.kSizeLarge_1X,
-                                          child: CircleAvatar(
-                                            backgroundColor:
-                                                ColorConst.colorPrimary,
-                                            child: Text(
-                                              comment
-                                                  .username
-                                                  .toString()
-                                                  .substring(0, 1),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
+                                      if (isMyComment(comment.userId ?? ''))
+                                        comment.avatar == ""
+                                            ? SizedBox(
+                                                width: DoubleX.kSizeLarge_1X,
+                                                height: DoubleX.kSizeLarge_1X,
+                                                child: CircleAvatar(
+                                                  backgroundColor:
+                                                      ColorConst.colorPrimary,
+                                                  child: Text(
+                                                    comment.username
+                                                        .toString()
+                                                        .substring(0, 1),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(
+                                                height: 44,
+                                                width: 44,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                    image: MemoryImage(
+                                                        base64Decode(
+                                                            comment.avatar ??
+                                                                '')),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
                                     ],
                                   ),
                                 )
-                  
                           ],
                         )
                       ],

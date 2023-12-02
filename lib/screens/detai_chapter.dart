@@ -15,7 +15,9 @@ import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/routes.dart';
+import 'package:loginapp/screens/Driver.dart';
 import 'package:loginapp/user_Service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailChapter extends StatefulWidget {
   final String chapterId;
@@ -73,11 +75,12 @@ class _DetailChapterState extends State<DetailChapter> {
   void initState() {
     super.initState();
     _loadUser();
+    checkfirstRead();
 
     UserServices us = UserServices();
     print('alo123 ${chapterDetail?.id}');
     us.addChuongVuaDocCuaTruyen(
-        widget.chapterId, chapterDetail?.name ?? 'lỗi', widget.storyId);
+        widget.chapterId,widget.viporfree ?? 'free', chapterDetail?.name ?? 'lỗi', widget.storyId);
   }
 
   @override
@@ -92,13 +95,10 @@ class _DetailChapterState extends State<DetailChapter> {
     await ChapterDetail.fetchChapterImages(chapId, userId).then((value) {
       setState(() {
         chapterDetail = value;
-        // if (chapterDetail?.nextChap?.vipOrFree == 'vip') {
-        //   widget.viporfree = 'vip';
-        // }
         widget.viporfree = chapterDetail?.viporfree ?? 'vip';
         UserServices us = UserServices();
         print('alo123 ${chapterDetail?.id}');
-        us.addChuongVuaDocCuaTruyen(chapterDetail?.id ?? widget.chapterId,
+        us.addChuongVuaDocCuaTruyen(chapterDetail?.id ?? widget.chapterId,chapterDetail?.viporfree ?? widget.viporfree!,
             chapterDetail?.name ?? 'lỗi', widget.storyId);
         // _scrollController.addListener(_scrollListener);
       });
@@ -215,6 +215,16 @@ class _DetailChapterState extends State<DetailChapter> {
           Navigator.of(context).pop(setStatelaidi);
         },
       ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.info_outline),
+          onPressed: () {
+            setState(() {
+              isFirstTime = true;
+            });
+          },
+        ),
+      ],
     );
   }
 
@@ -465,7 +475,13 @@ class _DetailChapterState extends State<DetailChapter> {
   );
 }
 
-
+bool isFirstTime = true;
+Future<void> checkfirstRead() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isFirstTime = prefs.getBool('checkfirstRead') ?? true;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -504,6 +520,162 @@ class _DetailChapterState extends State<DetailChapter> {
               child: _buildBottomBar(chapterDetail),
             ),
           ),
+           !isFirstTime
+              ? Container()
+              : Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  top: 0,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.black.withOpacity(0.8),
+                    child: Stack(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width / 7,
+                              child: DottedVerticalDivider(),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width / 7,
+                              child: DottedVerticalDivider(),
+                            )
+                          ],
+                        ),
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 60),
+                              const Column(
+                                children: [
+                                  // Icon(
+                                  //   Icons.keyboard_arrow_up_rounded,
+                                  //   color: Colors.white,
+                                  //   size: 70,
+                                  // ),
+                                  // Text(
+                                  //   'Cuộn lên trên để hiện thanh tab',
+                                  //   textAlign: TextAlign.center,
+                                  //   style: TextStyle(
+                                  //     fontWeight: FontWeight.bold,
+                                  //     fontSize: 16,
+                                  //     color: Colors.white,
+                                  //     shadows: [
+                                  //       Shadow(
+                                  //         blurRadius: 10.0,
+                                  //         offset: Offset(1.0, 1.0),
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              const SizedBox(height: 15),
+                              Column(
+                                children: [
+                                  const SizedBox(height: 35),
+                                  Transform.rotate(
+                                    angle: 6,
+                                    child: Image.asset(
+                                      AssetsPathConst.ico_1,
+                                      height: 70,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                  const Text(
+                                    'Chạm 2 lần vào màn hình \n để ẩn/hiện thanh tab',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                          blurRadius: 10.0,
+                                          offset: Offset(1.0, 1.0),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 35),
+                              const Column(
+                                children: [
+                                  Text(
+                                    'Cuộn xuống dưới cùng để\ntự động chuyển chap',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                          blurRadius: 10.0,
+                                          offset: Offset(1.0, 1.0),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: Colors.white,
+                                    size: 70,
+                                  ),
+                                ],
+                              ),
+                              OutlinedButton(
+                                style: ButtonStyle(
+                                  shape:
+                                      MaterialStateProperty.all<OutlinedBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  side: MaterialStateProperty.all<BorderSide>(
+                                    const BorderSide(
+                                      color: Colors.white,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.transparent),
+                                  foregroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.white),
+                                ),
+                                onPressed: () async {
+                                  final SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  prefs.setBool('checkfirstRead', false);
+                                  setState(() {
+                                    isFirstTime = false;
+                                  });
+                                },
+                                child: const Text(
+                                  'Đã hiểu',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 40),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
         ],
       ),
     );

@@ -1,22 +1,21 @@
-import 'dart:convert';
+
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:image/image.dart' as image_format;
-import 'package:loginapp/constant/strings_const.dart';
 import 'dart:math' as math;
 import 'package:path_provider/path_provider.dart';
 
+// ignore: must_be_immutable
 class SuaThongTin extends StatefulWidget {
-  SuaThongTin({super.key, required this.userID, required this.image});
+  SuaThongTin({super.key, required this.userID});
   String userID;
-  String image;
   static const routeName = 'suathongtin';
 
   @override
@@ -24,11 +23,14 @@ class SuaThongTin extends StatefulWidget {
 }
 
 class _SuaThongTinState extends State<SuaThongTin> {
+  bool isAvatarChanged = false;
   XFile? _imageFile;
   final _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
+    InventoryData dataToPass = InventoryData(isAvatarChanged, false);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorConst.colorPrimary50,
@@ -36,7 +38,7 @@ class _SuaThongTinState extends State<SuaThongTin> {
         title: const Text('Thay đổi ảnh đại diện'),
         leading: InkWell(
           onTap: (() {
-            Navigator.pop(context);
+            Navigator.of(context).pop(dataToPass);
           }),
           child: Icon(Icons.arrow_back_ios),
         ),
@@ -69,7 +71,8 @@ class _SuaThongTinState extends State<SuaThongTin> {
                         width: DoubleX.kLayoutWidthHuge,
                         height: DoubleX.kLayoutHeightHuge,
                         child: ClipOval(
-                          child: Image.memory(base64Decode(widget.image)),
+                          child: Image.asset(AssetsPathConst.logo)
+                              ,
                         ),
                       ),
                     ),
@@ -105,6 +108,9 @@ class _SuaThongTinState extends State<SuaThongTin> {
               child: GestureDetector(
                 onTap: () async {
                   _uploadAndNavigate(context);
+                  setState(() {
+                    isAvatarChanged = true;
+                  });
                 },
                 child: Container(
                   width: double.infinity,
@@ -168,7 +174,6 @@ class _SuaThongTinState extends State<SuaThongTin> {
           );
 
           File image2 = File('$path/img_$rand.jpg');
-
           await image2.writeAsBytes(
             image_format.encodeJpg(thumbnail, quality: 72),
           );
@@ -228,4 +233,11 @@ class _SuaThongTinState extends State<SuaThongTin> {
       // Không gọi Navigator.pop ở đây
     }
   }
+}
+
+class InventoryData {
+  final bool dataToPass;
+  final bool boolValue;
+
+  InventoryData(this.dataToPass, this.boolValue);
 }

@@ -45,7 +45,6 @@ class _BangTinScreenState extends State<BangTinScreen>
   void initState() {
     super.initState();
     _loadUser();
-    _scrollController = ScrollController()..addListener(_scrollListener);
   }
 
   @override
@@ -54,24 +53,6 @@ class _BangTinScreenState extends State<BangTinScreen>
     super.dispose();
   }
 
-  void _scrollListener() {
-    if (_scrollController.offset >=
-            _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
-      setState(() {
-        isLoading = true;
-      });
-      _loadMorePosts();
-    }
-  }
-
-  Future<void> _loadMorePosts() async {
-    List<Bangtin> morePosts = await _fetchPosts();
-    setState(() {
-      posts.addAll(morePosts);
-      isLoading = false;
-    });
-  }
 
   Future<List<Bangtin>> _fetchPosts() {
     if (currentUser == null) {
@@ -99,8 +80,6 @@ class _BangTinScreenState extends State<BangTinScreen>
     });
   }
 
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +136,12 @@ class _BangTinScreenState extends State<BangTinScreen>
                               MaterialPageRoute(
                                   builder: (context) => PostBaiVietScreen(
                                       userId: currentUser?.user[0].id ?? '')),
-                            ).then((value) {
-                              _loadUser();
+                            ).then((result) {
+                              if (result.dataToPass == true) {
+                                setState(() {
+                                  _loadUser();
+                                });
+                              }
                             });
                           } else {
                             _showToast(StringConst.textyeucaudangnhap);
@@ -210,7 +193,6 @@ class _BangTinScreenState extends State<BangTinScreen>
                   } else {
                     posts = snapshot.data!;
                     return ListView.builder(
-                      controller: _scrollController,
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
                         return ItemBangTin(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loginapp/constant/colors_const.dart';
+import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,15 +30,19 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
   final _picker = ImagePicker();
   final Dio _dio = Dio();
   Data? currentUser;
+  bool isAvatarChanged = false;
+
   @override
   Widget build(BuildContext context) {
+    InventoryData dataToPass = InventoryData(isAvatarChanged, false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Viết bài mới'),
         backgroundColor: ColorConst.colorPrimary50,
         leading: InkWell(
             onTap: (() {
-              Navigator.pop(context, false);
+              Navigator.of(context).pop(dataToPass);
             }),
             child: Icon(Icons.arrow_back_ios)),
       ),
@@ -94,6 +99,11 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
             InkWell(
               onTap: (() async {
                 try {
+                  if (contentController.text.isEmpty) {
+                    CommonService.showToast(
+                        'Vui lòng nhập nội dung bài viết', context);
+                    return;
+                  }
                   String imagePath = '';
                   if (_imageFile != null) {
                     final tempDir = await getTemporaryDirectory();
@@ -129,6 +139,7 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
                             fontSize: 16.0);
                       };
                   });
+                  
                   Fluttertoast.showToast(
                       msg: 'Đăng bài viết thành công',
                       toastLength: Toast.LENGTH_LONG,
@@ -138,7 +149,10 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
                       textColor: Colors.white,
                       fontSize: 16.0);
                   await Future.delayed(Duration(seconds: 2));
-                  Navigator.pop(context, true);
+                  setState(() {
+                    isAvatarChanged = true;
+                  });
+                  Navigator.pop(context, InventoryData(isAvatarChanged, true));
                 } catch (e) {
                   print('lỗi gì đây $e');
                 }
@@ -202,4 +216,11 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
       print('Thienlogin : Upload : OKKKKKKKKKKKKK');
     }
   }
+}
+
+class InventoryData {
+  final bool dataToPass;
+  final bool boolValue;
+
+  InventoryData(this.dataToPass, this.boolValue);
 }
