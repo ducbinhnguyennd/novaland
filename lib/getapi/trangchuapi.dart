@@ -12,6 +12,8 @@ import 'package:loginapp/model/trangchu_model.dart';
 import 'package:loginapp/model/user_model2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../model/nhomdich_model.dart';
+
 Dio dio = Dio();
 // String urlapi = 'https://mangaland.site';
 
@@ -448,6 +450,42 @@ class XoaUser {
       }
     } catch (e) {
       print('Error: $e');
+    }
+  }
+}
+
+// detail nhóm dịch
+class ApiDetaiNhomDich {
+  Future<NhomdichModel> fetchData(String nhomdichId, String userId) async {
+    try {
+      final response = await dio.get('$urlapi/getnhomdich/$nhomdichId/$userId');
+      if (response.statusCode == 200) {
+        final mangaDetail = NhomdichModel.fromJson(response.data);
+        return mangaDetail;
+      } else {
+        throw Exception(
+            'Failed to load user data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error decoding JSON: $e');
+      throw Exception('Failed to load user data');
+    }
+  }
+}
+
+class ApiDichTheoDoi {
+  Future<List<UserModel>> fetchData(String userId) async {
+    try {
+      final response =
+          await dio.get('https://du-an-2023.vercel.app/getfollow/$userId');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data.map((json) => UserModel.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (error) {
+      throw Exception('Error: $error');
     }
   }
 }

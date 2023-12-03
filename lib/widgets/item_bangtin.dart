@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
@@ -139,18 +140,25 @@ class _ItemBangTinState extends State<ItemBangTin> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 5, 15.0, 15.0),
+            padding: const EdgeInsets.fromLTRB(0, 5, 15.0, 10.0),
             child: Text(
               widget.content ?? '',
               style: TextStyle(fontSize: 15),
             ),
           ),
           for (String imageBase64 in widget.images!)
-            Image.memory(
-              base64Decode(imageBase64),
-              // height: 400,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            Hero(
+              tag: 'image_hero_${widget.idbaiviet}_$imageBase64',
+              child: Material(
+                child: Center(
+                  child: Image.memory(
+                    base64Decode(imageBase64),
+                    // width: MediaQuery.of(context).size.height / 2,
+                    height: MediaQuery.of(context).size.height / 2,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             ),
           Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
@@ -183,7 +191,7 @@ class _ItemBangTinState extends State<ItemBangTin> {
                         size: 25,
                       ),
                     ),
-                   widget.isLike ? Text(' Đã Thích') : Text(' Thích')
+                    widget.isLike ? Text(' Đã Thích') : Text(' Thích')
                   ],
                 ),
                 widget.widgetPostCM ?? Container(),

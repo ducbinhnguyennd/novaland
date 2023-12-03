@@ -79,8 +79,8 @@ class _DetailChapterState extends State<DetailChapter> {
 
     UserServices us = UserServices();
     print('alo123 ${chapterDetail?.id}');
-    us.addChuongVuaDocCuaTruyen(
-        widget.chapterId,widget.viporfree ?? 'free', chapterDetail?.name ?? 'lỗi', widget.storyId);
+    us.addChuongVuaDocCuaTruyen(widget.chapterId, widget.viporfree ?? 'free',
+        chapterDetail?.name ?? 'lỗi', widget.storyId);
   }
 
   @override
@@ -90,7 +90,7 @@ class _DetailChapterState extends State<DetailChapter> {
   }
 
   Future<void> _goToNewChap(String chapId, String userId) async {
-     _scrollToTop();
+    _scrollToTop();
     print('object $chapId');
     await ChapterDetail.fetchChapterImages(chapId, userId).then((value) {
       setState(() {
@@ -98,8 +98,11 @@ class _DetailChapterState extends State<DetailChapter> {
         widget.viporfree = chapterDetail?.viporfree ?? 'vip';
         UserServices us = UserServices();
         print('alo123 ${chapterDetail?.id}');
-        us.addChuongVuaDocCuaTruyen(chapterDetail?.id ?? widget.chapterId,chapterDetail?.viporfree ?? widget.viporfree!,
-            chapterDetail?.name ?? 'lỗi', widget.storyId);
+        us.addChuongVuaDocCuaTruyen(
+            chapterDetail?.id ?? widget.chapterId,
+            chapterDetail?.viporfree ?? widget.viporfree!,
+            chapterDetail?.name ?? 'lỗi',
+            widget.storyId);
         // _scrollController.addListener(_scrollListener);
       });
     });
@@ -253,7 +256,6 @@ class _DetailChapterState extends State<DetailChapter> {
     //   curve: Curves.easeInOut,
     // );
   }
-
 
   List<String> _extractImageUrlsFromHtml(String htmlString) {
     List<String> imageUrls = [];
@@ -415,73 +417,75 @@ class _DetailChapterState extends State<DetailChapter> {
     }
   }
 
- Widget _buildChapterBodyPartNormal(String sChapContent) {
-  List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
+  Widget _buildChapterBodyPartNormal(String sChapContent) {
+    List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
 
-  return Container(
-    height: MediaQuery.of(context).size.height,
-    child: imageUrls.isNotEmpty
-        ? InkWell(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            onTap: () {
-              setState(() {});
-            },
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              padding: const EdgeInsets.only(bottom: 0, top: 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    children: List.generate(
-                      imageUrls.length,
-                      (index) => CachedNetworkImage(
-                        fit: BoxFit.fitWidth,
-                        width: MediaQuery.of(context).size.width,
-                        imageUrl: imageUrls[index],
-                        placeholder: (context, url) {
-                          // Replace CircularProgressIndicator with a GIF
-                          return Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: index < 5
-                                    ? 120
-                                    : MediaQuery.of(context).size.height / 4,
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: imageUrls.isNotEmpty
+          ? InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              onTap: () {
+                setState(() {});
+              },
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                padding: const EdgeInsets.only(bottom: 0, top: 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: List.generate(
+                        imageUrls.length,
+                        (index) => CachedNetworkImage(
+                          fit: BoxFit.fitWidth,
+                          width: MediaQuery.of(context).size.width,
+                          imageUrl: imageUrls[index],
+                          placeholder: (context, url) {
+                            // Replace CircularProgressIndicator with a GIF
+                            return Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: index < 5
+                                      ? 120
+                                      : MediaQuery.of(context).size.height / 4,
+                                ),
+                                child: Image.asset(
+                                  AssetsPathConst.gifloading,
+                                  width: 50,
+                                ),
                               ),
-                              child: Image.asset(
-                                AssetsPathConst.gifloading,
-                                width: 50, 
-                              ),
-                            ),
-                          );
-                        },
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                            );
+                          },
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+            )
+          : Center(
+              child: Image.asset(
+                AssetsPathConst.gifloading,
+                width: 50,
               ),
             ),
-          )
-        : Center(
-            child: Image.asset(
-              AssetsPathConst.gifloading,
-              width: 50,
-            ),
-          ),
-  );
-}
+    );
+  }
 
-bool isFirstTime = true;
-Future<void> checkfirstRead() async {
+  bool isFirstTime = true;
+  Future<void> checkfirstRead() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       isFirstTime = prefs.getBool('checkfirstRead') ?? true;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -520,7 +524,7 @@ Future<void> checkfirstRead() async {
               child: _buildBottomBar(chapterDetail),
             ),
           ),
-           !isFirstTime
+          !isFirstTime
               ? Container()
               : Positioned(
                   left: 0,
@@ -552,7 +556,7 @@ Future<void> checkfirstRead() async {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const SizedBox(height: 60),
-                              const Column(
+                              Column(
                                 children: [
                                   // Icon(
                                   //   Icons.keyboard_arrow_up_rounded,
@@ -606,7 +610,7 @@ Future<void> checkfirstRead() async {
                                 ],
                               ),
                               const SizedBox(height: 35),
-                              const Column(
+                              Column(
                                 children: [
                                   Text(
                                     'Cuộn xuống dưới cùng để\ntự động chuyển chap',

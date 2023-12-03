@@ -33,8 +33,6 @@ class _BangTinScreenState extends State<BangTinScreen>
   ApiBangTin apiBangTin = ApiBangTin();
   ApiBangTinDaLog apiBangTinDaLog = ApiBangTinDaLog();
   bool isLoading = false;
-
-  late ScrollController _scrollController;
   List<Bangtin> posts = [];
 
   Future<void> _refresh() async {
@@ -49,10 +47,8 @@ class _BangTinScreenState extends State<BangTinScreen>
 
   @override
   void dispose() {
-    _scrollController.dispose();
     super.dispose();
   }
-
 
   Future<List<Bangtin>> _fetchPosts() {
     if (currentUser == null) {
@@ -79,7 +75,6 @@ class _BangTinScreenState extends State<BangTinScreen>
       print('userid: ${currentUser?.user[0].id}');
     });
   }
-
 
   @override
   Widget build(BuildContext context) {

@@ -12,9 +12,9 @@ import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/login_screen.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/screens/detai_chapter.dart';
+import 'package:loginapp/screens/nhomdich_Screen.dart';
 import 'package:loginapp/user_Service.dart';
 import 'package:share_plus/share_plus.dart';
-
 import '../model/user_model.dart';
 
 class MangaDetailScreen extends StatefulWidget {
@@ -698,10 +698,24 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Nhóm dịch:'),
-              const SizedBox(height: 5),
-                    
+                    const SizedBox(height: 5),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NhomDichScreen(
+                              nhomdichID: mangaDetail!.nhomdichId,
+                              userID: currentUser!.user[0].id,
+                              // idUser: currentUser!.user[0].id,
+                              // chapterId: detail?.chapters[0].idchap ?? '',
+                              // storyName: detail?.chapters[0].namechap,
+                              // storyId: widget.mangaId,
+                              // viporfree: detail?.chapters[0].viporfree,
+                            ),
+                          ),
+                        );
+                      },
                       child: Row(
                         children: [
                           Container(
@@ -745,20 +759,25 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
             bottom: 5,
             child: Column(
               children: [
-                FloatingActionButton(
-                  onPressed: () {
+                InkWell(
+                  onTap: () {
                     toggleLike();
                   },
-                  child: Icon(
-                    nutlike ? Icons.favorite : Icons.favorite_border,
-                    size: 35,
-                    color: nutlike ? Colors.white : Colors.white,
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: ColorConst.colorPrimary50),
+                    child: Icon(
+                      nutlike ? Icons.favorite : Icons.favorite_border,
+                      size: 35,
+                      color: nutlike ? Colors.white : Colors.white,
+                    ),
                   ),
-                  backgroundColor: ColorConst.colorPrimary50,
                 ),
                 SizedBox(height: 10),
-                FloatingActionButton(
-                  onPressed: () async {
+                InkWell(
+                  onTap: () async {
                     try {
                       final box = context.findRenderObject() as RenderBox?;
                       await Share.shareWithResult(
@@ -773,12 +792,18 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                       }
                     }
                   },
-                  child: Icon(
-                    Icons.share,
-                    color: Colors.white,
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: ColorConst.colorPrimary50),
+                    child: Icon(
+                      Icons.share,
+                      size: 35,
+                      color: Colors.white,
+                    ),
                   ),
-                  backgroundColor: ColorConst.colorPrimary50,
-                ),
+                )
               ],
             ),
           )

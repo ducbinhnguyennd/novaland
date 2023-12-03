@@ -307,7 +307,6 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                 MaterialPageRoute(
                     builder: (context) => SuaThongTin(
                           userID: currentUser?.user[0].id ?? '',
-                         
                         )),
               ).then((result) {
                 if (result.dataToPass == true) {
@@ -316,7 +315,6 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                   });
                 }
               });
-              
             },
             child: ListTile(
               title: Transform.translate(
@@ -367,7 +365,7 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
               onTap: () {
                 Navigator.of(context).pushNamed(ThemTienThach.routeName);
               },
-               child: ListTile(
+              child: ListTile(
                 title: Transform.translate(
                   offset: Offset(-20, 0),
                   child: Text('Nạp Xu'),
@@ -375,8 +373,8 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                 leading: Icon(
                   Icons.euro,
                   color: ColorConst.colorPrimary50,
-                ),),
-              
+                ),
+              ),
             ),
           ),
         ]),
@@ -448,7 +446,6 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                 ),
               ),
             ),
-
             InkWell(
               onTap: () {
                 setState(() {
@@ -514,6 +511,16 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
             InkWell(
               onTap: () async {
                 await XoaUser.xoaUser(currentUser?.user[0].id ?? '');
+                try {
+                  UserServices us = UserServices();
+                  await us.deleteinfo();
+                  setState(() {
+                    currentUser = null;
+                  });
+                  print('Deleted user data.');
+                } catch (err) {
+                  print(err);
+                }
                 Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(
@@ -546,9 +553,9 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           SizedBox(height: 10),
           InkWell(
-             onTap: () {
-                      Navigator.of(context).pushNamed(LienHe.routeName);
-                    },
+            onTap: () {
+              Navigator.of(context).pushNamed(LienHe.routeName);
+            },
             child: ListTile(
               title: Transform.translate(
                 offset: Offset(-20, 0),
@@ -566,9 +573,9 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Image.asset(
-                        AssetsPathConst.ico_face,
-                        height: 23,
-                      ),
+                      AssetsPathConst.ico_face,
+                      height: 23,
+                    ),
                     SizedBox(width: 15),
                     InkWell(
                       onTap: () {
@@ -592,16 +599,16 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
             onTap: () {
               Navigator.of(context).pushNamed(HuongDanScreen.routeName);
             },
-             child: ListTile(
-                title: Transform.translate(
-                  offset: Offset(-20, 0),
-                  child: Text('Hướng dẫn'),
-                ),
-                leading: Icon(
-                  Icons.integration_instructions_outlined,
-                  color: ColorConst.colorPrimary50,
-                ),),
-           
+            child: ListTile(
+              title: Transform.translate(
+                offset: Offset(-20, 0),
+                child: Text('Hướng dẫn'),
+              ),
+              leading: Icon(
+                Icons.integration_instructions_outlined,
+                color: ColorConst.colorPrimary50,
+              ),
+            ),
           ),
           InkWell(
               onTap: () {
