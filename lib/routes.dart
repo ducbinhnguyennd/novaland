@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:loginapp/login_screen.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/register_screen.dart';
-import 'package:loginapp/screen_tk/doimatkhau.dart';
 import 'package:loginapp/screen_tk/huongdan_screen.dart';
-import 'package:loginapp/screen_tk/lichsugiaodich.dart';
 import 'package:loginapp/screen_tk/lienhe.dart';
-import 'package:loginapp/screen_tk/suathongtin.dart';
 import 'package:loginapp/screen_tk/themtienthach.dart';
-import 'package:loginapp/screen_tk/xoataikhoan.dart';
 import 'package:loginapp/screens/introsignin.dart';
 import 'package:loginapp/screens/splash_screen.dart';
 
@@ -20,7 +16,6 @@ final Map<String, WidgetBuilder> routes = {
   RegisterScreen.routeName: (context) => const RegisterScreen(),
   HuongDanScreen.routeName: (context) => const HuongDanScreen(),
   LienHe.routeName: (context) => const LienHe(),
-  XoaTaiKhoan.routeName: (context) => const XoaTaiKhoan(),
   ThemTienThach.routeName: (context) => ThemTienThach(),
 };
 

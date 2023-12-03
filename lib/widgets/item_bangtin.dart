@@ -1,9 +1,5 @@
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:like_button/like_button.dart';
-import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/strings_const.dart';
@@ -11,9 +7,8 @@ import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/bangtin_model.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/routes.dart';
-import 'package:loginapp/screens/binhluan_screen.dart';
-import 'package:loginapp/user_Service.dart';
 
+// ignore: must_be_immutable
 class ItemBangTin extends StatefulWidget {
   ItemBangTin(
       {Key? key,
@@ -103,28 +98,28 @@ class _ItemBangTinState extends State<ItemBangTin> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 8.0, 8.0, 8.0),
- child: ClipOval(
-  child: widget.avatar == ''
-    ? CircleAvatar(
-        backgroundColor: ColorConst.colorPrimary,
-        child: Text(
-          widget.username?.substring(0, 1) ?? '',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      )
-    : Container(
-        height: 40,width: 40,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            image: MemoryImage(base64Decode(widget.avatar ?? '')),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-),
-
-
+                child: ClipOval(
+                  child: widget.avatar == ''
+                      ? CircleAvatar(
+                          backgroundColor: ColorConst.colorPrimary,
+                          child: Text(
+                            widget.username?.substring(0, 1) ?? '',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      : Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: MemoryImage(
+                                  base64Decode(widget.avatar ?? '')),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,11 +148,12 @@ class _ItemBangTinState extends State<ItemBangTin> {
           for (String imageBase64 in widget.images!)
             Image.memory(
               base64Decode(imageBase64),
-              height: 100,
+              // height: 400,
               width: double.infinity,
+              fit: BoxFit.cover,
             ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(8.0,8.0,8.0,0),
+            padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -181,13 +177,13 @@ class _ItemBangTinState extends State<ItemBangTin> {
                       onTap: toggleLike,
                       child: Icon(
                         widget.isLike ? Icons.favorite : Icons.favorite_border,
-                        color: widget.isLike ?? false
+                        color: widget.isLike
                             ? ColorConst.colorPrimary50
                             : Colors.grey[350],
                         size: 25,
                       ),
                     ),
-                    Text(' Tim')
+                   widget.isLike ? Text(' Đã Thích') : Text(' Thích')
                   ],
                 ),
                 widget.widgetPostCM ?? Container(),

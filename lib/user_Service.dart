@@ -21,10 +21,11 @@ Future<String> getInfoLogin() async {
     return await _storage.delete(key: 'user');
   }
    Future<void> addChuongVuaDocCuaTruyen(
-      String chapterid, String chaptertitle, String storyid) async {
+      String chapterid,String viporfree, String chaptertitle, String storyid,) async {
     Map<String, String> content = {
       'idchap': chapterid,
-      'titlechap': chaptertitle
+      'titlechap': chaptertitle,
+      'viporfree': viporfree
     };
     print('tanvlog');
     print(storyid);

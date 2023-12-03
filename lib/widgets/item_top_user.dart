@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
@@ -48,7 +50,7 @@ class TopCuongGiaItem extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      model.avatar == "" ? SizedBox(
                         width: DoubleX.kSizeLarge_1X,
                         height: DoubleX.kSizeLarge_1X,
                            child: CircleAvatar(
@@ -61,7 +63,18 @@ class TopCuongGiaItem extends StatelessWidget {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
-                      ),
+                      ): Container(
+                          height: 44,
+                          width: 44,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: MemoryImage(
+                                  base64Decode(model.avatar)),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       const SizedBox(
                         width: DoubleX.kPaddingSizeTiny,
                       ),

@@ -3,6 +3,7 @@ import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/lichsuthanhtoan_model.dart';
 
+// ignore: must_be_immutable
 class LichSuGiaoDich extends StatefulWidget {
   LichSuGiaoDich({super.key, required this.userId});
   static const routeName = 'lichsugiaodich';

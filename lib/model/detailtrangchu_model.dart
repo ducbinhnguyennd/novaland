@@ -8,10 +8,12 @@ class MangaDetailModel {
   final int like;
   final int totalChapters;
   final int totalcomment;
+  final String linktruyen;
+  final String nhomdichId;
+  final String nhomdich;
 
   final List<Chapter> chapters;
   final List<Comments> cmts;
-
   bool? isLiked;
 
   MangaDetailModel({
@@ -26,6 +28,9 @@ class MangaDetailModel {
     required this.chapters,
     required this.cmts,
     required this.totalcomment,
+    required this.linktruyen,
+    required this.nhomdichId,
+    required this.nhomdich,
     this.isLiked,
   });
 
@@ -48,7 +53,9 @@ class MangaDetailModel {
         chapters: chapterList,
         cmts: cmtList,
         isLiked: json['isLiked'],
-        totalcomment: json['totalcomment']);
+        totalcomment: json['totalcomment'], linktruyen: json['linktruyen'],
+        nhomdich: json['nhomdich'],
+        nhomdichId: json['nhomdichId']);
   }
 }
 

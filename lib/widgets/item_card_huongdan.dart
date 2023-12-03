@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:loginapp/constant/colors_const.dart';
 
 class ItemHuongdan extends StatelessWidget {
   const ItemHuongdan(
@@ -17,7 +18,7 @@ class ItemHuongdan extends StatelessWidget {
             // controller: controller,
             title: Text(
               title,
-              style: TextStyle(color: Colors.purple),
+              style: TextStyle(color: ColorConst.colorPrimary50),
             ),
             children: <Widget>[
               Container(

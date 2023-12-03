@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
@@ -65,22 +67,36 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                             Row(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      0, 8.0, 8.0, 8.0),
-                                  child: CircleAvatar(
-                                    backgroundColor: ColorConst.colorPrimary,
-                                    child: Text(
-                                      bangtin.username?.substring(0, 1) ?? '',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                                  padding:
+                                      EdgeInsets.fromLTRB(0, 8.0, 8.0, 8.0),
+                                  child: bangtin.avatar == ""
+                                      ? CircleAvatar(
+                                          backgroundColor:
+                                              ColorConst.colorPrimary,
+                                          child: Text(
+                                            bangtin.username.substring(0, 1),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        )
+                                      : Container(
+                                          height: 44,
+                                          width: 44,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: MemoryImage(base64Decode(
+                                                  bangtin.avatar ?? '')),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      bangtin.username ?? '',
+                                      bangtin.username,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -105,6 +121,13 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                 style: TextStyle(fontSize: 15),
                               ),
                             ),
+                            if (bangtin.images != null)
+                              for (String imageBase64 in bangtin.images ?? [])
+                                Image.memory(
+                                  base64Decode(imageBase64),
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -126,6 +149,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                     children: [
                                       InkWell(
                                         onTap: () {
+                                          // ignore: unnecessary_null_comparison
                                           if (bangtin.userId != null) {
                                             if (!bangtin.isLiked) {
                                               // If the post is not liked, allow the user to like it
@@ -133,8 +157,8 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                                 bangtin.isLiked = true;
                                               });
                                               likeApiService.likeBaiViet(
-                                                  bangtin.userId ?? '',
-                                                  widget.baivietID ?? '');
+                                                  bangtin.userId,
+                                                  widget.baivietID);
                                             } else {
                                               // If the post is already liked, show a toast message
                                               _showToast(
@@ -149,7 +173,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                           bangtin.isLiked
                                               ? Icons.favorite
                                               : Icons.favorite_border,
-                                          color: bangtin.isLiked ?? false
+                                          color: bangtin.isLiked
                                               ? ColorConst.colorPrimary50
                                               : Colors.grey[350],
                                           size: 25,
@@ -203,7 +227,6 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                               ),
                                             );
                                             setState(() {});
-                                            // Navigator.pop(context, true);
                                           },
                                         ),
                                       if (!isMyComment(comment.userId ?? ''))
