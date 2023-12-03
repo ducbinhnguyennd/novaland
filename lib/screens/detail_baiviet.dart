@@ -23,9 +23,10 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
   LikeApiService likeApiService = LikeApiService();
 
   // void toggleLike() {
- bool isMyComment(String commentUserId) {
+  bool isMyComment(String commentUserId) {
     return commentUserId == widget.userID;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,18 +174,16 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                               thickness: 5,
                             ),
                             if (bangtin.comments != null)
-                            
                               for (Comment comment in bangtin.comments!)
-                                
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
-                                    mainAxisAlignment: isMyComment(comment.userId ??'')
-                                        ? MainAxisAlignment.end
-                                        : MainAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        isMyComment(comment.userId ?? '')
+                                            ? MainAxisAlignment.end
+                                            : MainAxisAlignment.start,
                                     children: [
-                                      if (comment.userId ==
-                                          widget.userID)
+                                      if (comment.userId == widget.userID)
                                         IconButton(
                                           icon: Icon(Icons.delete),
                                           onPressed: () {
@@ -193,9 +192,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                               widget.baivietID,
                                               widget.userID,
                                             ).then((_) {
-                                              setState(() {
-                                             
-                                              });
+                                              setState(() {});
                                             });
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
@@ -209,7 +206,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                             // Navigator.pop(context, true);
                                           },
                                         ),
-                                      if (!isMyComment(comment.userId ??''))
+                                      if (!isMyComment(comment.userId ?? ''))
                                         SizedBox(
                                           width: DoubleX.kSizeLarge_1X,
                                           height: DoubleX.kSizeLarge_1X,
@@ -217,8 +214,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                             backgroundColor:
                                                 ColorConst.colorPrimary,
                                             child: Text(
-                                              comment
-                                                  .username
+                                              comment.username
                                                   .toString()
                                                   .substring(0, 1),
                                               style: TextStyle(
@@ -228,40 +224,39 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                         ),
                                       Expanded(
                                         child: Padding(
-                                          padding: isMyComment(comment.userId ??'')
-                                              ? EdgeInsets.only(right: 8.0)
-                                              : EdgeInsets.only(left: 8.0),
+                                          padding:
+                                              isMyComment(comment.userId ?? '')
+                                                  ? EdgeInsets.only(right: 8.0)
+                                                  : EdgeInsets.only(left: 8.0),
                                           child: Container(
                                             padding: EdgeInsets.all(15),
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(15),
-                                              color: isMyComment(comment.userId ??'')
+                                              color: isMyComment(
+                                                      comment.userId ?? '')
                                                   ? ColorConst.colorPrimary80
                                                   : Colors.grey[300],
                                             ),
                                             child: Column(
-                                              crossAxisAlignment:isMyComment(comment.userId ??'')
+                                              crossAxisAlignment: isMyComment(
+                                                      comment.userId ?? '')
                                                   ? CrossAxisAlignment.start
                                                   : CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  comment.username ??
-                                                      '',
+                                                  comment.username ?? '',
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 16),
                                                 ),
-                                                Text(comment.content ??
-                                                    ''),
+                                                Text(comment.content ?? ''),
                                                 Row(
                                                   children: [
                                                     Spacer(),
-                                                    Text(
-                                                        comment.date ??
-                                                            'aloo',
+                                                    Text(comment.date ?? 'aloo',
                                                         style: TextStyle(
                                                             color: Colors.black
                                                                 .withOpacity(
@@ -274,7 +269,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                           ),
                                         ),
                                       ),
-                                      if (isMyComment(comment.userId ??''))
+                                      if (isMyComment(comment.userId ?? ''))
                                         SizedBox(
                                           width: DoubleX.kSizeLarge_1X,
                                           height: DoubleX.kSizeLarge_1X,
@@ -282,8 +277,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                             backgroundColor:
                                                 ColorConst.colorPrimary,
                                             child: Text(
-                                              comment
-                                                  .username
+                                              comment.username
                                                   .toString()
                                                   .substring(0, 1),
                                               style: TextStyle(
@@ -294,7 +288,6 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                     ],
                                   ),
                                 )
-                  
                           ],
                         )
                       ],
