@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
@@ -87,36 +88,54 @@ class _CommentScreenState extends State<CommentScreen> {
                                   },
                                 ),
                               if (!isMyComment)
-                               comments[index].avatar == ''
-                                      ?  SizedBox(
-                                  width: DoubleX.kSizeLarge_1X,
-                                  height: DoubleX.kSizeLarge_1X,
-                                  child: CircleAvatar(
-                                          backgroundColor:
-                                              ColorConst.colorPrimary,
-                                          child: Text(
-                                            comments[index]
-                                                .username
-                                                .toString()
-                                                .substring(0, 1),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        )
-                                      
-                                ): Container(
-                                          height: 44,
-                                          width: 44,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              image: MemoryImage(base64Decode(
-                                                  comments[index].avatar ??
-                                                      '')),
-                                              fit: BoxFit.cover,
+                                comments[index].avatar == ''
+                                    ? Row(
+                                        children: [
+                                          SizedBox(
+                                              width: DoubleX.kSizeLarge_1X,
+                                              height: DoubleX.kSizeLarge_1X,
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    ColorConst.colorPrimary,
+                                                child: Text(
+                                                  comments[index]
+                                                      .username
+                                                      .toString()
+                                                      .substring(0, 1),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              )),
+                                          comments[index].role == 'admin'
+                                              ? Image.asset(
+                                                  AssetsPathConst.tichxanh,
+                                                  height: 20)
+                                              : Container()
+                                        ],
+                                      )
+                                    : Row(
+                                        children: [
+                                          Container(
+                                            height: 44,
+                                            width: 44,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                image: MemoryImage(base64Decode(
+                                                    comments[index].avatar ??
+                                                        '')),
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ),
-                                        ),
+                                          comments[index].role == 'admin'
+                                              ? Image.asset(
+                                                  AssetsPathConst.tichxanh,
+                                                  height: 20)
+                                              : Container()
+                                        ],
+                                      ),
                               Expanded(
                                 child: Padding(
                                   padding: isMyComment
@@ -159,11 +178,11 @@ class _CommentScreenState extends State<CommentScreen> {
                                 ),
                               ),
                               if (isMyComment)
-                                 comments[index].avatar == ''
-                                      ?  SizedBox(
-                                  width: DoubleX.kSizeLarge_1X,
-                                  height: DoubleX.kSizeLarge_1X,
-                                  child: CircleAvatar(
+                                comments[index].avatar == ''
+                                    ? SizedBox(
+                                        width: DoubleX.kSizeLarge_1X,
+                                        height: DoubleX.kSizeLarge_1X,
+                                        child: CircleAvatar(
                                           backgroundColor:
                                               ColorConst.colorPrimary,
                                           child: Text(
@@ -174,21 +193,19 @@ class _CommentScreenState extends State<CommentScreen> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                        )
-                                      
-                                ): Container(
-                                          height: 44,
-                                          width: 44,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              image: MemoryImage(base64Decode(
-                                                  comments[index].avatar ??
-                                                      '')),
-                                              fit: BoxFit.cover,
-                                            ),
+                                        ))
+                                    : Container(
+                                        height: 44,
+                                        width: 44,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: MemoryImage(base64Decode(
+                                                comments[index].avatar ?? '')),
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
+                                      ),
                             ],
                           ),
                         );

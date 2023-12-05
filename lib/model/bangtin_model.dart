@@ -8,6 +8,7 @@ class Bangtin {
   bool isLiked;
   int cmt;
   String? avatar;
+  String? role;
   List<Comment>? comments;
   List<String>? images;
 
@@ -22,6 +23,7 @@ class Bangtin {
     this.date,
     this.comments,
     required this.cmt,
+    required this.role,
     this.images,
   });
 
@@ -43,6 +45,7 @@ class Bangtin {
       date: json['date'],
       comments: comments,
       cmt: json['commentCount'],
+      role: json['role'],
       images:
           (json['images'] != null) ? List<String>.from(json['images']) : null,
       avatar: json['avatar'],
@@ -57,24 +60,25 @@ class Comment {
   String? content;
   String? date;
   String? avatar;
+  String? role;
 
-  Comment({
-    this.id,
-    this.userId,
-    this.username,
-    this.content,
-    this.date,
-    this.avatar
-  });
+  Comment(
+      {this.id,
+      this.userId,
+      this.username,
+      this.content,
+      this.date,
+      this.avatar,
+      this.role});
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
-      id: json['_id'],
-      userId: json['userId'],
-      content: json['cmt'],
-      username: json['username'],
-      date: json['date'],
-      avatar: json['avatar']
-    );
+        id: json['_id'],
+        userId: json['userId'],
+        content: json['cmt'],
+        username: json['username'],
+        date: json['date'],
+        role: json['role'],
+        avatar: json['avatar']);
   }
 }

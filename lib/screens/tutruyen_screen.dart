@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/nhomdichtheodoi_model.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/screens/detail_mangan.dart';
+import 'package:loginapp/screens/nhomdich_Screen.dart';
 import 'package:loginapp/user_Service.dart';
 
 import '../model/trangchu_model.dart';
@@ -20,10 +22,10 @@ class FavoriteMangaScreen extends StatefulWidget {
 class _FavoriteMangaScreenState extends State<FavoriteMangaScreen>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   List<Manga> favoriteManga = [];
+  List<DichTheoDoiModel> dichTheoDoiModel = [];
   Data? currentUser;
   late TabController _tabController;
-  DichTheoDoiModel? dichTheoDoiModel;
-  ApiDichTheoDoi apiDichTheoDoi = ApiDichTheoDoi();
+  // ApiDichTheoDoi apiDichTheoDoi = ApiDichTheoDoi();
   Future<void> _refresh() async {
     await _loadUser();
   }
@@ -51,9 +53,11 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen>
       print('userid: ${currentUser?.user[0].id}');
       List<Manga> mangaList = await ApiListYeuThich.fetchFavoriteManga(
           currentUser?.user[0].id ?? '');
-
+      List<DichTheoDoiModel> dichTheoDoiList =
+          await ApiDichTheoDoi.fetchData(currentUser?.user[0].id ?? '');
       setState(() {
         favoriteManga = mangaList;
+        dichTheoDoiModel = dichTheoDoiList;
       });
     });
   }
@@ -78,9 +82,8 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen>
         ),
       ),
       body: TabBarView(
-        controller: _tabController, // Kết nối TabController với TabBarView
+        controller: _tabController,
         children: [
-          // Màn hình hiện tại
           RefreshIndicator(
             color: ColorConst.colorPrimary120,
             onRefresh: _refresh,
@@ -184,9 +187,89 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen>
                     },
                   ),
           ),
-          // Màn hình thứ 2
-          Center(
-            child: Text(dichTheoDoiModel?.username ?? ''),
+          RefreshIndicator(
+            color: ColorConst.colorPrimary120,
+            onRefresh: _refresh,
+            child: dichTheoDoiModel.isEmpty
+                ? ListView(
+                    padding: EdgeInsets.all(50),
+                    children: [
+                      Container(
+                        child: Center(
+                          child: Text('Bạn chưa yêu thích nhóm dịch nào'),
+                        ),
+                      ),
+                    ],
+                  )
+                : GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 0.0,
+                        mainAxisSpacing: 0.0,
+                        childAspectRatio: 3 / 5),
+                    itemCount: dichTheoDoiModel.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NhomDichScreen(
+                                  nhomdichID: dichTheoDoiModel[index].id,
+                                  userID: currentUser?.user[0].id ?? '',
+                                ),
+                              ),
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 80,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorConst.colorPrimary,
+                                ),
+                                child: dichTheoDoiModel[index].avatar == ''
+                                    ? Center(
+                                        child: Text(
+                                          dichTheoDoiModel[index]
+                                              .username
+                                              .substring(0, 1),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )
+                                    : ClipOval(
+                                        child: Image.memory(
+                                          base64Decode(
+                                              dichTheoDoiModel[index].avatar),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    dichTheoDoiModel[index].username,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Image.asset(AssetsPathConst.tichxanh,
+                                      height: 20)
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),

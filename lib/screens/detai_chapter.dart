@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:html/parser.dart';
+import 'package:loginapp/Globals.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
@@ -463,6 +464,26 @@ class _DetailChapterState extends State<DetailChapter> {
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error),
                         ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: Globals.isAutoNoiChap,
+                      child: Column(
+                        children: [
+                          Icon(Icons.lock_open_rounded),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Kéo lên để chuyển chap mới',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.normal,
+                              fontSize: DoubleX.kFontSizeTiny_1XX1X,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

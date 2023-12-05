@@ -14,13 +14,18 @@ class BXHScreen extends StatefulWidget {
   _BXHScreenState createState() => _BXHScreenState();
 }
 
-class _BXHScreenState extends State<BXHScreen> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin{
+class _BXHScreenState extends State<BXHScreen>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   ApiTopUser apiService = ApiTopUser();
   late Future<List<TopUserModel>> futureUsers;
 
   @override
   void initState() {
     super.initState();
+    futureUsers = apiService.getUsers();
+  }
+
+  Future<void> _refresh() async {
     futureUsers = apiService.getUsers();
   }
 
@@ -44,87 +49,94 @@ class _BXHScreenState extends State<BXHScreen> with SingleTickerProviderStateMix
             ),
           ),
           // buildTopUserItemWidget(),
-          FutureBuilder(
-            future: futureUsers,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator(color: ColorConst.colorPrimary120,));
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                List<TopUserModel> topUserList =
-                    snapshot.data as List<TopUserModel>;
-                return Positioned(
+          RefreshIndicator(
+            color: ColorConst.colorPrimary120,
+            onRefresh: _refresh,
+            child: FutureBuilder(
+              future: futureUsers,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                      child: CircularProgressIndicator(
+                    color: ColorConst.colorPrimary120,
+                  ));
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  List<TopUserModel> topUserList =
+                      snapshot.data as List<TopUserModel>;
+                  return Positioned(
                     bottom: 0,
-            left: 0,
-            right: 0,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: buildTopUserItemWidget(2, topUserList),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: buildTopUserItemWidget(0, topUserList),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: buildTopUserItemWidget(1, topUserList),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20.0, 0, 20, 0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                blurRadius: 10,
-                                offset: Offset(0, 0),
-                                spreadRadius: 0,
+                    left: 0,
+                    right: 0,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: buildTopUserItemWidget(2, topUserList),
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: buildTopUserItemWidget(0, topUserList),
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: buildTopUserItemWidget(1, topUserList),
                               ),
                             ],
                           ),
-                          height: Platform.isIOS ? MediaQuery.of(context).size.height / 2.5 : MediaQuery.of(context).size.height / 3.5,
-                          child: ListView.builder(
-                            padding: const EdgeInsets.fromLTRB(
-                              DoubleX.kPaddingSizeMedium_1X,
-                              DoubleX.kPaddingSizeLarge,
-                              DoubleX.kPaddingSizeMedium_1X,
-                              DoubleX.kPaddingSizeTiny_1X,
-                            ),
-                            itemCount: topUserList.length,
-                            itemBuilder: (context, index) {
-                              if (index < topUserList.length - 3) {
-                                return TopCuongGiaItem(
-                                    model: topUserList[index + 3],
-                                    index: index + 3);
-                              }
-                              return null;
-                            },
-                          ),
                         ),
-                      )
-                    ],
-                  ),
-                );
-              }
-            },
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20.0, 0, 20, 0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  blurRadius: 10,
+                                  offset: Offset(0, 0),
+                                  spreadRadius: 0,
+                                ),
+                              ],
+                            ),
+                            height: Platform.isIOS
+                                ? MediaQuery.of(context).size.height / 2.5
+                                : MediaQuery.of(context).size.height / 3.5,
+                            child: ListView.builder(
+                              padding: const EdgeInsets.fromLTRB(
+                                DoubleX.kPaddingSizeMedium_1X,
+                                DoubleX.kPaddingSizeLarge,
+                                DoubleX.kPaddingSizeMedium_1X,
+                                DoubleX.kPaddingSizeTiny_1X,
+                              ),
+                              itemCount: topUserList.length,
+                              itemBuilder: (context, index) {
+                                if (index < topUserList.length - 3) {
+                                  return TopCuongGiaItem(
+                                      model: topUserList[index + 3],
+                                      index: index + 3);
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
           ),
-       
         ],
       ),
     );
@@ -164,40 +176,45 @@ class _BXHScreenState extends State<BXHScreen> with SingleTickerProviderStateMix
           child: Stack(
             alignment: Alignment.center,
             children: [
-             topUserList[index].avatar =='' ? Container(
-                height: widthAvatar * 1.5,
-                width: widthAvatar * 1.5,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  boxShadow: const <BoxShadow>[
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.17),
-                      blurRadius: 10,
+              topUserList[index].avatar == ''
+                  ? Container(
+                      height: widthAvatar * 1.5,
+                      width: widthAvatar * 1.5,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        boxShadow: const <BoxShadow>[
+                          BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.17),
+                            blurRadius: 10,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(widthAvatar * 1.5),
+                      ),
+                      child: Center(
+                        child: Text(
+                          topUserList[index]
+                              .username
+                              .toString()
+                              .substring(0, 1),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: widthAvatar,
+                            color: ColorConst.colorBackgroundStory,
+                          ),
+                        ),
+                      ))
+                  : Container(
+                      height: widthAvatar * 1.5,
+                      width: widthAvatar * 1.5,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: MemoryImage(
+                              base64Decode(topUserList[index].avatar)),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                  ],
-                  borderRadius: BorderRadius.circular(widthAvatar * 1.5),
-                ),
-                child:   Center(
-                  child: Text(
-                    topUserList[index].username.toString().substring(0, 1),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: widthAvatar,
-                      color: ColorConst.colorBackgroundStory,
-                    ),
-                  ),
-                )
-      ): Container(
-        height: widthAvatar * 1.5,
-                width: widthAvatar * 1.5,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            image: MemoryImage(base64Decode(topUserList[index].avatar)),
-            fit: BoxFit.cover,
-          ),
-        ),),
-              
               Image.asset(
                 levelImage,
                 height: widthAvatar * 1.5 + 20,
@@ -246,7 +263,10 @@ class _BXHScreenState extends State<BXHScreen> with SingleTickerProviderStateMix
             padding: const EdgeInsets.all(6.0),
             child: Column(
               children: [
-                Text(topUserList[index].username, style: TextStyle(fontWeight: FontWeight.w600),),
+                Text(
+                  topUserList[index].username,
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
                 Text('Xu: ${topUserList[index].coin.toString()}'),
               ],
             ),
@@ -255,6 +275,7 @@ class _BXHScreenState extends State<BXHScreen> with SingleTickerProviderStateMix
       ],
     );
   }
+
   @override
   bool get wantKeepAlive => true;
 }

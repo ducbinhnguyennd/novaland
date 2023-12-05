@@ -13,7 +13,7 @@ class DichTheoDoiModel {
     return DichTheoDoiModel(
       id: json['id'],
       username: json['username'],
-      avatar: json['avatar'] ?? "", // Đặt giá trị mặc định nếu không có avatar
+      avatar: json['avatar'] ?? "",
     );
   }
 }

@@ -6,7 +6,7 @@ class AssetsPathConst {
   static const String ico_back = 'assets/images/ico_back.png';
 
   //khung
- static const String khunglevel1 = 'assets/images/khunglevel1.png';
+  static const String khunglevel1 = 'assets/images/khunglevel1.png';
   static const String khunglevel2 = 'assets/images/khunglevel2.png';
   static const String khunglevel4 = 'assets/images/khunglevel4.png';
 
@@ -21,6 +21,8 @@ class AssetsPathConst {
 
 //icons
   static const String logo = 'assets/images/icons.png';
+  static const String tichxanh = 'assets/images/tichxanh.png';
+
 //follow
   static const String icofollow = 'assets/images/icofollow.png';
   static const String icodafollow = 'assets/images/icodafollow.png';

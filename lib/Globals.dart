@@ -8,7 +8,7 @@ class Globals {
   static bool loadData = true;
   // thienlogin: chế độ tay phải
   static bool isRight = true;
-
+  static bool isAutoNoiChap = false;
   // thienlogin: chế độ tay phải
   static int numCmt = 0;
 

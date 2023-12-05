@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/strings_const.dart';
@@ -25,6 +26,7 @@ class ItemBangTin extends StatefulWidget {
       this.widgetDelete,
       this.widgetPostCM,
       required this.avatar,
+      required this.role,
       required this.useridbaiviet,
       required this.images})
       : super(key: key);
@@ -38,7 +40,10 @@ class ItemBangTin extends StatefulWidget {
   final String? idbaiviet;
   final String? useridbaiviet;
   final String? avatar;
+  final String? role;
+
   bool isLike = false;
+
   final List<Comment> comments;
   List<String>? images;
   Widget? widgetDelete;
@@ -125,9 +130,20 @@ class _ItemBangTinState extends State<ItemBangTin> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.username ?? '',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      Text(
+                        widget.username ?? '',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: 5),
+                      widget.role == 'admin'
+                          ? Image.asset(
+                              AssetsPathConst.tichxanh,
+                              height: 20,
+                            )
+                          : Container()
+                    ],
                   ),
                   Text(
                     widget.date ?? '2023-11-18T04:38:10.828Z',
