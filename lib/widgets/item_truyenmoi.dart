@@ -9,6 +9,7 @@ import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/routes.dart';
 import 'package:loginapp/screens/detail_mangan.dart';
 import 'package:loginapp/user_Service.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class ItemTruyenMoi extends StatefulWidget {
   final String id;
@@ -76,14 +77,16 @@ class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SizedBox(
-        child: GestureDetector(
+        child: ZoomTapAnimation(
           onTap: () {
             if (currentUser != null && currentUser!.user != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => MangaDetailScreen(
-                      mangaId: widget.id, storyName: widget.name),
+                      mangaId: widget.id,
+                      storyName: widget.name,
+                      image: widget.image),
                 ),
               );
             } else {
@@ -106,10 +109,16 @@ class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
                       ),
                       height: 155,
                     ),
-                    placeholder: (context, url) => Center(
-                        child: CircularProgressIndicator(
-                      color: ColorConst.colorPrimary50,
-                    )), // Hiển thị khi đang tải ảnh
+                    placeholder: (context, url) => Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: ColorConst.colorPrimary80),
+                      height: 155,
+                      child: Center(
+                          child: CircularProgressIndicator(
+                        color: ColorConst.colorPrimary50,
+                      )),
+                    ), // Hiển thị khi đang tải ảnh
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                   // Positioned(

@@ -137,7 +137,7 @@ class _ItemBangTinState extends State<ItemBangTin> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(width: 5),
-                      widget.role == 'admin'
+                      (widget.role == 'admin' || widget.role == 'nhomdich')
                           ? Image.asset(
                               AssetsPathConst.tichxanh,
                               height: 20,
@@ -169,7 +169,6 @@ class _ItemBangTinState extends State<ItemBangTin> {
                 child: Center(
                   child: Image.memory(
                     base64Decode(imageBase64),
-                    // width: MediaQuery.of(context).size.height / 2,
                     height: MediaQuery.of(context).size.height / 2,
                     fit: BoxFit.cover,
                   ),

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -12,9 +11,7 @@ import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 class ItemSearch extends StatelessWidget {
   const ItemSearch(
       {super.key,
-      
       required this.theloai,
-
       required this.imagePath,
       required this.title,
       required this.author,
@@ -28,7 +25,6 @@ class ItemSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ZoomTapAnimation(
@@ -36,7 +32,8 @@ class ItemSearch extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MangaDetailScreen(mangaId: id, storyName: title, ),
+              builder: (context) => MangaDetailScreen(
+                  mangaId: id, storyName: title, image: imagePath),
             ),
           );
         },
@@ -51,10 +48,8 @@ class ItemSearch extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  
                   child: CachedNetworkImage(
-           
-           imageUrl: imagePath,
+                    imageUrl: imagePath,
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Center(child: CircularProgressIndicator()),
@@ -81,8 +76,6 @@ class ItemSearch extends StatelessWidget {
                       Text('Tác giả: ${author}'),
                       SizedBox(height: 10),
                       Text('Thể loại: ${theloai}'),
-
-                     
                     ],
                   ),
                 ),

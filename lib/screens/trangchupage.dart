@@ -1,8 +1,5 @@
-import 'dart:convert';
-
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/screens/category_screen.dart';
 import 'package:loginapp/screens/search_screen.dart';
@@ -25,7 +22,6 @@ class ItemCarousel {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  int _current = 0;
   bool _isLoading = true;
 
   final List<ItemCarousel> itemList = [
@@ -96,6 +92,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     print('abc');
     return Scaffold(
       body: Container(
@@ -126,12 +123,26 @@ class _HomePageState extends State<HomePage>
                   itemBuilder: (context, index) {
                     return Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25)),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(25),
-                        child: Image.network(
-                          itemList[index].image,
+                        child: CachedNetworkImage(
+                          // Thay đổi từ Image.network thành CachedNetworkImage
+                          imageUrl: itemList[index].image,
                           fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            height: 200,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: ColorConst.colorPrimary80),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              color: ColorConst.colorPrimary50,
+                            )),
+                          ), // Placeholder khi đang load
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error), // Widget hiển thị khi có lỗi
                         ),
                       ),
                     );
@@ -166,18 +177,4 @@ class _HomePageState extends State<HomePage>
 
   @override
   bool get wantKeepAlive => true;
-}
-
-class TheloaiItem {
-  final String image;
-  final String theloaiID;
-  final String theloaiName;
-  final int initialTabIndex;
-
-  TheloaiItem({
-    required this.image,
-    required this.theloaiID,
-    required this.theloaiName,
-    required this.initialTabIndex,
-  });
 }

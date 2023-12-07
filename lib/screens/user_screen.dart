@@ -7,6 +7,8 @@ import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/topUser_model.dart';
+import 'package:loginapp/model/user_model.dart';
+import 'package:loginapp/user_Service.dart';
 import 'package:loginapp/widgets/item_top_user.dart';
 
 class BXHScreen extends StatefulWidget {
@@ -18,14 +20,35 @@ class _BXHScreenState extends State<BXHScreen>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   ApiTopUser apiService = ApiTopUser();
   late Future<List<TopUserModel>> futureUsers;
+  Data? currentUser;
 
   @override
   void initState() {
     super.initState();
+    _loadUser();
+
     futureUsers = apiService.getUsers();
   }
 
+  Future<void> _loadUser() async {
+    UserServices us = UserServices();
+    us.getInfoLogin().then((value) {
+      if (value != "") {
+        setState(() {
+          currentUser = Data.fromJson(jsonDecode(value));
+        });
+      } else {
+        setState(() {
+          currentUser = null;
+        });
+      }
+    }, onError: (error) {}).then((value) async {
+      print('userid: ${currentUser?.user[0].id}');
+    });
+  }
+
   Future<void> _refresh() async {
+    _loadUser();
     futureUsers = apiService.getUsers();
   }
 
@@ -38,21 +61,20 @@ class _BXHScreenState extends State<BXHScreen>
         title: Text('Bảng Xếp Hạng'),
         backgroundColor: ColorConst.colorPrimary50,
       ),
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(AssetsPathConst.nen),
-                fit: BoxFit.cover,
+      body: RefreshIndicator(
+        color: ColorConst.colorPrimary50,
+        onRefresh: _refresh,
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(AssetsPathConst.nen),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          // buildTopUserItemWidget(),
-          RefreshIndicator(
-            color: ColorConst.colorPrimary120,
-            onRefresh: _refresh,
-            child: FutureBuilder(
+            FutureBuilder(
               future: futureUsers,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -136,8 +158,8 @@ class _BXHScreenState extends State<BXHScreen>
                 }
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -263,9 +285,19 @@ class _BXHScreenState extends State<BXHScreen>
             padding: const EdgeInsets.all(6.0),
             child: Column(
               children: [
-                Text(
-                  topUserList[index].username,
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        topUserList[index].username,
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Image.asset(AssetsPathConst.tichxanh, height: 18)
+                  ],
                 ),
                 Text('Xu: ${topUserList[index].coin.toString()}'),
               ],

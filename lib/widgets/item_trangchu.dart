@@ -42,12 +42,17 @@ class _ItemTrangChuState extends State<ItemTrangChu> {
       future: mangaList,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return SizedBox(
+            height: 200,
+            child: Center(
               child: CircularProgressIndicator(
-            color: ColorConst.colorPrimary50,
-          ));
+                color: ColorConst.colorPrimary50,
+                backgroundColor: ColorConst.colorPrimary80,
+              ),
+            ),
+          );
         } else if (snapshot.hasError) {
-          return Text('Đã xảy ra lỗi: ${snapshot.error}');
+          return Text('Kiểm tra lại kết nối internet');
         } else {
           if (snapshot.hasData) {
             List<Manga> mangas = snapshot.data!;

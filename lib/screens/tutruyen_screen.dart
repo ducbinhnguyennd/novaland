@@ -111,6 +111,7 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen>
                                 builder: (context) => MangaDetailScreen(
                                   mangaId: favoriteManga[index].id!,
                                   storyName: favoriteManga[index].mangaName!,
+                                  image: favoriteManga[index].image!,
                                 ),
                               ),
                             );
@@ -168,6 +169,8 @@ class _FavoriteMangaScreenState extends State<FavoriteMangaScreen>
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                         Text(
                                           'Thể loại: ${favoriteManga[index].category}',

@@ -319,8 +319,10 @@ class _DataScreenState extends State<NhomDichScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MangaDetailScreen(
-                                    mangaId: manga?.id ?? '',
-                                    storyName: manga?.mangaName ?? ''),
+                                  mangaId: manga?.id ?? '',
+                                  storyName: manga?.mangaName ?? '',
+                                  image: manga?.image ?? '',
+                                ),
                               ),
                             );
                           },

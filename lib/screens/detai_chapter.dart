@@ -280,7 +280,6 @@ class _DetailChapterState extends State<DetailChapter> {
       String imageUrl = imgElement.attributes['src'] ?? '...';
       if (imageUrl != null) {
         imageUrls.add('https:$imageUrl');
-        // print(imageUrls);
       }
     }
     return imageUrls;
@@ -437,16 +436,16 @@ class _DetailChapterState extends State<DetailChapter> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: List.generate(
-                        imageUrls.length,
-                        (index) => CachedNetworkImage(
+                  children: List.generate(
+                    imageUrls.length,
+                    (index) => Stack(
+                      children: [
+                        // CachedNetworkImage as the background
+                        CachedNetworkImage(
                           fit: BoxFit.fitWidth,
                           width: MediaQuery.of(context).size.width,
                           imageUrl: imageUrls[index],
                           placeholder: (context, url) {
-                            // Replace CircularProgressIndicator with a GIF
                             return Center(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -464,29 +463,26 @@ class _DetailChapterState extends State<DetailChapter> {
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error),
                         ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: Globals.isAutoNoiChap,
-                      child: Column(
-                        children: [
-                          Icon(Icons.lock_open_rounded),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            'Kéo lên để chuyển chap mới',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.normal,
-                              fontSize: DoubleX.kFontSizeTiny_1XX1X,
+                        // Watermark as an overlay
+                        Positioned.fill(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'MangaLand',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             )
@@ -510,198 +506,181 @@ class _DetailChapterState extends State<DetailChapter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          ListView.builder(
-            // controller: _scrollController,
-            physics: AlwaysScrollableScrollPhysics(),
-            // scrollDirection: Axis.vertical,
-            itemCount: chapterDetail?.images.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              // print('${chapterDetail?.images[index]}');
-              return _buildBodyChapter(chapterDetail?.images[index] ?? '');
-            },
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: AnimatedContainer(
-              height: _isShowBar
-                  ? 56.0 + MediaQuery.of(context).viewPadding.top
-                  : 0.0,
-              duration: const Duration(milliseconds: 200),
-              child: _buildNavbar(),
+      body: GestureDetector(
+        onDoubleTap: () {
+          setState(() {
+            _isShowBar = !_isShowBar;
+          });
+        },
+        child: Stack(
+          children: [
+            ListView.builder(
+              // controller: _scrollController,
+              physics: AlwaysScrollableScrollPhysics(),
+              // scrollDirection: Axis.vertical,
+              itemCount: chapterDetail?.images.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                // print('${chapterDetail?.images[index]}');
+                return _buildBodyChapter(chapterDetail?.images[index] ?? '');
+              },
             ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: AnimatedContainer(
-              height: _isShowBar ? 56.0 : 56,
-              duration: const Duration(milliseconds: 200),
-              child: _buildBottomBar(chapterDetail),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: AnimatedContainer(
+                height: _isShowBar
+                    ? 56.0 + MediaQuery.of(context).viewPadding.top
+                    : 0.0,
+                duration: const Duration(milliseconds: 200),
+                child: _buildNavbar(),
+              ),
             ),
-          ),
-          !isFirstTime
-              ? Container()
-              : Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  top: 0,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.black.withOpacity(0.8),
-                    child: Stack(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width / 7,
-                              child: DottedVerticalDivider(),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width / 7,
-                              child: DottedVerticalDivider(),
-                            )
-                          ],
-                        ),
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: AnimatedContainer(
+                height: _isShowBar ? 56.0 : 0.0,
+                duration: const Duration(milliseconds: 200),
+                child: _buildBottomBar(chapterDetail),
+              ),
+            ),
+            !isFirstTime
+                ? Container()
+                : Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    top: 0,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.black.withOpacity(0.8),
+                      child: Stack(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const SizedBox(height: 60),
-                              Column(
-                                children: [
-                                  // Icon(
-                                  //   Icons.keyboard_arrow_up_rounded,
-                                  //   color: Colors.white,
-                                  //   size: 70,
-                                  // ),
-                                  // Text(
-                                  //   'Cuộn lên trên để hiện thanh tab',
-                                  //   textAlign: TextAlign.center,
-                                  //   style: TextStyle(
-                                  //     fontWeight: FontWeight.bold,
-                                  //     fontSize: 16,
-                                  //     color: Colors.white,
-                                  //     shadows: [
-                                  //       Shadow(
-                                  //         blurRadius: 10.0,
-                                  //         offset: Offset(1.0, 1.0),
-                                  //       ),
-                                  //     ],
-                                  //   ),
-                                  // ),
-                                ],
+                              Container(
+                                width: MediaQuery.of(context).size.width / 7,
+                                child: DottedVerticalDivider(),
                               ),
-                              const SizedBox(height: 15),
-                              Column(
-                                children: [
-                                  const SizedBox(height: 35),
-                                  Transform.rotate(
-                                    angle: 6,
-                                    child: Image.asset(
-                                      AssetsPathConst.ico_1,
-                                      height: 70,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 15),
-                                  const Text(
-                                    'Chạm 2 lần vào màn hình \n để ẩn/hiện thanh tab',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      shadows: [
-                                        Shadow(
-                                          blurRadius: 10.0,
-                                          offset: Offset(1.0, 1.0),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 35),
-                              Column(
-                                children: [
-                                  Text(
-                                    'Cuộn xuống dưới cùng để\ntự động chuyển chap',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      shadows: [
-                                        Shadow(
-                                          blurRadius: 10.0,
-                                          offset: Offset(1.0, 1.0),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: Colors.white,
-                                    size: 70,
-                                  ),
-                                ],
-                              ),
-                              OutlinedButton(
-                                style: ButtonStyle(
-                                  shape:
-                                      MaterialStateProperty.all<OutlinedBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                  side: MaterialStateProperty.all<BorderSide>(
-                                    const BorderSide(
-                                      color: Colors.white,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.transparent),
-                                  foregroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.white),
-                                ),
-                                onPressed: () async {
-                                  final SharedPreferences prefs =
-                                      await SharedPreferences.getInstance();
-                                  prefs.setBool('checkfirstRead', false);
-                                  setState(() {
-                                    isFirstTime = false;
-                                  });
-                                },
-                                child: const Text(
-                                  'Đã hiểu',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 20,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 40),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 7,
+                                child: DottedVerticalDivider(),
+                              )
                             ],
                           ),
-                        )
-                      ],
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 60),
+                                Column(
+                                  children: [
+                                    const SizedBox(height: 35),
+                                    Transform.rotate(
+                                      angle: 6,
+                                      child: Image.asset(
+                                        AssetsPathConst.ico_1,
+                                        height: 70,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 15),
+                                    const Text(
+                                      'Chạm 2 lần vào màn hình \n để ẩn/hiện thanh tab',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 10.0,
+                                            offset: Offset(1.0, 1.0),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 35),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'Cuộn xuống dưới cùng để\ntự động chuyển chap',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 10.0,
+                                            offset: Offset(1.0, 1.0),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: Colors.white,
+                                      size: 70,
+                                    ),
+                                  ],
+                                ),
+                                OutlinedButton(
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                        OutlinedBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                    side: MaterialStateProperty.all<BorderSide>(
+                                      const BorderSide(
+                                        color: Colors.white,
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.transparent),
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    final SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.setBool('checkfirstRead', false);
+                                    setState(() {
+                                      isFirstTime = false;
+                                    });
+                                  },
+                                  child: const Text(
+                                    'Đã hiểu',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 40),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }

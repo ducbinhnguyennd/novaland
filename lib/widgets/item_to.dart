@@ -81,7 +81,9 @@ class _ItemToMoiState extends State<ItemTo> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => MangaDetailScreen(
-                      mangaId: widget.id, storyName: widget.name),
+                      mangaId: widget.id,
+                      storyName: widget.name,
+                      image: widget.image),
                 ),
               );
             } else {
