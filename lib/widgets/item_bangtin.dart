@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/strings_const.dart';
@@ -8,6 +9,7 @@ import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/bangtin_model.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/routes.dart';
+import 'package:loginapp/screens/report_screen.dart';
 
 // ignore: must_be_immutable
 class ItemBangTin extends StatefulWidget {
@@ -25,7 +27,9 @@ class ItemBangTin extends StatefulWidget {
       this.widgetDelete,
       this.widgetPostCM,
       required this.avatar,
+      required this.role,
       required this.useridbaiviet,
+      required this.rolevip,
       required this.images})
       : super(key: key);
 
@@ -38,7 +42,11 @@ class ItemBangTin extends StatefulWidget {
   final String? idbaiviet;
   final String? useridbaiviet;
   final String? avatar;
+  final String? role;
+  final String? rolevip;
+
   bool isLike = false;
+
   final List<Comment> comments;
   List<String>? images;
   Widget? widgetDelete;
@@ -125,9 +133,22 @@ class _ItemBangTinState extends State<ItemBangTin> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.username ?? '',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      Text(
+                        widget.username ?? '',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: 5),
+                      (widget.role == 'admin' ||
+                              widget.role == 'nhomdich' ||
+                              widget.rolevip == 'vip')
+                          ? Image.asset(
+                              AssetsPathConst.tichxanh,
+                              height: 20,
+                            )
+                          : Container()
+                    ],
                   ),
                   Text(
                     widget.date ?? '2023-11-18T04:38:10.828Z',
@@ -153,7 +174,6 @@ class _ItemBangTinState extends State<ItemBangTin> {
                 child: Center(
                   child: Image.memory(
                     base64Decode(imageBase64),
-                    // width: MediaQuery.of(context).size.height / 2,
                     height: MediaQuery.of(context).size.height / 2,
                     fit: BoxFit.cover,
                   ),
@@ -195,11 +215,24 @@ class _ItemBangTinState extends State<ItemBangTin> {
                   ],
                 ),
                 widget.widgetPostCM ?? Container(),
-                Row(
-                  children: [
-                    Icon(Icons.report, size: 25, color: Colors.grey[350]),
-                    Text(' Report')
-                  ],
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ReportScreen(
+                          baivietID: widget.idbaiviet ?? '',
+                          userID: widget.userid ?? '',
+                        ),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.report, size: 25, color: Colors.grey[350]),
+                      Text(' Report')
+                    ],
+                  ),
                 ),
               ],
             ),

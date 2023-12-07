@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/double_x.dart';
@@ -95,10 +96,18 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      bangtin.username,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          bangtin.username,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(width: 5),
+                                        if (bangtin.rolevip == 'vip')
+                                          Image.asset(AssetsPathConst.tichxanh,
+                                              height: 18)
+                                      ],
                                     ),
                                     Text(
                                       bangtin.date ??
@@ -267,13 +276,24 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                                   ? CrossAxisAlignment.start
                                                   : CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  comment.username ?? '',
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      comment.username ?? '',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16),
+                                                    ),
+                                                    SizedBox(width: 5),
+                                                    if (comment.rolevip ==
+                                                        'vip')
+                                                      Image.asset(
+                                                          AssetsPathConst
+                                                              .tichxanh,
+                                                          height: 18)
+                                                  ],
                                                 ),
                                                 Text(comment.content ?? ''),
                                                 Row(

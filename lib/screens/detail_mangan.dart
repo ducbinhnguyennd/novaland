@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
@@ -20,9 +21,12 @@ import '../model/user_model.dart';
 class MangaDetailScreen extends StatefulWidget {
   final String mangaId;
   final String storyName;
-
+  final String image;
   const MangaDetailScreen(
-      {super.key, required this.mangaId, required this.storyName});
+      {super.key,
+      required this.mangaId,
+      required this.storyName,
+      required this.image});
 
   @override
   _MangaDetailScreenState createState() => _MangaDetailScreenState();
@@ -422,12 +426,24 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                      mangaDetail?.cmts[index].usernamecmt ??
-                                          '',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15)),
+                                  Row(
+                                    children: [
+                                      Text(
+                                          mangaDetail
+                                                  ?.cmts[index].usernamecmt ??
+                                              '',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15)),
+                                      SizedBox(width: 5),
+                                      if (mangaDetail?.cmts[index].rolevip ==
+                                          'vip')
+                                        Image.asset(
+                                          AssetsPathConst.tichxanh,
+                                          height: 18,
+                                        )
+                                    ],
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 3.0),
@@ -445,12 +461,20 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                             isCurrentUserComment
                                 ? IconButton(
                                     icon: Icon(Icons.delete),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       deleteComment(
                                           mangaDetail?.cmts[index].idcmt,
                                           widget.mangaId,
                                           mangaDetail?.cmts[index].userIdcmt);
+                                      await Future.delayed(
+                                          Duration(seconds: 2));
+
                                       _loadUser();
+                                      Fluttertoast.showToast(
+                                        msg: "Xóa bình luận thành công",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                      );
                                     },
                                   )
                                 : Container()
@@ -487,20 +511,27 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                     ),
                   ),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
                       String comment = commentController.text;
                       if (comment.isNotEmpty && comment.length >= 10) {
-                        Fluttertoast.showToast(
-                          msg: "Đăng bình luận thành công",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                        );
                         CommentService.postComment(
                             currentUser?.user[0].id ?? '',
                             widget.mangaId,
                             comment);
                         commentController.clear();
                         _loadUser();
+                        Fluttertoast.showToast(
+                          msg: "Bình luận đang được tải lên...",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                        );
+                        await Future.delayed(Duration(seconds: 2));
+
+                        Fluttertoast.showToast(
+                          msg: "Đăng bình luận thành công",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                        );
                       } else {
                         Fluttertoast.showToast(
                           msg: "Nhập ít nhất 10 kí tự",
@@ -524,19 +555,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
   }
 
   void deleteComment(String? commentId, String? mangaId, String? userId) {
-    XoaComment.xoaComment(commentId!, mangaId!, userId!).then((response) {
-      Fluttertoast.showToast(
-        msg: "Xóa bình luận thành công",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-    }).catchError((error) {
-      Fluttertoast.showToast(
-        msg: "Xóa bình luận thất bại",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-      );
-    });
+    XoaComment.xoaComment(commentId!, mangaId!, userId!);
   }
 
   _loadData() {
@@ -572,7 +591,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
               Stack(
                 children: [
                   Image.network(
-                    mangaDetail?.image ?? '',
+                    widget.image,
                     height: 230,
                     width: MediaQuery.of(context).size.width,
                     fit: BoxFit.cover,
@@ -607,7 +626,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                         Expanded(
                           flex: 4,
                           child: CachedNetworkImage(
-                            imageUrl: mangaDetail?.image ?? '',
+                            imageUrl: widget.image,
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),

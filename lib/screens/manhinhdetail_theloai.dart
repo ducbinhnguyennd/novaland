@@ -30,7 +30,10 @@ class MangaListScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => MangaDetailScreen(
-                          mangaId: manga.id!, storyName: manga.mangaName!),
+                        mangaId: manga.id!,
+                        storyName: manga.mangaName!,
+                        image: manga.image!,
+                      ),
                     ),
                   );
                 },
@@ -74,9 +77,12 @@ class MangaListScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(manga.mangaName!,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text(
+                                  manga.mangaName!,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                                 Text('Thể loại: ${manga.category}'),
                                 Text(
                                     'Chapter ${manga.totalChapters.toString()}'),

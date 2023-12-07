@@ -53,7 +53,8 @@ class MangaDetailModel {
         chapters: chapterList,
         cmts: cmtList,
         isLiked: json['isLiked'],
-        totalcomment: json['totalcomment'], linktruyen: json['linktruyen'],
+        totalcomment: json['totalcomment'],
+        linktruyen: json['linktruyen'],
         nhomdich: json['nhomdich'],
         nhomdichId: json['nhomdichId']);
   }
@@ -86,13 +87,16 @@ class Comments {
   final String userIdcmt;
   final String date;
   final String avatar;
+  final String rolevip;
 
   Comments(
       {required this.idcmt,
       required this.usernamecmt,
       required this.noidung,
       required this.userIdcmt,
-      required this.date, required this.avatar});
+      required this.rolevip,
+      required this.date,
+      required this.avatar});
 
   factory Comments.fromJson(Map<String, dynamic> json) {
     return Comments(
@@ -101,6 +105,7 @@ class Comments {
         noidung: json['cmt'],
         userIdcmt: json['userID'],
         date: json['date'],
+        rolevip: json['rolevip'],
         avatar: json['avatar']);
   }
 }

@@ -6,6 +6,7 @@ import 'package:loginapp/model/category_model.dart';
 import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/detailtrangchu_model.dart';
 import 'package:loginapp/model/lichsuthanhtoan_model.dart';
+import 'package:loginapp/model/nhomdichtheodoi_model.dart';
 import 'package:loginapp/model/thongbao_model.dart';
 import 'package:loginapp/model/topUser_model.dart';
 import 'package:loginapp/model/trangchu_model.dart';
@@ -316,6 +317,22 @@ class ApiSCommentBaiDang {
   }
 }
 
+// post report
+class ApiReportBaiDang {
+  Future<void> postReport(
+      String baivietId, String userId, String reason) async {
+    try {
+      final response = await dio.post(
+        '$urlapi/report/$baivietId/$userId',
+        data: {'reason': reason},
+      );
+      print('Response from postComment API: $response');
+    } catch (error) {
+      print('Error in postComment API: $error');
+    }
+  }
+}
+
 // xoa cmt bài viết
 class XoaCommentBaiDang {
   static Future<void> xoaComment(
@@ -474,13 +491,12 @@ class ApiDetaiNhomDich {
 }
 
 class ApiDichTheoDoi {
-  Future<List<UserModel>> fetchData(String userId) async {
+  static Future<List<DichTheoDoiModel>> fetchData(String userId) async {
     try {
-      final response =
-          await dio.get('https://du-an-2023.vercel.app/getfollow/$userId');
+      final response = await dio.get('$urlapi/getfollow/$userId');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
-        return data.map((json) => UserModel.fromJson(json)).toList();
+        return data.map((json) => DichTheoDoiModel.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load data');
       }

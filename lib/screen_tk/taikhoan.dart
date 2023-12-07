@@ -30,6 +30,8 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
   bool isSwitchedModeRight = Globals.isRight;
   final GlobalKey _secondUserMissionKey = GlobalKey();
   late Future<UserModel> futureUserData;
+  bool isSwitchedAutoNoiChap = Globals.isAutoNoiChap;
+
   final ApiUser apiService = ApiUser();
   _loadUser() {
     UserServices us = UserServices();
@@ -173,12 +175,22 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                                   ),
                                 ),
                                 SizedBox(height: 5),
-                                Text(
-                                  userData.username,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.black),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      userData.username,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                          color: Colors.black),
+                                    ),
+                                    if (userData.rolevip == 'vip')
+                                      Image.asset(
+                                        AssetsPathConst.tichxanh,
+                                        height: 20,
+                                      ),
+                                  ],
                                 ),
                                 Text(
                                   'Xu của bạn: ${userData.coin.toString()}',
@@ -447,27 +459,31 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
               ),
             ),
             InkWell(
-              onTap: () {
-                setState(() {
-                  noichap = !noichap;
-                });
-              },
               child: ListTile(
                 title: Transform.translate(
                   offset: Offset(-20, 0),
                   child: Text('Tự động nối chapter'),
                 ),
-                leading: ImageIcon(AssetImage(AssetsPathConst.ico_11),
-                    size: 22, color: ColorConst.colorPrimary30),
+                leading: Image.asset(
+                  AssetsPathConst.ico_11,
+                  height: 22,
+                ),
                 trailing: Switch.adaptive(
-                  onChanged: (value) {
-                    setState(() {
-                      noichap = !noichap;
-                    });
+                  onChanged: (v) {
+                    if (v) {
+                      setState(() {
+                        isSwitchedAutoNoiChap = true;
+                        Globals.isAutoNoiChap = true;
+                      });
+                    } else {
+                      setState(() {
+                        isSwitchedAutoNoiChap = false;
+                        Globals.isAutoNoiChap = false;
+                      });
+                    }
                   },
-                  value: noichap,
-                  activeColor: ColorConst.colorPrimary30,
-                  // trackColor: Colors.grey,
+                  value: isSwitchedAutoNoiChap,
+                  activeColor: ColorConst.colorPrimary50,
                 ),
               ),
             ),

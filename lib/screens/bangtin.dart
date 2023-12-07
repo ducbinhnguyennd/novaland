@@ -212,6 +212,8 @@ class _BangTinScreenState extends State<BangTinScreen>
                           ),
                           images: posts[index].images ?? [],
                           avatar: posts[index].avatar,
+                          role: posts[index].role,
+                          rolevip: posts[index].rolevip,
                         );
                       },
                     );
