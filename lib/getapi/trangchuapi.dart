@@ -449,6 +449,7 @@ class ApiCmtBaiViet {
 class ApiDetailBaiViet {
   Future<Bangtin> fetchDetailBaiviet(String baivietID, String userId) async {
     final response = await dio.get('$urlapi/detailbaiviet/$baivietID/$userId');
+    print('detail bai viet $urlapi/detailbaiviet/$baivietID/$userId');
     return Bangtin.fromJson(response.data);
   }
 }

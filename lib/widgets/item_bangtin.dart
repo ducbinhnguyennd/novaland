@@ -145,7 +145,7 @@ class _ItemBangTinState extends State<ItemBangTin> {
                               widget.rolevip == 'vip')
                           ? Image.asset(
                               AssetsPathConst.tichxanh,
-                              height: 20,
+                              height: 18,
                             )
                           : Container()
                     ],

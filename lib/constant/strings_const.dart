@@ -1,4 +1,3 @@
-
 class StringConst {
   static const patternNumber = '99';
   static const coin = 'xu';
@@ -84,7 +83,6 @@ class StringConst {
   static const String switchModeDarkTheme = 'Chế độ nền tối';
   static const String downloadAgain = 'Không có dữ liệu ☹. Vui lòng tải lại.';
 
-
   static const String registerAccount = 'Đăng ký tài khoản';
   static const String register = 'Đăng ký';
   static const String memberFeature = 'Chức năng thành viên';
@@ -124,7 +122,7 @@ class StringConst {
   static const String nobodyReviewMessage =
       'Truyện chưa có ai Đánh giá, bạn hãy mở bát ngay hôm nay';
   static const String suggestUsersDoMission =
-      'Nếu bạn không đủ xu, vui lòng click vào nút làm nhiệm vụ ở dưới, làm nhiệm vụ để nhận xu đọc chap này miễn phí';
+      'Nếu bạn không đủ xu, vui lòng click vào phần tài khoản của bạn để nạp xu';
   static const String latestCommentsTitle = 'Bình luận nổi bật';
   static const String regularOfUserName =
       "Tên đăng nhập phải là email ví dụ : abcd@gmail.com";
@@ -186,8 +184,6 @@ class StringConst {
   static const returnCoinsTitle = 'Hoàn xu khi mua: ';
   static const returnCoinsWhenBuyOne = '/1 sản phẩm';
 
-
-  
   static String poly0 = 'ĐIỀU KHOẢN VÀ ĐIỀU KIỆN SỬ DỤNG DỊCH VỤ';
   static String poly1 =
       'Các điều khoản và điều kiện sử dụng dịch vụ hiển thị dưới đây (sau đây gọi là "Điều khoản và Điều kiện", hoặc “Điều Khoản Sử Dụng”) quy định các điều khoản và điều kiện được đồng ý bởi và giữa Truyện 5 Sao (sau đây gọi “Truyện 5 Sao”, hoặc “chúng tôi”) và người sử dụng (sau đây gọi tắt là “người dùng”, hoặc “bạn”) về việc, hoặc có liên quan tới việc cung cấp, sử dụng dịch vụ giải trí và các dịch vụ khác cung cấp bởi Ứng dụng (sau đây gọi tắt là “Dịch vụ”). Bằng cách truy cập hoặc sử dụng ứng dụng này, bạn đã xác nhận rằng bạn đã đọc và hiểu các điều khoản được ghi trong chính sách này. Nếu bạn không đồng ý với chính sách, vui lòng không nên truy cập và sử dụng Động Ngôn Tình';

@@ -139,7 +139,7 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
           SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(18.0, 0, 18.0, 0),
             child: InkWell(
               onTap: () {
                 _postReport();
@@ -153,7 +153,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 child: Center(
                   child: Text(
                     'Gửi',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
               ),

@@ -9,6 +9,7 @@ import 'package:loginapp/constant/strings_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/model/bangtin_model.dart';
 import 'package:loginapp/routes.dart';
+import 'package:loginapp/screens/report_screen.dart';
 
 class DetailBaiViet extends StatefulWidget {
   const DetailBaiViet(
@@ -55,10 +56,9 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                       color: ColorConst.colorPrimary120,
                     ));
                   } else if (snapshot.hasError) {
-                    return Text("Error: ${snapshot.error}");
+                    return Center(child: Text("Bài viết này không tồn tại"));
                   } else {
                     Bangtin bangtin = snapshot.data as Bangtin;
-
                     return ListView(
                       padding: EdgeInsets.all(10),
                       children: [
@@ -137,6 +137,7 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                   width: double.infinity,
                                   fit: BoxFit.cover,
                                 ),
+                            SizedBox(height: 5),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -192,12 +193,26 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                     ],
                                   ),
                                   // widgetPostCM ?? Container(),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.report,
-                                          size: 25, color: Colors.grey[350]),
-                                      Text(' Report')
-                                    ],
+
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ReportScreen(
+                                            baivietID: widget.baivietID,
+                                            userID: widget.userID,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.report,
+                                            size: 25, color: Colors.grey[350]),
+                                        Text(' Report')
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -239,21 +254,37 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                           },
                                         ),
                                       if (!isMyComment(comment.userId ?? ''))
-                                        SizedBox(
-                                          width: DoubleX.kSizeLarge_1X,
-                                          height: DoubleX.kSizeLarge_1X,
-                                          child: CircleAvatar(
-                                            backgroundColor:
-                                                ColorConst.colorPrimary,
-                                            child: Text(
-                                              comment.username
-                                                  .toString()
-                                                  .substring(0, 1),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
+                                        comment.avatar == ''
+                                            ? SizedBox(
+                                                width: DoubleX.kSizeLarge_1X,
+                                                height: DoubleX.kSizeLarge_1X,
+                                                child: CircleAvatar(
+                                                  backgroundColor:
+                                                      ColorConst.colorPrimary,
+                                                  child: Text(
+                                                    comment.username
+                                                        .toString()
+                                                        .substring(0, 1),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(
+                                                width: DoubleX.kSizeLarge_1X,
+                                                height: DoubleX.kSizeLarge_1X,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                    image: MemoryImage(
+                                                        base64Decode(
+                                                            comment.avatar ??
+                                                                '')),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
                                       Expanded(
                                         child: Padding(
                                           padding:
@@ -313,21 +344,37 @@ class _DetailBaiVietState extends State<DetailBaiViet> {
                                         ),
                                       ),
                                       if (isMyComment(comment.userId ?? ''))
-                                        SizedBox(
-                                          width: DoubleX.kSizeLarge_1X,
-                                          height: DoubleX.kSizeLarge_1X,
-                                          child: CircleAvatar(
-                                            backgroundColor:
-                                                ColorConst.colorPrimary,
-                                            child: Text(
-                                              comment.username
-                                                  .toString()
-                                                  .substring(0, 1),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
+                                        comment.avatar == ''
+                                            ? SizedBox(
+                                                width: DoubleX.kSizeLarge_1X,
+                                                height: DoubleX.kSizeLarge_1X,
+                                                child: CircleAvatar(
+                                                  backgroundColor:
+                                                      ColorConst.colorPrimary,
+                                                  child: Text(
+                                                    comment.username
+                                                        .toString()
+                                                        .substring(0, 1),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(
+                                                width: DoubleX.kSizeLarge_1X,
+                                                height: DoubleX.kSizeLarge_1X,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                    image: MemoryImage(
+                                                        base64Decode(
+                                                            comment.avatar ??
+                                                                '')),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
                                     ],
                                   ),
                                 )

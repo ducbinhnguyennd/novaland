@@ -17,6 +17,7 @@ import 'package:loginapp/model/detail_chapter.dart';
 import 'package:loginapp/model/user_model.dart';
 import 'package:loginapp/routes.dart';
 import 'package:loginapp/screens/Driver.dart';
+import 'package:loginapp/screens/fetch_more_incaditor.dart';
 import 'package:loginapp/user_Service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -113,66 +114,64 @@ class _DetailChapterState extends State<DetailChapter> {
     final bool isFirstChapter = chap?.prevChap == null;
     final bool isNextChapter = chap?.nextChap == null;
 
-    return Stack(
-      alignment: Alignment.bottomCenter,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          color: ColorConst.colorBgNovelBlack.withOpacity(0.7),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: ColorConst.colorPrimary50.withOpacity(0.5)),
+            width: 60,
+            height: 60,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                child: Icon(
+                  Icons.arrow_left,
+                  color: isFirstChapter
+                      ? ColorConst.colorWhite.withOpacity(0.5)
+                      : Colors.black,
+                  size: 20,
+                ),
+                onTap: () {
+                  isFirstChapter
+                      ? _showToast('Bạn đang đọc chap đầu tiên')
+                      : _goToNewChap(chapterDetail?.prevChap?.id ?? '-1',
+                          currentUser?.user[0].id ?? '');
+                  // go to the previous chapter,
+                },
+              ),
+            ),
+          ),
         ),
-        SizedBox(
-          height: 56,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: Container(
-                  height: double.infinity,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      child: Icon(
-                        Icons.arrow_left,
-                        color: isFirstChapter
-                            ? ColorConst.colorWhite.withOpacity(0.5)
-                            : Colors.black,
-                        size: 20,
-                      ),
-                      onTap: () {
-                        isFirstChapter
-                            ? _showToast('Bạn đang đọc chap đầu tiên')
-                            : _goToNewChap(chapterDetail?.prevChap?.id ?? '-1',
-                                currentUser?.user[0].id ?? '');
-                        // go to the previous chapter,
-                      },
-                    ),
-                  ),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: ColorConst.colorPrimary50.withOpacity(0.5)),
+            width: 60,
+            height: 60,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                child: Icon(
+                  Icons.arrow_right,
+                  color: isNextChapter
+                      ? Colors.white.withOpacity(0.2)
+                      : Colors.black87,
+                  size: 20,
                 ),
+                onTap: () {
+                  isNextChapter
+                      ? _showToast('Bạn đang đọc chap mới nhất')
+                      : _goToNewChap(chapterDetail?.nextChap?.id ?? '-1',
+                          currentUser?.user[0].id ?? '');
+                },
               ),
-              Expanded(
-                child: Container(
-                  // width: 60,
-                  height: double.infinity,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      child: Icon(
-                        Icons.arrow_right,
-                        color: isNextChapter
-                            ? Colors.white.withOpacity(0.2)
-                            : Colors.black87,
-                        size: 20,
-                      ),
-                      onTap: () {
-                        isNextChapter
-                            ? _showToast('Bạn đang đọc chap mới nhất')
-                            : _goToNewChap(chapterDetail?.nextChap?.id ?? '-1',
-                                currentUser?.user[0].id ?? '');
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ],
@@ -204,9 +203,9 @@ class _DetailChapterState extends State<DetailChapter> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.black.withOpacity(0.8),
-              Colors.black.withOpacity(0.8),
-              Colors.black.withOpacity(0.5),
+              ColorConst.colorPrimary50.withOpacity(0.8),
+              ColorConst.colorPrimary50.withOpacity(0.7),
+              ColorConst.colorPrimary50.withOpacity(0.5),
               Colors.transparent,
               Colors.transparent,
             ],
@@ -430,60 +429,87 @@ class _DetailChapterState extends State<DetailChapter> {
               onTap: () {
                 setState(() {});
               },
-              child: SingleChildScrollView(
+              child: ListView(
+                shrinkWrap: true,
                 controller: _scrollController,
                 padding: const EdgeInsets.only(bottom: 0, top: 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: List.generate(
-                    imageUrls.length,
-                    (index) => Stack(
-                      children: [
-                        // CachedNetworkImage as the background
-                        CachedNetworkImage(
-                          fit: BoxFit.fitWidth,
-                          width: MediaQuery.of(context).size.width,
-                          imageUrl: imageUrls[index],
-                          placeholder: (context, url) {
-                            return Center(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: List.generate(
+                      imageUrls.length,
+                      (index) => Stack(
+                        children: [
+                          // CachedNetworkImage as the background
+                          CachedNetworkImage(
+                            fit: BoxFit.fitWidth,
+                            width: MediaQuery.of(context).size.width,
+                            imageUrl: imageUrls[index],
+                            placeholder: (context, url) {
+                              return Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: index < 5
+                                        ? 120
+                                        : MediaQuery.of(context).size.height /
+                                            4,
+                                  ),
+                                  child: Image.asset(
+                                    AssetsPathConst.gifloading,
+                                    width: 50,
+                                  ),
+                                ),
+                              );
+                            },
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          ),
+                          // Watermark as an overlay
+                          Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.centerRight,
                               child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: index < 5
-                                      ? 120
-                                      : MediaQuery.of(context).size.height / 4,
-                                ),
-                                child: Image.asset(
-                                  AssetsPathConst.gifloading,
-                                  width: 50,
-                                ),
-                              ),
-                            );
-                          },
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                        ),
-                        // Watermark as an overlay
-                        Positioned.fill(
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'MangaLand',
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.5),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'MangaLand',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.5),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                  Globals.isAutoNoiChap == false
+                      ? Container()
+                      : Transform.translate(
+                          offset: const Offset(0.0, 0),
+                          child: Visibility(
+                            visible: true,
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Kéo lên để chuyển chap mới',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 16),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                ],
               ),
             )
           : Center(
@@ -514,16 +540,25 @@ class _DetailChapterState extends State<DetailChapter> {
         },
         child: Stack(
           children: [
-            ListView.builder(
-              // controller: _scrollController,
-              physics: AlwaysScrollableScrollPhysics(),
-              // scrollDirection: Axis.vertical,
-              itemCount: chapterDetail?.images.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                // print('${chapterDetail?.images[index]}');
-                return _buildBodyChapter(chapterDetail?.images[index] ?? '');
+            FetchMoreIndicator(
+              onAction: () {
+                Globals.isAutoNoiChap == false
+                    ? null
+                    : _goToNewChap(chapterDetail?.nextChap?.id ?? '-1',
+                        currentUser?.user[0].id ?? '');
               },
+              color: ColorConst.colorBackgroundStory,
+              child: ListView.builder(
+                // controller: _scrollController,
+                // physics: AlwaysScrollableScrollPhysics(),
+                // scrollDirection: Axis.vertical,
+                itemCount: chapterDetail?.images.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  // print('${chapterDetail?.images[index]}');
+                  return _buildBodyChapter(chapterDetail?.images[index] ?? '');
+                },
+              ),
             ),
             Positioned(
               top: 0,
@@ -531,22 +566,34 @@ class _DetailChapterState extends State<DetailChapter> {
               right: 0,
               child: AnimatedContainer(
                 height: _isShowBar
-                    ? 56.0 + MediaQuery.of(context).viewPadding.top
+                    ? 76.0 + MediaQuery.of(context).viewPadding.top
                     : 0.0,
                 duration: const Duration(milliseconds: 200),
                 child: _buildNavbar(),
               ),
             ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AnimatedContainer(
-                height: _isShowBar ? 56.0 : 0.0,
-                duration: const Duration(milliseconds: 200),
-                child: _buildBottomBar(chapterDetail),
-              ),
-            ),
+            Globals.isRight == false
+                ? Positioned(
+                    left: 5,
+                    bottom: 275,
+                    top: 270,
+                    child: AnimatedContainer(
+                      width: _isShowBar ? 56.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: _buildBottomBar(chapterDetail),
+                    ),
+                  )
+                : Positioned(
+                    // left: 0,
+                    right: 5,
+                    bottom: 275,
+                    top: 270,
+                    child: AnimatedContainer(
+                      width: _isShowBar ? 56.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: _buildBottomBar(chapterDetail),
+                    ),
+                  ),
             !isFirstTime
                 ? Container()
                 : Positioned(
