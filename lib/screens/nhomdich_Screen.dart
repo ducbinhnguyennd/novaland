@@ -12,6 +12,7 @@ import 'package:loginapp/screens/detail_mangan.dart';
 import 'package:loginapp/user_Service.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
+// ignore: must_be_immutable
 class NhomDichScreen extends StatefulWidget {
   String nhomdichID;
   String userID;
@@ -363,7 +364,7 @@ class _DataScreenState extends State<NhomDichScreen> {
                                         children: [
                                           Text(manga?.mangaName ?? ''),
                                           SizedBox(height: 10),
-                                          Text('Author: ${manga?.author}'),
+                                          Text('Tác giả: ${manga?.author}'),
                                         ],
                                       ),
                                     ))

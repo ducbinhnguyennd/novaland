@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class UserResponse {
   bool success;
   Data data;
@@ -27,7 +25,8 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) {
     var userList = json['user'] as List;
-    List<UserTSH> users = userList.map((user) => UserTSH.fromJson(user)).toList();
+    List<UserTSH> users =
+        userList.map((user) => UserTSH.fromJson(user)).toList();
     return Data(user: users);
   }
 }
@@ -40,27 +39,21 @@ class UserTSH {
   int coin;
   String avatar;
 
-
-  UserTSH({
-    required this.id,
-    required this.username,
-    required this.password,
-    required this.role,
-    required this.coin,
-    required this.avatar
-  });
+  UserTSH(
+      {required this.id,
+      required this.username,
+      required this.password,
+      required this.role,
+      required this.coin,
+      required this.avatar});
 
   factory UserTSH.fromJson(Map<String, dynamic> json) {
     return UserTSH(
-      id: json['_id'],
-      username: json['username'],
-      password: json['password'],
-      role: json['role'],
-      coin: json['coin'],
-      avatar: json['avatar']
-    );
+        id: json['_id'],
+        username: json['username'],
+        password: json['password'],
+        role: json['role'],
+        coin: json['coin'],
+        avatar: json['avatar']);
   }
 }
-
-
-

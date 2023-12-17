@@ -2,13 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:loginapp/login_screen.dart';
-import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/routes.dart';
-import 'package:loginapp/screen_tk/taikhoan.dart';
 import 'package:loginapp/screens/splash_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
@@ -24,7 +19,7 @@ class MyApp extends StatelessWidget {
     int backButtonCount = 0;
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'MangaLand',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -38,7 +33,6 @@ class MyApp extends StatelessWidget {
             if (backButtonCount == 2) {
               SystemNavigator.pop();
             } else {
-              print('thoatnhe');
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text("Nhấn Back lần nữa để thoát"),
@@ -49,7 +43,6 @@ class MyApp extends StatelessWidget {
             return false;
           },
           child: SplashScreen(),
-      
         ),
       ),
     );

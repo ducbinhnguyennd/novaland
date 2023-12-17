@@ -12,7 +12,7 @@ import 'package:loginapp/screen_tk/doimatkhau.dart';
 import 'package:loginapp/screen_tk/huongdan_screen.dart';
 import 'package:loginapp/screen_tk/lichsugiaodich.dart';
 import 'package:loginapp/screen_tk/lienhe.dart';
-import 'package:loginapp/screen_tk/suathongtin.dart';
+import 'package:loginapp/screen_tk/thayavatar.dart';
 import 'package:loginapp/screen_tk/themtienthach.dart';
 import 'package:loginapp/user_Service.dart';
 
@@ -375,7 +375,11 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
             visible: true,
             child: InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed(ThemTienThach.routeName);
+                Navigator.of(context)
+                    .pushNamed(ThemTienThach.routeName)
+                    .then((value) {
+                  _loadUser();
+                });
               },
               child: ListTile(
                 title: Transform.translate(

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
+import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/constant/double_x.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/login_screen.dart';
@@ -155,10 +156,10 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
           child: InkWell(
             onTap: (chapterDocTiepId == null || chapterDocTiepId!.length <= 2)
                 ? () {
-                    Container();
+                    CommonService.showToast(
+                        'Bạn chưa đọc chap đầu tiên', context);
                   }
                 : () {
-                    print('day la gi $viporfree');
                     {
                       Navigator.push(
                         context,
@@ -184,9 +185,9 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
                   },
             child: Container(
               margin: EdgeInsets.only(left: 1),
-              color: chapterTitleDocTiep != 'Đọc tiếp'
-                  ? ColorConst.colorPrimary
-                  : ColorConst.colorPrimary.withOpacity(0.6),
+              color: chapterDocTiepId == null
+                  ? ColorConst.colorPrimary.withOpacity(0.6)
+                  : ColorConst.colorPrimary50,
               height: 70,
               child: const Center(
                 child: Text(
@@ -590,23 +591,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
             children: [
               Stack(
                 children: [
-                  Image.network(
-                    widget.image,
+                  CachedNetworkImage(
+                    imageUrl: widget.image,
                     height: 230,
                     width: MediaQuery.of(context).size.width,
                     fit: BoxFit.cover,
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return CircularProgressIndicator();
-                      }
-                    },
-                    errorBuilder: (BuildContext context, Object error,
-                        StackTrace? stackTrace) {
-                      return Icon(Icons.error);
-                    },
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                   Positioned.fill(
                     child: BackdropFilter(

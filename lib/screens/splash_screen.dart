@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
-import 'package:loginapp/login_screen.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/screens/introsignin.dart';
 import 'package:shared_preferences/shared_preferences.dart';

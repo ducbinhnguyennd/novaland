@@ -28,7 +28,6 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
   ApiPostBaiDang apiService = ApiPostBaiDang();
   XFile? _imageFile;
   final _picker = ImagePicker();
-  final Dio _dio = Dio();
   Data? currentUser;
   bool isAvatarChanged = false;
 
@@ -139,7 +138,7 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
                             fontSize: 16.0);
                       };
                   });
-                  
+
                   Fluttertoast.showToast(
                       msg: 'Đăng bài viết thành công',
                       toastLength: Toast.LENGTH_LONG,

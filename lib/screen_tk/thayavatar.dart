@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -71,8 +70,7 @@ class _SuaThongTinState extends State<SuaThongTin> {
                         width: DoubleX.kLayoutWidthHuge,
                         height: DoubleX.kLayoutHeightHuge,
                         child: ClipOval(
-                          child: Image.asset(AssetsPathConst.logo)
-                              ,
+                          child: Image.asset(AssetsPathConst.logo),
                         ),
                       ),
                     ),

@@ -1,21 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/register_screen.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:loginapp/screen_tk/taikhoan.dart';
+import 'package:loginapp/screens/quenmk_screen.dart';
 import 'package:loginapp/user_Service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   LoginScreen({super.key});
 
   static const routeName = 'login_screen';
@@ -31,23 +26,14 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController userEditingController = TextEditingController();
   TextEditingController passwEditingController = TextEditingController();
   FlutterSecureStorage secureStorage = const FlutterSecureStorage();
-  final _storage = const FlutterSecureStorage();
-Login login = Login();
-
-  @override
-  void initState() {
- 
-  }
-
+  Login login = Login();
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return GestureDetector(
       child: Scaffold(
-         
           body: Stack(
-            children: [
-              Image.asset(AssetsPathConst.bgintro),
+        children: [
+          Image.asset(AssetsPathConst.bgintro),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -56,7 +42,7 @@ Login login = Login();
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [ Colors.white,ColorConst.colorPrimary],
+                    colors: [Colors.white, ColorConst.colorPrimary],
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -68,82 +54,114 @@ Login login = Login();
                   ]),
             ),
           ),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Chào mừng bạn đến với',style: TextStyle(fontSize: 26,fontWeight: FontWeight.w500)),
-                    Text('Novaland',style: TextStyle(fontSize: 23,fontWeight: FontWeight.w500)),
-
-                  
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB( 20, 120, 20, 20),
-                      child: textField(),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () async {
-
-                            var response = await login.signIn(_username, _password);
-          
-                            if (response?.data['success'] == true) {
-                              UserServices us = UserServices();
-                              await us.saveinfologin(jsonEncode(response?.data['data']));
-                              // final storage = new FlutterSecureStorage();
-                             
-                              print('${response?.data['data']}');
-                              Navigator.pushReplacement<void, void>(
-                                context,
-                                MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      const MainScreen(),
-                                ),
-                              );
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text("Sai tài khoản hoặc mật khẩu"),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text("OK"),
-                                        ),
-                                      ],
-                                    );
-                                  });
-                            }
-                          
-                          },
-                          child: Container(width: MediaQuery.of(context).size.width/3,decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),color: ColorConst.colorPrimary50), child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Align(alignment: Alignment.center, child: Text('Đăng nhập',style: TextStyle(color: Colors.white,fontSize: 18),)),
-                          ),)),
-                        SizedBox(
-                          width: 40,
-                        ),
-                        InkWell(
-                          onTap: () async {
-                  
-                        Navigator.pushNamed(context, RegisterScreen.routeName);
-                           
-                          
-                          },
-                          child: Container(width: MediaQuery.of(context).size.width/3, decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),color: ColorConst.colorPrimary50), child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Align(alignment: Alignment.center, child: Text('Đăng ký',style: TextStyle(color: Colors.white,fontSize: 18),)),
-                          ),)),
-                      ],
-                    ),
-                  ],
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Chào mừng bạn đến với',
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w500)),
+              Text('MangaLand',
+                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 120, 20, 20),
+                child: textField(),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => QuenMatKhauScreen()),
+                    );
+                  },
+                  child: Text('Quên mật khẩu?'),
                 ),
-              
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                      onTap: () async {
+                        var response = await login.signIn(_username, _password);
+
+                        if (response?.data['success'] == true) {
+                          UserServices us = UserServices();
+                          await us.saveinfologin(
+                              jsonEncode(response?.data['data']));
+                          // final storage = new FlutterSecureStorage();
+
+                          print('${response?.data['data']}');
+                          Navigator.pushReplacement<void, void>(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) =>
+                                  const MainScreen(),
+                            ),
+                          );
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Sai tài khoản hoặc mật khẩu"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text("OK"),
+                                    ),
+                                  ],
+                                );
+                              });
+                        }
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 3,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: ColorConst.colorPrimary50),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Đăng nhập',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              )),
+                        ),
+                      )),
+                  SizedBox(
+                    width: 40,
+                  ),
+                  InkWell(
+                      onTap: () async {
+                        Navigator.pushNamed(context, RegisterScreen.routeName);
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 3,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: ColorConst.colorPrimary50),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Đăng ký',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              )),
+                        ),
+                      )),
+                ],
+              ),
             ],
-          )),
+          ),
+        ],
+      )),
     );
   }
 

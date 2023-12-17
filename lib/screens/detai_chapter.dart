@@ -286,7 +286,6 @@ class _DetailChapterState extends State<DetailChapter> {
 
   void bychapterlock() async {
     final apiUrl =
-        // 'https://mangaland.site/purchaseChapter/${currentUser!.user[0].id}/${widget.chapterId}';
         'https://du-an-2023.vercel.app/purchaseChapter/${currentUser!.user[0].id}/${chapterDetail?.id}';
 
     try {
@@ -495,15 +494,22 @@ class _DetailChapterState extends State<DetailChapter> {
                             child: Column(
                               children: [
                                 const SizedBox(
-                                  height: 5,
+                                  height: 35,
+                                ),
+                                Icon(
+                                  Icons.arrow_upward_sharp,
+                                  size: 25,
                                 ),
                                 Text(
                                   'Kéo lên để chuyển chap mới',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 16),
+                                ),
+                                const SizedBox(
+                                  height: 35,
                                 ),
                               ],
                             ),
@@ -658,7 +664,7 @@ class _DetailChapterState extends State<DetailChapter> {
                                 Column(
                                   children: [
                                     Text(
-                                      'Cuộn xuống dưới cùng để\ntự động chuyển chap',
+                                      'Cuộn xuống dưới cùng để\ntự động chuyển chap \n (khi bật nối chap tự động ở tài khoản)',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,

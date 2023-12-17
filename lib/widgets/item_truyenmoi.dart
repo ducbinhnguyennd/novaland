@@ -72,8 +72,6 @@ class _ItemTruyenMoiState extends State<ItemTruyenMoi> {
 
   @override
   Widget build(BuildContext context) {
-    final widthS = MediaQuery.of(context).size.width;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SizedBox(

@@ -15,10 +15,9 @@ class ThemTienThach extends StatefulWidget {
 
 class _ThemTienThachState extends State<ThemTienThach> {
   Data? currentUser;
-   _loadUser() {
+  _loadUser() {
     UserServices us = UserServices();
     us.getInfoLogin().then((value) {
-    
       if (value != "") {
         setState(() {
           currentUser = Data.fromJson(jsonDecode(value));
@@ -28,15 +27,13 @@ class _ThemTienThachState extends State<ThemTienThach> {
           currentUser = null;
         });
       }
-    }, onError: (error) {
-     
-    }).then((value) async{
-       
-          // _sendPaymentData()
-      
+    }, onError: (error) {}).then((value) async {
+      // _sendPaymentData()
     });
   }
- Future<void> _sendPaymentData(String userId, double amount, String currency) async {
+
+  Future<void> _sendPaymentData(
+      String userId, double amount, String currency) async {
     print('day id khac ${userId}');
     try {
       await ApiThanhToan.sendPaymentData(userId, amount, currency);
@@ -45,22 +42,24 @@ class _ThemTienThachState extends State<ThemTienThach> {
     }
   }
 
-    
   @override
   void initState() {
     super.initState();
-  
-    _loadUser();
 
+    _loadUser();
   }
+
   final List<PaymentItem> paymentItems = [
-    PaymentItem(amount: 2.0, currency: 'USD', quy: '2.00 USD quy đổi ra được 20 xu'),
-    PaymentItem(amount: 10.0, currency: 'USD', quy: '10.00 USD quy đổi ra được 100 xu'),
-    PaymentItem(amount: 20.0, currency: 'USD', quy: '20.00 USD quy đổi ra được 200 xu'),
-    PaymentItem(amount: 30.0, currency: 'USD', quy: '30.00 USD quy đổi ra được 300 xu'),
+    PaymentItem(
+        amount: 2.0, currency: 'USD', quy: '2.00 USD quy đổi ra được 20 xu'),
+    PaymentItem(
+        amount: 10.0, currency: 'USD', quy: '10.00 USD quy đổi ra được 100 xu'),
+    PaymentItem(
+        amount: 20.0, currency: 'USD', quy: '20.00 USD quy đổi ra được 200 xu'),
+    PaymentItem(
+        amount: 30.0, currency: 'USD', quy: '30.00 USD quy đổi ra được 300 xu'),
   ];
 
- 
   @override
   Widget build(BuildContext context) {
     print('day ${currentUser?.user[0].id}');
@@ -68,6 +67,12 @@ class _ThemTienThachState extends State<ThemTienThach> {
       appBar: AppBar(
         backgroundColor: ColorConst.colorPrimary50,
         title: Text('Nạp tiền'),
+        leading: InkWell(
+          onTap: (() {
+            Navigator.of(context).pop(true);
+          }),
+          child: Icon(Icons.arrow_back_ios),
+        ),
       ),
       body: ListView.builder(
         itemCount: paymentItems.length,
@@ -76,53 +81,55 @@ class _ThemTienThachState extends State<ThemTienThach> {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              height: MediaQuery.of(context).size.height/12,
+              height: MediaQuery.of(context).size.height / 11,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: ColorConst.colorPrimary120
-              ),
+                  borderRadius: BorderRadius.circular(25),
+                  color: ColorConst.colorPrimary120),
               child: Row(
                 children: [
-          Expanded(
-            flex: 7,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(
-                        'Số tiền: ${item.amount.toStringAsFixed(2)} ${item.currency}',
-                        style: TextStyle(fontSize: 20),
+                  Expanded(
+                    flex: 7,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Số tiền: ${item.amount.toStringAsFixed(2)} ${item.currency}',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Text(item.quy.toString())
+                        ],
                       ),
-                      Text(item.quy.toString())
-                ],
-              ),
-            ),
-          ),
-              Expanded(
-                flex: 3,
-                child: InkWell(
-                  onTap: (() {
-                    _sendPaymentData(currentUser?.user[0].id ?? '' ,item.amount, item.currency);
-                  }),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: ColorConst.colorPrimary50,
-                                  ),
-                      
-                      child: Center(child: Text('Nạp tiền',style: TextStyle(color: Colors.white),)),
                     ),
                   ),
-                ),
-              )
+                  Expanded(
+                    flex: 3,
+                    child: InkWell(
+                      onTap: (() {
+                        _sendPaymentData(currentUser?.user[0].id ?? '',
+                            item.amount, item.currency);
+                      }),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: ColorConst.colorPrimary50,
+                          ),
+                          child: Center(
+                              child: Text(
+                            'Nạp tiền',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
           );
-          
         },
       ),
     );
@@ -134,9 +141,6 @@ class PaymentItem {
   final String currency;
   final String quy;
 
-  PaymentItem({
-    required this.amount,
-    required this.currency,
-    required this.quy
-  });
+  PaymentItem(
+      {required this.amount, required this.currency, required this.quy});
 }

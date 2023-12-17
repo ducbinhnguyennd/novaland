@@ -69,8 +69,6 @@ class _ItemToMoiState extends State<ItemTo> {
 
   @override
   Widget build(BuildContext context) {
-    final widthS = MediaQuery.of(context).size.width;
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
@@ -104,7 +102,7 @@ class _ItemToMoiState extends State<ItemTo> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  height: 150,
+                  height: MediaQuery.of(context).size.height / 5,
                 ),
                 placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(
@@ -114,6 +112,7 @@ class _ItemToMoiState extends State<ItemTo> {
                     Icon(Icons.error), // Hiển thị khi có lỗi tải ảnh
               ),
               Container(
+                padding: EdgeInsets.all(3),
                 width: double.infinity,
                 child: Column(
                   children: [

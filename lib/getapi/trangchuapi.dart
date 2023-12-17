@@ -70,7 +70,6 @@ class ChapterDetail {
         throw Exception('Failed to load chapter images');
       }
     } catch (e) {
-      print('loi o day nay :$e');
       throw Exception('Error: $e');
     }
   }
@@ -80,7 +79,6 @@ class ApiListYeuThich {
   static Future<List<Manga>> fetchFavoriteManga(String userId) async {
     final response = await dio.get('$urlapi/user/favoriteManga/$userId');
     if (response.statusCode == 200) {
-      print(response.data);
       final List<dynamic> jsonData = response.data;
       return jsonData.map((mangaData) => Manga.fromJson(mangaData)).toList();
     } else {
@@ -103,7 +101,6 @@ class CategoryService {
         return categories;
       }
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
     return [];
@@ -128,11 +125,11 @@ class ApiThanhToan {
         // print('binh thanh toan ${response.data}');
         final Uri paymentUri = Uri.parse(response.data);
         launchUrl(paymentUri);
-      } else {
-        print('loi');
-      }
+      } else {}
     } catch (error) {
-      print(error);
+      if (kDebugMode) {
+        print(error);
+      }
     }
   }
 }
@@ -146,7 +143,9 @@ class CommentService {
       final response = await dio.post('$urlapi/postcomment/$userId/$mangaId',
           data: {'comment': comment});
       if (response.statusCode == 200) {
-        print('binh cmt ${response.data}');
+        if (kDebugMode) {
+          print('binh cmt ${response.data}');
+        }
       } else {
         print('Loi cmnr');
       }
@@ -166,7 +165,9 @@ class XoaComment {
         '$urlapi/deletecomment/$comment/$mangaId/$userId',
       );
       if (response.statusCode == 200) {
-        print('binh xoa ${response.data}');
+        if (kDebugMode) {
+          print('binh cmt ${response.data}');
+        }
       } else {
         print('Loi cmnr');
       }
@@ -277,7 +278,9 @@ class XoaBaiDang {
         '$urlapi/deletebaiviet/$baivietId/$userId',
       );
       if (response.statusCode == 200) {
-        print('binh xoa ${response.data}');
+        if (kDebugMode) {
+          print('binh xóa ${response.data}');
+        }
       } else {
         print('Loi cmnr');
       }
@@ -419,6 +422,24 @@ class Login {
       );
       print('API response status: ${response.statusCode}');
       print('API response data: ${response.data}');
+      return response;
+    } catch (e) {
+      print(e.toString());
+    }
+    return null;
+  }
+}
+
+class QuenMatKhau {
+  Future<Response?> forgetpass(String phone, String password) async {
+    var dio = Dio();
+    try {
+      var response = await dio.post(
+        '$urlapi/quenmk',
+        data: {"phone": phone, "passNew": password},
+      );
+      print(response.data);
+
       return response;
     } catch (e) {
       print(e.toString());
