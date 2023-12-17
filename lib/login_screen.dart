@@ -73,17 +73,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.fromLTRB(20, 120, 20, 20),
                 child: textField(),
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => QuenMatKhauScreen()),
-                    );
-                  },
-                  child: Text('Quên mật khẩu?'),
+              Padding(
+                padding: const EdgeInsets.only(right: 18.0, bottom: 10),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => QuenMatKhauScreen()),
+                      );
+                    },
+                    child: Text('Quên mật khẩu?'),
+                  ),
                 ),
               ),
               Row(
@@ -138,6 +141,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'Đăng nhập',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               )),
                         ),
                       )),

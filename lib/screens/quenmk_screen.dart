@@ -73,8 +73,8 @@ class _QuenMatKhauScreenState extends State<QuenMatKhauScreen> {
                     children: [
                       InkWell(
                           onTap: () async {
-                            var response =
-                                await quenMatKhau.forgetpass(_phone, _password);
+                            var response = await quenMatKhau.forgetpass(
+                                _username, _phone, _password);
 
                             if (response?.statusCode == 200) {
                               CommonService.showToast(
