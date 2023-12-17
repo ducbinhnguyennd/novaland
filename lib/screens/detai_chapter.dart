@@ -339,6 +339,7 @@ class _DetailChapterState extends State<DetailChapter> {
         setState(() {
           widget.viporfree = 'free';
         });
+        _showToast('Bạn vừa mua chap thành công');
       }
     } catch (e) {
       _showToast('Bạn không đủ xu, vui lòng nạp thêm');
