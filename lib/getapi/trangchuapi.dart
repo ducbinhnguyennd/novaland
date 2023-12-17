@@ -431,12 +431,13 @@ class Login {
 }
 
 class QuenMatKhau {
-  Future<Response?> forgetpass(String phone, String password) async {
+  Future<Response?> forgetpass(
+      String username, String phone, String password) async {
     var dio = Dio();
     try {
       var response = await dio.post(
         '$urlapi/quenmk',
-        data: {"phone": phone, "passNew": password},
+        data: {"username": username, "phone": phone, "passNew": password},
       );
       print(response.data);
 
