@@ -29,11 +29,19 @@ class _LoginScreenState extends State<LoginScreen> {
   Login login = Login();
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Scaffold(
-          body: Stack(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          Image.asset(AssetsPathConst.bgintro),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Image.asset(
+              AssetsPathConst.bgintro,
+              fit: BoxFit.cover,
+            ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -161,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         ],
-      )),
+      ),
     );
   }
 

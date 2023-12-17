@@ -109,12 +109,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Image.asset(
-            AssetsPathConst.bgintro,
+          Container(
+            height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
+            child: Image.asset(
+              AssetsPathConst.bgintro,
+              fit: BoxFit.cover,
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,

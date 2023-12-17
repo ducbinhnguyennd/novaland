@@ -20,6 +20,7 @@ import 'package:loginapp/screens/Driver.dart';
 import 'package:loginapp/screens/fetch_more_incaditor.dart';
 import 'package:loginapp/user_Service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:screen_protector/screen_protector.dart';
 
 class DetailChapter extends StatefulWidget {
   final String chapterId;
@@ -89,6 +90,50 @@ class _DetailChapterState extends State<DetailChapter> {
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+    _removeListenerPreventScreenshot();
+    _preventScreenshotOff();
+  }
+
+  void _checkScreenRecording() async {
+    final isRecording = await ScreenProtector.isRecording();
+
+    if (isRecording) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Screen Recording...'),
+      ));
+    }
+  }
+
+  void _preventScreenshotOn() async =>
+      await ScreenProtector.preventScreenshotOn();
+
+  void _preventScreenshotOff() async =>
+      await ScreenProtector.preventScreenshotOff();
+
+  void _addListenerPreventScreenshot() async {
+    ScreenProtector.addListener(() {
+      // Screenshot
+      debugPrint('Screenshot:');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Screenshot!'),
+      ));
+    }, (isCaptured) {
+      // Screen Record
+      debugPrint('Screen Record:');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Screen Record!'),
+      ));
+    });
+  }
+
+  void _removeListenerPreventScreenshot() async {
+    ScreenProtector.removeListener();
+  }
+
+  _checkVipScreenShot() {
+    _addListenerPreventScreenshot();
+    _preventScreenshotOn();
+    _checkScreenRecording();
   }
 
   Future<void> _goToNewChap(String chapId, String userId) async {
@@ -417,7 +462,7 @@ class _DetailChapterState extends State<DetailChapter> {
 
   Widget _buildChapterBodyPartNormal(String sChapContent) {
     List<String> imageUrls = _extractImageUrlsFromHtml(sChapContent);
-
+    _checkVipScreenShot();
     return Container(
       height: MediaQuery.of(context).size.height,
       child: imageUrls.isNotEmpty

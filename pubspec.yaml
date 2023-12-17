@@ -55,6 +55,7 @@ dependencies:
   share_plus: ^7.2.1
   share: ^2.0.4
   custom_refresh_indicator: ^3.0.0
+  screen_protector: ^1.4.1
 
 dev_dependencies:
   flutter_test:

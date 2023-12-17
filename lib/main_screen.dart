@@ -64,6 +64,7 @@ class _MainScreenState extends State<MainScreen>
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
