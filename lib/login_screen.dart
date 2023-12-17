@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:loginapp/constant/asset_path_const.dart';
 import 'package:loginapp/constant/colors_const.dart';
+import 'package:loginapp/constant/common_service.dart';
 import 'package:loginapp/getapi/trangchuapi.dart';
 import 'package:loginapp/main_screen.dart';
 import 'package:loginapp/register_screen.dart';
@@ -87,14 +88,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   InkWell(
                       onTap: () async {
                         var response = await login.signIn(_username, _password);
-
+                        CommonService.showToast('Đang đăng nhập...', context);
                         if (response?.data['success'] == true) {
                           UserServices us = UserServices();
                           await us.saveinfologin(
                               jsonEncode(response?.data['data']));
-                          // final storage = new FlutterSecureStorage();
+                          CommonService.showToast(
+                              'Đăng nhập thành công', context);
 
-                          print('${response?.data['data']}');
                           Navigator.pushReplacement<void, void>(
                             context,
                             MaterialPageRoute<void>(
@@ -103,21 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           );
                         } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Sai tài khoản hoặc mật khẩu"),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("OK"),
-                                    ),
-                                  ],
-                                );
-                              });
+                          CommonService.showToast(
+                              'Sai tên tài khoản hoặc mật khẩu', context);
                         }
                       },
                       child: Container(

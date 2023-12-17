@@ -76,6 +76,10 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
     });
   }
 
+  Future<void> _refresh() async {
+    await _loadUser();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -370,188 +374,193 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
 
   final TextEditingController commentController = TextEditingController();
   Widget buildComments() {
-    return Column(
-      children: [
-        Expanded(
-          child: mangaDetail!.cmts.isEmpty
-              ? Center(
-                  child: Text('Chưa có bình luận'),
-                )
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: mangaDetail?.cmts.length,
-                  itemBuilder: (context, index) {
-                    bool isCurrentUserComment = currentUser?.user[0].id ==
-                        mangaDetail?.cmts[index].userIdcmt;
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 15.0, 8.0, 0),
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        // decoration: BoxDecoration(
-                        //     borderRadius: BorderRadius.circular(15),
-                        //     color: ColorConst.colorPrimary80),
-                        child: Row(
-                          children: [
-                            mangaDetail?.cmts[index].avatar == ''
-                                ? SizedBox(
-                                    width: DoubleX.kSizeLarge_1X,
-                                    height: DoubleX.kSizeLarge_1X,
-                                    child: CircleAvatar(
-                                      backgroundColor:
-                                          ColorConst.colorPrimary80,
-                                      child: Text(
-                                        mangaDetail?.cmts[index].usernamecmt
-                                                .toString()
-                                                .substring(0, 1) ??
-                                            '',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    height: 44,
-                                    width: 44,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: MemoryImage(base64Decode(
-                                            mangaDetail?.cmts[index].avatar ??
-                                                '')),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                          mangaDetail
-                                                  ?.cmts[index].usernamecmt ??
+    return RefreshIndicator(
+      color: ColorConst.colorPrimary120,
+      onRefresh: _refresh,
+      child: Column(
+        children: [
+          Expanded(
+            child: mangaDetail!.cmts.isEmpty
+                ? Center(
+                    child: Text('Chưa có bình luận'),
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: mangaDetail?.cmts.length,
+                    itemBuilder: (context, index) {
+                      bool isCurrentUserComment = currentUser?.user[0].id ==
+                          mangaDetail?.cmts[index].userIdcmt;
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 15.0, 8.0, 0),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          // decoration: BoxDecoration(
+                          //     borderRadius: BorderRadius.circular(15),
+                          //     color: ColorConst.colorPrimary80),
+                          child: Row(
+                            children: [
+                              mangaDetail?.cmts[index].avatar == ''
+                                  ? SizedBox(
+                                      width: DoubleX.kSizeLarge_1X,
+                                      height: DoubleX.kSizeLarge_1X,
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            ColorConst.colorPrimary80,
+                                        child: Text(
+                                          mangaDetail?.cmts[index].usernamecmt
+                                                  .toString()
+                                                  .substring(0, 1) ??
                                               '',
                                           style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15)),
-                                      SizedBox(width: 5),
-                                      if (mangaDetail?.cmts[index].rolevip ==
-                                          'vip')
-                                        Image.asset(
-                                          AssetsPathConst.tichxanh,
-                                          height: 18,
-                                        )
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 3.0),
-                                    child: Text(
-                                        mangaDetail?.cmts[index].noidung ?? ''),
-                                  ),
-                                  Text(
-                                    mangaDetail?.cmts[index].date ?? '',
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 13),
-                                  ),
-                                ],
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      height: 44,
+                                      width: 44,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: MemoryImage(base64Decode(
+                                              mangaDetail?.cmts[index].avatar ??
+                                                  '')),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                            mangaDetail
+                                                    ?.cmts[index].usernamecmt ??
+                                                '',
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15)),
+                                        SizedBox(width: 5),
+                                        if (mangaDetail?.cmts[index].rolevip ==
+                                            'vip')
+                                          Image.asset(
+                                            AssetsPathConst.tichxanh,
+                                            height: 18,
+                                          )
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3.0),
+                                      child: Text(
+                                          mangaDetail?.cmts[index].noidung ??
+                                              ''),
+                                    ),
+                                    Text(
+                                      mangaDetail?.cmts[index].date ?? '',
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 13),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            isCurrentUserComment
-                                ? IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () async {
-                                      deleteComment(
-                                          mangaDetail?.cmts[index].idcmt,
-                                          widget.mangaId,
-                                          mangaDetail?.cmts[index].userIdcmt);
-                                      await Future.delayed(
-                                          Duration(seconds: 2));
+                              isCurrentUserComment
+                                  ? IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () async {
+                                        deleteComment(
+                                            mangaDetail?.cmts[index].idcmt,
+                                            widget.mangaId,
+                                            mangaDetail?.cmts[index].userIdcmt);
+                                        await Future.delayed(
+                                            Duration(seconds: 2));
 
-                                      _loadUser();
-                                      Fluttertoast.showToast(
-                                        msg: "Xóa bình luận thành công",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER,
-                                      );
-                                    },
-                                  )
-                                : Container()
-                          ],
+                                        _loadUser();
+                                        Fluttertoast.showToast(
+                                          msg: "Xóa bình luận thành công",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.CENTER,
+                                        );
+                                      },
+                                    )
+                                  : Container()
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: ColorConst.colorPrimary120),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: commentController,
-                      decoration: const InputDecoration(
-                        labelText: 'Nhập bình luận',
-                        focusColor: Colors.black,
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      String comment = commentController.text;
-                      if (comment.isNotEmpty && comment.length >= 10) {
-                        CommentService.postComment(
-                            currentUser?.user[0].id ?? '',
-                            widget.mangaId,
-                            comment);
-                        commentController.clear();
-                        _loadUser();
-                        Fluttertoast.showToast(
-                          msg: "Bình luận đang được tải lên...",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                        );
-                        await Future.delayed(Duration(seconds: 2));
-
-                        Fluttertoast.showToast(
-                          msg: "Đăng bình luận thành công",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                        );
-                      } else {
-                        Fluttertoast.showToast(
-                          msg: "Nhập ít nhất 10 kí tự",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                        );
-                      }
+                      );
                     },
-                    child: const Icon(
-                      Icons.send_rounded,
-                      color: ColorConst.colorPrimary50,
-                    ),
                   ),
-                ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: ColorConst.colorPrimary120),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: commentController,
+                        decoration: const InputDecoration(
+                          labelText: 'Nhập bình luận',
+                          focusColor: Colors.black,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        String comment = commentController.text;
+                        if (comment.isNotEmpty && comment.length >= 5) {
+                          CommentService.postComment(
+                              currentUser?.user[0].id ?? '',
+                              widget.mangaId,
+                              comment);
+                          commentController.clear();
+                          _loadUser();
+                          Fluttertoast.showToast(
+                            msg: "Bình luận đang được tải lên...",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                          );
+                          await Future.delayed(Duration(seconds: 2));
+
+                          Fluttertoast.showToast(
+                            msg: "Đăng bình luận thành công",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                          );
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: "Nhập ít nhất 5 kí tự",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                          );
+                        }
+                      },
+                      child: const Icon(
+                        Icons.send_rounded,
+                        color: ColorConst.colorPrimary50,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -838,7 +847,6 @@ class _MangaDetailScreenState extends State<MangaDetailScreen>
           nutlike = !nutlike;
         });
 
-        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (context) {

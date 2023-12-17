@@ -41,5 +41,4 @@ class AssetsPathConst {
   static const String ico_14 = 'assets/images/icosetting/ico_14.png';
 
   static const String ico_face = 'assets/images/icosetting/ico_face.png';
-  static const String ico_tiktok = 'assets/images/icosetting/ico_tiktok.png';
 }

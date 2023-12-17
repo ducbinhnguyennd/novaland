@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -103,6 +102,7 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
                         'Vui lòng nhập nội dung bài viết', context);
                     return;
                   }
+
                   String imagePath = '';
                   if (_imageFile != null) {
                     final tempDir = await getTemporaryDirectory();
@@ -111,7 +111,7 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
                     final image = image_format
                         .decodeImage(File(_imageFile!.path).readAsBytesSync());
                     final thumbnail =
-                        image_format.copyResize(image!, width: 200);
+                        image_format.copyResize(image!, width: 700);
 
                     File image2 = File('$path/img_$rand.jpg');
 
@@ -125,7 +125,7 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
                           imagePath, context)
                       .then((data) {
                     if (data != null) {
-                      print("Thienlogin : uploadImageAvatar : $data");
+                      print(" uploadImageAvatar : $data");
                     } else
                       (e) {
                         Fluttertoast.showToast(
@@ -139,15 +139,8 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
                       };
                   });
 
-                  Fluttertoast.showToast(
-                      msg: 'Đăng bài viết thành công',
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.TOP,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.black,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                  await Future.delayed(Duration(seconds: 2));
+                  CommonService.showToast('Đăng bài viết thành công', context);
+                  await Future.delayed(Duration(seconds: 1));
                   setState(() {
                     isAvatarChanged = true;
                   });
@@ -185,7 +178,6 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
 
   static Future<dynamic> uploadImageAvatar(
       String userId, String content, String? path, BuildContext context) async {
-    print('Thienlogin : uploadImageAvatar : Dang upload... ');
     var body = FormData();
     if (path != null && path != '') {
       List<String> st = path.split("/");
@@ -208,12 +200,11 @@ class _PostBaiVietScreenState extends State<PostBaiVietScreen> {
 
       return response.data;
     } catch (e) {
+      // ignore: deprecated_member_use
       DioError di = e as DioError;
 
       return di.message;
-    } finally {
-      print('Thienlogin : Upload : OKKKKKKKKKKKKK');
-    }
+    } finally {}
   }
 }
 

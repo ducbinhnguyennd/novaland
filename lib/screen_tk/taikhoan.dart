@@ -554,7 +554,7 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
             child: ListTile(
               title: Transform.translate(
                 offset: Offset(-20, 0),
-                child: Text('Chăm sóc khách hàng'),
+                child: Text('Đăng ký nhóm dịch'),
               ),
               leading: ImageIcon(
                 AssetImage(AssetsPathConst.ico_1),
@@ -572,16 +572,10 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
                       height: 23,
                     ),
                     SizedBox(width: 15),
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(LienHe.routeName);
-                      },
-                      child:
-                          //  AssetImage(AssetsPathConst.ico_face),
-                          Image.asset(
-                        AssetsPathConst.ico_tiktok,
-                        height: 21,
-                      ),
+                    Icon(
+                      Icons.mail,
+                      size: 22,
+                      color: ColorConst.colorPrimary30,
                     ),
                     SizedBox(width: 5),
                   ],
