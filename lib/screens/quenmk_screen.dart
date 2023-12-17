@@ -32,7 +32,6 @@ class _QuenMatKhauScreenState extends State<QuenMatKhauScreen> {
       child: Scaffold(
           body: Stack(
         children: [
-          Image.asset(AssetsPathConst.bgintro),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -54,6 +53,7 @@ class _QuenMatKhauScreenState extends State<QuenMatKhauScreen> {
             ),
           ),
           ListView(
+            padding: EdgeInsets.only(top: 150),
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +65,7 @@ class _QuenMatKhauScreenState extends State<QuenMatKhauScreen> {
                       style:
                           TextStyle(fontSize: 23, fontWeight: FontWeight.w500)),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 120, 20, 20),
+                    padding: const EdgeInsets.fromLTRB(20, 80, 20, 20),
                     child: textField(),
                   ),
                   Row(
@@ -108,7 +108,7 @@ class _QuenMatKhauScreenState extends State<QuenMatKhauScreen> {
                               child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    'Lấy lại mật khẩu',
+                                    'Gửi',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18),
                                   )),
@@ -238,7 +238,7 @@ class _QuenMatKhauScreenState extends State<QuenMatKhauScreen> {
       children: [
         buildTextField(
           labelText: 'Tên đăng nhập',
-          hintText: 'abc',
+          hintText: 'Tên đăng nhập',
           prefixIcon: Icons.people,
           controller: userEditingController,
           onChanged: (val) {

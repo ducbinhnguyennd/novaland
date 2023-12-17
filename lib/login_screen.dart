@@ -34,14 +34,6 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Image.asset(
-              AssetsPathConst.bgintro,
-              fit: BoxFit.cover,
-            ),
-          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -70,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Text('MangaLand',
                   style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500)),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 120, 20, 20),
+                padding: const EdgeInsets.fromLTRB(20, 80, 20, 10),
                 child: textField(),
               ),
               Padding(

@@ -33,7 +33,6 @@ class AssetsPathConst {
   static const String ico_4 = 'assets/images/icosetting/ico_4.png';
   static const String ico_6 = 'assets/images/icosetting/ico_6.png';
   static const String ico_7 = 'assets/images/icosetting/ico_7.png';
-  static const String ico_8 = 'assets/images/icosetting/ico_8.png';
   static const String ico_9 = 'assets/images/icosetting/ico_9.png';
 
   static const String ico_11 = 'assets/images/icosetting/ico_11.png';

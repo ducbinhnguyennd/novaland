@@ -412,31 +412,6 @@ class _TaikhoanScreenState extends State<TaikhoanScreen>
             SizedBox(height: 10),
             InkWell(
               onTap: () {
-                setState(() {
-                  hot18 = !hot18;
-                });
-              },
-              child: ListTile(
-                title: Transform.translate(
-                  offset: Offset(-20, 0),
-                  child: Text('Lọc nội dung 18+'),
-                ),
-                leading: ImageIcon(AssetImage(AssetsPathConst.ico_8),
-                    size: 22, color: ColorConst.colorPrimary30),
-                trailing: Switch.adaptive(
-                  onChanged: (value) {
-                    setState(() {
-                      hot18 = !hot18;
-                    });
-                  },
-                  value: hot18,
-                  activeColor: ColorConst.colorPrimary30,
-                  // trackColor: Colors.grey,
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
                 //
               },
               child: ListTile(

@@ -49,7 +49,7 @@ class FetchMoreIndicator extends StatelessWidget {
                     transform: Matrix4.translationValues(0.0, dy, 0.0),
                     padding: const EdgeInsets.only(bottom: 0.0),
                     constraints: const BoxConstraints.expand(),
-                    child: const Column(
+                    child: Column(
                       children: [
                         CircularProgressIndicator.adaptive(
                           strokeWidth: 2,
